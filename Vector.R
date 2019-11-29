@@ -513,18 +513,12 @@ vector.selectCenter <- function(OUT){
 
 
 
-
-vector.selectRegion <- function(OUT){
-    #######################
-    P.SCORE=OUT$P.SCORE
-    VEC=OUT$VEC
+vector.reDrawArrow <- function(OUT){
+    ################
     A1_VEC=OUT$A1_VEC
     A2_VEC=OUT$A2_VEC
     A_LENGTH=OUT$A_LENGTH
-    CENTER_LIST=OUT$CENTER_LIST
-    INDEX_LIST=OUT$INDEX_LIST
-    USED=OUT$USED
-    
+    VEC=OUT$VEC
     #####################
     plot(x=VEC[,1],y=VEC[,2], col=OUT$COL,cex=0.5, pch=16)
     i=1
@@ -536,7 +530,26 @@ vector.selectRegion <- function(OUT){
                    )
         i=i+1
         }
-    #########################
+    ############################
+    return(OUT)
+    ############################
+    }
+
+
+
+vector.selectRegion <- function(OUT){
+    #######################
+    P.SCORE=OUT$P.SCORE
+    ################
+    A1_VEC=OUT$A1_VEC
+    A2_VEC=OUT$A2_VEC
+    A_LENGTH=OUT$A_LENGTH
+    VEC=OUT$VEC
+    #####################
+    CENTER_LIST=OUT$CENTER_LIST
+    INDEX_LIST=OUT$INDEX_LIST
+    USED=OUT$USED  
+    ################################
     SELECT_NAME=vector.selectPoint(VEC,CEX=1)
     #########################
     SELECT_INDEX=which(rownames(VEC) %in% SELECT_NAME)
