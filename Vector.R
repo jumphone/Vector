@@ -570,9 +570,11 @@ vector.selectRegion <- function(OUT){
         i=i+1}
     
     ##########################
+    #Draw new
     COL=OUT$COL
     COL[which(!rownames(VEC) %in% SELECT_NAME)]='grey70'
-    points(x=VEC[,1],y=VEC[,2], col=COL,cex=0.5, pch=16)
+    plot(x=VEC[,1],y=VEC[,2], col=COL,cex=0.5, pch=16)
+    #points(x=VEC[,1],y=VEC[,2], col=COL,cex=0.5, pch=16)
     #########################
     i=1
     while(i<=length(A_LENGTH)){
