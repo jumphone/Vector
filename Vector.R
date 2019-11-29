@@ -4,7 +4,11 @@
 
 ##################
 library('circlize')
-library('princurve')
+library('gatepoints')
+library('stringr')
+library('igraph')
+##################
+
 
 
 vector.vcol<-function(VALUE, CV, CN){
@@ -205,7 +209,7 @@ vector.gridValue <- function(OUT, VALUE， SHOW=TRUE){
     ################
     if(SHOW==TRUE){
         
-        plot(OUT$VEC,col='grey80',pch=16,cex=0.5)
+        plot(OUT$VEC,col='grey70',pch=16,cex=0.5)
         points(OUT$CENTER_VEC,col=COL,pch=16)
         points(OUT$CENTER_VEC[USED,],col='black',pch=0, cex=1.5)
         }
@@ -513,14 +517,15 @@ vector.selectCenter <- function(OUT){
 
 
 
-vector.reDrawArrow <- function(OUT){
+vector.reDrawArrow <- function(OUT, COL='grey70'){
     ################
     A1_VEC=OUT$A1_VEC
     A2_VEC=OUT$A2_VEC
     A_LENGTH=OUT$A_LENGTH
     VEC=OUT$VEC
+    COL=COL
     #####################
-    plot(x=VEC[,1],y=VEC[,2], col=OUT$COL,cex=0.5, pch=16)
+    plot(x=VEC[,1],y=VEC[,2], col=COL,cex=0.5, pch=16)
     i=1
     while(i<=length(A_LENGTH)){
         arrows(x0=A1_VEC[i,1],y0=A1_VEC[i,2],
@@ -550,9 +555,10 @@ vector.selectRegion <- function(OUT){
     INDEX_LIST=OUT$INDEX_LIST
     USED=OUT$USED  
     ################################
-    SELECT_NAME=vector.selectPoint(VEC,CEX=1)
+    SELECT_NAME=vector.selectPoint(VEC,CEX=0.1)
     #########################
     SELECT_INDEX=which(rownames(VEC) %in% SELECT_NAME)
+    #########################
     #########################
     A_USED=c()
     i=1
@@ -566,14 +572,24 @@ vector.selectRegion <- function(OUT){
     ##########################
     COL=OUT$COL
     COL[which(!rownames(VEC) %in% SELECT_NAME)]='grey70'
-    plot(x=VEC[,1],y=VEC[,2], col=COL,cex=0.5, pch=16)
+    points(x=VEC[,1],y=VEC[,2], col=COL,cex=0.5, pch=16)
     #########################
+    i=1
+    while(i<=length(A_LENGTH)){
+        arrows(x0=A1_VEC[i,1],y0=A1_VEC[i,2],
+                   x1=A2_VEC[i,1],y1=A2_VEC[i,2],
+                   lwd=2, length=A_LENGTH[i],
+                   col='black'
+                   )
+        i=i+1
+        }
+    ##########################
     #points(x=VEC[,1],y=VEC[,2], col='grey70',cex=0.5, pch=16)
     for(i in A_USED){
         arrows(x0=A1_VEC[i,1],y0=A1_VEC[i,2],
                    x1=A2_VEC[i,1],y1=A2_VEC[i,2],
                    lwd=2, length=A_LENGTH[i],
-                   col='black'
+                   col='red'
                    )
         
         }
