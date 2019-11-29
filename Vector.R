@@ -16,6 +16,7 @@ vector.vcol<-function(VALUE, CV, CN){
     }
 
 
+
 vector.value <-function(PCA){
     PCA=PCA
     r.pca=apply(abs(PCA), 2, rank)
@@ -401,10 +402,95 @@ vector.arrows <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70'){
 
 
 
-vector.select<-function(VEC){
+vector.select<-function(VEC,CEX=0.5){
+    VEC=VEC
+    CEX=CEX
+    ############
     library(gatepoints)
-    selectedPoints <- fhs(VEC, pch=16,col='red3',cex=0.2,mark = TRUE)
+    selectedPoints <- fhs(VEC, pch=16,col='red3',cex=CEX,mark = TRUE)
     return(selectedPoints)
+    }
+
+
+
+
+
+
+vector.selectCenter <- function(OUT){
+    #####################
+    OUT=OUT
+    SHOW=TRUE
+    #############################
+    DIST=OUT$DIST
+    USED=OUT$USED
+    USED_NAME=OUT$USED_NAME
+    CENTER_VALUE=OUT$CENTER_VALUE
+    CENTER_VEC=OUT$CENTER_VEC
+    CENTER_INDEX=OUT$CENTER_INDEX
+    INDEX_LIST=OUT$INDEX_LIST
+    ############
+    
+    plot(OUT$VEC, col='grey80',pch=16,cex=0.5)
+    points(OUT$CENTER_VEC[USED,], col=OUT$ORIG.CENTER.COL[USED], pch=16, cex=1)
+    SELECT_NAME=vector.select(OUT$CENTER_VEC[USED,],CEX=1)
+    SUMMIT=USED[as.numeric(SELECT_NAME)]
+    #print(SELECT)
+    #plot(OUT$CENTER_VEC[USED,])
+    #points(OUT$CENTER_VEC[CLUSTER[[9]],],pch=16,col='red')
+    
+    
+    SCORE=c()
+    i=1
+    while(i<=length(USED_NAME)){
+        this_name=USED_NAME[i]
+        this_dist=DIST[which(colnames(DIST)==this_name),which(rownames(DIST) %in% paste0('P',SUMMIT))]
+        this_dist=this_dist
+        #this_value=CENTER_VALUE[USED]
+        this_score=min(this_dist)#sum(rank(-this_dist) * rank(this_value))
+        #this_cor=cor(-this_value, this_dist)#,method='spearman')
+        SCORE=c(SCORE, this_score)
+        i=i+1}
+    SCORE=max(SCORE)-SCORE
+    ##########################################
+    
+    VALUE=SCORE
+    #plot(OUT$VEC, col='grey70',pch=16)
+    N.VALUE=(VALUE-min(VALUE))/(max(VALUE)-min(VALUE))
+    COL=vector.vcol(N.VALUE, c(0,0.5,1),c('#009FFF','#FFF200','#ec2F4B'))
+    
+    
+    ###################################################
+    OUT$COL=rep('grey70',nrow(OUT$VEC))
+    OUT$ORIG.COL=rep('grey70',nrow(OUT$VEC))
+    OUT$P.SCORE=rep(0,nrow(OUT$VEC))
+    i=1
+    while(i<=length(USED)){
+        this_index=INDEX_LIST[[USED[i]]]
+        OUT$COL[this_index]=COL[i]
+        OUT$ORIG.COL[this_index]=OUT$ORIG.CENTER.COL[USED][i]
+        OUT$P.SCORE[this_index]=SCORE[i]
+        i=i+1
+        }
+    ###########
+    
+    
+    if(SHOW==TRUE){
+        plot(OUT$VEC, col=OUT$COL, pch=16, cex=0.5 )
+        #plot(OUT$VEC, col=OUT$ORIG.COL, pch=16, cex=0.5)
+        #text(CENTER_VEC[HIGH,],labels=PCH,cex=1,pos=2)
+        #points(CENTER_VEC[HIGH,], col='black',pch=16,cex=1)
+        points(CENTER_VEC[SUMMIT,], col='black',pch=16,cex=1.5)
+        points(CENTER_VEC[SUMMIT,], col='red',pch=16,cex=1)  
+        }
+    
+    ######################
+    ############
+    OUT$SCORE=SCORE
+    OUT$SUMMIT=SUMMIT
+    ################################
+    
+    #######################
+    return(OUT)
     }
 
 
