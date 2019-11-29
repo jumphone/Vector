@@ -17,7 +17,7 @@ vector.vcol<-function(VALUE, CV, CN){
 
 
 
-vector.value <-function(PCA){
+vector.getValue <-function(PCA){
     PCA=PCA
     r.pca=apply(abs(PCA), 2, rank)
     mean.r.pca=apply(r.pca,1,mean)
@@ -167,7 +167,7 @@ vector.buildNet<-function(OUT,CUT=3,SHOW=TRUE,COL='grey70'){
 
 
 
-vector.centerValue <- function(OUT, VALUE， SHOW=TRUE){
+vector.gridValue <- function(OUT, VALUE， SHOW=TRUE){
     OUT=OUT
     INDEX_LIST=OUT$INDEX_LIST
     VALUE=VALUE
@@ -224,7 +224,7 @@ vector.centerValue <- function(OUT, VALUE， SHOW=TRUE){
 
 
 
-vector.score <- function(OUT, UP=0.9, SHOW=TRUE){
+vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
     #####################
     OUT=OUT
     SHOW=SHOW
@@ -333,7 +333,7 @@ vector.score <- function(OUT, UP=0.9, SHOW=TRUE){
 
 
 
-vector.arrows <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70'){
+vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70'){
     ################
     OUT=OUT
     SHOW=SHOW
@@ -362,6 +362,7 @@ vector.arrows <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70'){
     
     A1_VEC=c()
     A2_VEC=c()
+    A_LENGTH=c()
     i=1
     while(i<=length(USED)){
         this_p1_loc=USED_CENTER_VEC[i,]
@@ -378,15 +379,18 @@ vector.arrows <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70'){
         final_vec=t(vector_list_norm) %*% vector_weight
         
         this_p2_loc=c(this_p1_loc[1]+final_vec[1],this_p1_loc[2]+final_vec[2])
+        this_arrow_length=0.1*sqrt(sum(final_vec^2))
+        
         if(SHOW==TRUE){
             arrows(x0=this_p1_loc[1],y0=this_p1_loc[2],
                    x1=this_p2_loc[1],y1=this_p2_loc[2],
-                   lwd=2, length=0.1*sqrt(sum(final_vec^2)),
+                   lwd=2, length=this_arrow_length,
                    col='black'
                    )
             }
         A1_VEC=cbind(A1_VEC,this_p1_loc)
         A2_VEC=cbind(A2_VEC,this_p2_loc)
+        A_LENGTH=c(A_LENGTH,this_arrow_length)
         i=i+1}
     #################################
     A1_VEC=t(A1_VEC)
@@ -395,12 +399,33 @@ vector.arrows <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70'){
     #OUT=list()
     OUT$A1_VEC=A1_VEC
     OUT$A2_VEC=A2_VEC
+    OUT$A_LENGTH=A_LENGTH
     ###########
     return(OUT)
     }
 
 
-vector.select<-function(VEC,CEX=0.5){
+VECTOR <- function(VEC, PCA, N=20){
+    N=N
+    par(mfrow=c(3,2))
+    ########################
+    
+    OUT=vector.buildGrid(VEC, N=N,SHOW=TRUE)
+    OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+    VALUE=vector.getValue(PCA)
+    OUT=vector.gridValue(OUT,VALUE, SHOW=TRUE)
+    OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+    OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
+
+    par(mfrow=c(1,1))
+    return(OUT)
+    #####
+   }
+
+#################################################################
+# Manually do something
+
+vector.selectPoint<-function(VEC,CEX=0.5){
     VEC=VEC
     CEX=CEX
     ############
@@ -426,7 +451,7 @@ vector.selectCenter <- function(OUT){
     
     plot(OUT$VEC, col='grey80',pch=16,cex=0.5)
     points(OUT$CENTER_VEC[USED,], col=OUT$ORIG.CENTER.COL[USED], pch=16, cex=1)
-    SELECT_NAME=vector.select(OUT$CENTER_VEC[USED,],CEX=1)
+    SELECT_NAME=vector.selectPoint(OUT$CENTER_VEC[USED,],CEX=1)
     SUMMIT=USED[as.numeric(SELECT_NAME)]
     #print(SELECT)
     #plot(OUT$CENTER_VEC[USED,])
@@ -470,9 +495,6 @@ vector.selectCenter <- function(OUT){
     
     if(SHOW==TRUE){
         plot(OUT$VEC, col=OUT$COL, pch=16, cex=0.5 )
-        #plot(OUT$VEC, col=OUT$ORIG.COL, pch=16, cex=0.5)
-        #text(CENTER_VEC[HIGH,],labels=PCH,cex=1,pos=2)
-        #points(CENTER_VEC[HIGH,], col='black',pch=16,cex=1)
         points(CENTER_VEC[SUMMIT,], col='black',pch=16,cex=1.5)
         points(CENTER_VEC[SUMMIT,], col='red',pch=16,cex=1)  
         }
@@ -491,22 +513,73 @@ vector.selectCenter <- function(OUT){
 
 
 
-VECTOR <- function(VEC, PCA, N=20){
-    N=N
-    par(mfrow=c(3,2))
-    ########################
-    
-    OUT=vector.buildGrid(VEC, N=N,SHOW=TRUE)
-    OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
-    VALUE=vector.value(PCA)
-    OUT=vector.centerValue(OUT,VALUE, SHOW=TRUE)
-    OUT=vector.score(OUT,UP=0.9,SHOW=TRUE)
-    OUT=vector.arrows(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
 
-    par(mfrow=c(1,1))
+vector.selectRegion <- function(OUT){
+    #######################
+    P.SCORE=OUT$P.SCORE
+    VEC=OUT$VEC
+    A1_VEC=OUT$A1_VEC
+    A2_VEC=OUT$A2_VEC
+    A_LENGTH=OUT$A_LENGTH
+    CENTER_LIST=OUT$CENTER_LIST
+    INDEX_LIST=OUT$INDEX_LIST
+    USED=OUT$USED
+    
+    #####################
+    plot(x=VEC[,1],y=VEC[,2], col=OUT$COL,cex=0.5, pch=16)
+    i=1
+    while(i<=length(A_LENGTH)){
+        arrows(x0=A1_VEC[i,1],y0=A1_VEC[i,2],
+                   x1=A2_VEC[i,1],y1=A2_VEC[i,2],
+                   lwd=2, length=A_LENGTH[i],
+                   col='black'
+                   )
+        i=i+1
+        }
+    #########################
+    SELECT_NAME=vector.selectPoint(VEC,CEX=1)
+    #########################
+    SELECT_INDEX=which(rownames(VEC) %in% SELECT_NAME)
+    #########################
+    A_USED=c()
+    i=1
+    while(i<=length(USED)){
+        if( length(which(INDEX_LIST[[USED[i]]] %in% SELECT_INDEX )) > 0 ){
+            A_USED=c(A_USED, i)
+            }
+                         
+        i=i+1}
+    
+    ##########################
+    COL=OUT$COL
+    COL[which(!rownames(VEC) %in% SELECT_NAME)]='grey70'
+    plot(x=VEC[,1],y=VEC[,2], col=COL,cex=0.5, pch=16)
+    #########################
+    #points(x=VEC[,1],y=VEC[,2], col='grey70',cex=0.5, pch=16)
+    for(i in A_USED){
+        arrows(x0=A1_VEC[i,1],y0=A1_VEC[i,2],
+                   x1=A2_VEC[i,1],y1=A2_VEC[i,2],
+                   lwd=2, length=A_LENGTH[i],
+                   col='black'
+                   )
+        
+        }
+    #########################
+    OUT$A_USED=A_USED
+    OUT$SELECT_NAME=SELECT_NAME
+    OUT$SELECT_INDEX=SELECT_INDEX
+    OUT$SELECT_SCORE=P.SCORE[SELECT_INDEX]
+    ########################
     return(OUT)
-    #####
-   }
+    }
+
+
+
+
+
+
+
+
 
 
 
