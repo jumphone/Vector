@@ -400,8 +400,6 @@ vector.arrows <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70'){
     }
 
 
-
-
 vector.select<-function(VEC,CEX=0.5){
     VEC=VEC
     CEX=CEX
@@ -410,10 +408,6 @@ vector.select<-function(VEC,CEX=0.5){
     selectedPoints <- fhs(VEC, pch=16,col='red3',cex=CEX,mark = TRUE)
     return(selectedPoints)
     }
-
-
-
-
 
 
 vector.selectCenter <- function(OUT){
