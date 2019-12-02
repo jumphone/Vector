@@ -606,7 +606,67 @@ vector.selectRegion <- function(OUT){
 
 
 
-
+vector.reDrawRegion <- function(OUT){
+    #######################
+    P.SCORE=OUT$P.SCORE
+    ################
+    A1_VEC=OUT$A1_VEC
+    A2_VEC=OUT$A2_VEC
+    A_LENGTH=OUT$A_LENGTH
+    VEC=OUT$VEC
+    #####################
+    CENTER_LIST=OUT$CENTER_LIST
+    INDEX_LIST=OUT$INDEX_LIST
+    USED=OUT$USED  
+    ################################
+    SELECT_NAME=OUT$SELECT_NAME#vector.selectPoint(VEC,CEX=0.1)
+    #########################
+    SELECT_INDEX=which(rownames(VEC) %in% SELECT_NAME)
+    #########################
+    #########################
+    A_USED=c()
+    i=1
+    while(i<=length(USED)){
+        if( length(which(INDEX_LIST[[USED[i]]] %in% SELECT_INDEX )) > 0 ){
+            A_USED=c(A_USED, i)
+            }
+                         
+        i=i+1}
+    
+    ##########################
+    #Draw new
+    COL=OUT$COL
+    COL[which(!rownames(VEC) %in% SELECT_NAME)]='grey70'
+    plot(x=VEC[,1],y=VEC[,2], col=COL,cex=0.5, pch=16)
+    #points(x=VEC[,1],y=VEC[,2], col=COL,cex=0.5, pch=16)
+    #########################
+    i=1
+    while(i<=length(A_LENGTH)){
+        arrows(x0=A1_VEC[i,1],y0=A1_VEC[i,2],
+                   x1=A2_VEC[i,1],y1=A2_VEC[i,2],
+                   lwd=2, length=A_LENGTH[i],
+                   col='black'
+                   )
+        i=i+1
+        }
+    ##########################
+    #points(x=VEC[,1],y=VEC[,2], col='grey70',cex=0.5, pch=16)
+    for(i in A_USED){
+        arrows(x0=A1_VEC[i,1],y0=A1_VEC[i,2],
+                   x1=A2_VEC[i,1],y1=A2_VEC[i,2],
+                   lwd=2, length=A_LENGTH[i],
+                   col='red'
+                   )
+        
+        }
+    #########################
+    OUT$A_USED=A_USED
+    OUT$SELECT_NAME=SELECT_NAME
+    OUT$SELECT_INDEX=SELECT_INDEX
+    OUT$SELECT_SCORE=P.SCORE[SELECT_INDEX]
+    ########################
+    return(OUT)
+    }
 
 
 
