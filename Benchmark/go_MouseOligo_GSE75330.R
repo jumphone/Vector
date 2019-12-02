@@ -5,6 +5,9 @@ saveRDS(DATA,file='DATA.RDS')
 
 
 ############################################
+
+setwd('F:/Vector/data/MouseOligo_GSE75330')
+DATA=readRDS('DATA.RDS')
 pbmc <- CreateSeuratObject(counts = DATA, project = "pbmc3k", min.cells = 0, min.features = 0)
 pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
 pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 2000)
@@ -14,5 +17,14 @@ pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs = 50)
 pbmc <- RunUMAP(pbmc, dims = 1:50)
 DimPlot(pbmc, reduction = "umap")
 saveRDS(pbmc,file='pbmc.RDS')
+
+
+############################################
+
+setwd('F:/Vector/data/MouseOligo_GSE75330')
+pbmc=readRDS('pbmc.RDS')
+pbmc@meta.data$celltype=readRDS('LABEL.RDS')
+
+FeaturePlot(pbmc,features=c('Pdgfra','Bmp4','Sema4f','Mog'))
 
 
