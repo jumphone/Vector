@@ -52,7 +52,10 @@ vector.calValue <- function(PCA){
     PCA.RC=apply(apply(PCA,2,rank), 2, .normX)
     PCA.RC=abs(PCA.RC-0.5)   
     VALUE=apply(PCA.RC,1,mean)
-    return(VALUE)
+    ###########################
+    OUT$VALUE=VALUE
+    OUT$PCA.RC=PCA.RC
+    return(OUT)
     }
 
 
@@ -62,11 +65,11 @@ vector.getValue <-function(OUT, PCA, SHOW=TRUE){
     PCA=PCA
     SHOW=SHOW
     ############
-    VALUE=vector.calValue(PCA)
+    VALUE.OUT=vector.calValue(PCA)
     ###############
-    OUT$VALUE=VALUE
+    OUT$VALUE=VALUE.OUT$VALUE
     OUT$PCA=PCA
-    OUT$PCA.RC=PCA.RC
+    OUT$PCA.RC=VALUE.OUT$PCA.RC
     ###############
     if(SHOW==TRUE){
         vector.showValue(OUT)
