@@ -54,7 +54,7 @@ SCORE=vector.getValue(PCA)
 VALUE=SCORE#vector.getScore(PCA)
 
 OUT=vector.gridValue(OUT,VALUE, SHOW=TRUE)
-OUT=vector.autoCenter(OUT,UP=0.7,SHOW=TRUE)
+OUT=vector.autoCenterNew(OUT,SHOW=TRUE)
 #OUT=vector.selectCenter(OUT)
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
 
@@ -137,9 +137,47 @@ pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 5000)
 pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs=50)
 pbmc <- RunUMAP(pbmc, dims = 1:50)
 DimPlot(pbmc, reduction = "umap")
+
 ######################
 pbmc@meta.data$type=TYPE
 DimPlot(pbmc, reduction = "umap",group.by='type',label=TRUE)
+
+
+
+VEC=pbmc@reductions$umap@cell.embeddings
+rownames(VEC)=colnames(pbmc)
+PCA= pbmc@reductions$pca@cell.embeddings
+
+
+
+
+OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+
+SCORE=vector.getValue(PCA)
+VALUE=SCORE#vector.getScore(PCA)
+VALUE=LGR5
+OUT=vector.gridValue(OUT,VALUE, SHOW=TRUE)
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+#OUT=vector.selectCenter(OUT)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 DimPlot(pbmc,reduction = 'pca',group.by = 'type',dims = c(3,2))
 
