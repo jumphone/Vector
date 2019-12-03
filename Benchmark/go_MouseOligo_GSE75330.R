@@ -74,9 +74,9 @@ dev.off()
 
 
 
-VCOL=vector.vcol(pbmc@meta.data$score, c(min(pbmc@meta.data$score),
-                 median(pbmc@meta.data$score), max(pbmc@meta.data$score)),
-                 c('blue3','grey95','red3'))
+VCOL=vector.vcol(pbmc@meta.data$score, c(min(pbmc@meta.data$score),quantile(pbmc@meta.data$score,0.1),
+                 median(pbmc@meta.data$score), quantile(pbmc@meta.data$score,0.9), max(pbmc@meta.data$score)),
+                 c('blue3','blue3','grey95','red3','red3'))
 pdf('f2.pdf',width=3.5,height=4)
 plot(VEC,col=VCOL,pch=16,cex=0.2)
 dev.off()
