@@ -62,6 +62,35 @@ VEC=pbmc@reductions$umap@cell.embeddings
 rownames(VEC)=colnames(pbmc)
 PCA= pbmc@reductions$pca@cell.embeddings
 
+DATA=as.matrix(pbmc@assays$RNA@data)
+
+
+OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+
+SCORE=vector.calScore(OUT,PCA,SHOW=TRUE)
+#VALUE=SCORE#vector.getScore(PCA)
+
+OUT=vector.gridValue(OUT,SCORE, SHOW=TRUE)
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+#OUT=vector.autoCenterNew(OUT,SHOW=TRUE)
+#OUT=vector.selectCenter(OUT)
+#OUT=vector.nonCenter(OUT)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
+
+OUT=vector.nonCenter(OUT)
+
+
+
+OUT=vector.drawArrow(OUT,P=1,SHOW=TRUE, COL=OUT$COL)
+
+
+
+
+
+
+
+
 
 
 OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
