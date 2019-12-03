@@ -20,6 +20,37 @@ rownames(VEC)=colnames(pbmc)
 PCA= pbmc@reductions$pca@cell.embeddings
 #######################
 
+
+OUT=vector.buildGrid(VEC, N=40,SHOW=TRUE)
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+
+
+SCORE=pbmc@assays$RNA@data[which(rownames(pbmc)=='Nes'),]
+#SCORE=vector.getValue(PCA)#vector.calScore(OUT,PCA,SHOW=TRUE)
+
+
+#VALUE=SCORE#vector.getScore(PCA)
+OUT=vector.gridValue(OUT,SCORE, SHOW=TRUE)
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+#OUT=vector.autoCenterNew(OUT,SHOW=TRUE)
+#OUT=vector.selectCenter(OUT)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 OUT=vector.buildGrid(VEC, N=40,SHOW=TRUE)
 OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
 VALUE=vector.getValue(PCA)
