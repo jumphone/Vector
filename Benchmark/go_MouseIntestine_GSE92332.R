@@ -54,7 +54,8 @@ SCORE=vector.getValue(PCA)
 VALUE=SCORE#vector.getScore(PCA)
 
 OUT=vector.gridValue(OUT,VALUE, SHOW=TRUE)
-OUT=vector.autoCenterNew(OUT,SHOW=TRUE)
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+#OUT=vector.autoCenterNew(OUT,SHOW=TRUE)
 #OUT=vector.selectCenter(OUT)
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
 
