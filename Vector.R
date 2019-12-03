@@ -248,11 +248,6 @@ vector.calScore <-function(OUT,PCA,SHOW=TRUE){
     colnames(CENTER_PCA)=colnames(PCA)
     ####################################
 
-    #CENTER_PCA_SCORE=apply(apply(abs(CENTER_PCA),2,rank),1,mean)#1-cor(t(CENTER_PCA_RANK),method='spearman')
-    #CENTER_PCA_DIST=CENTER_PCA_SCORE
-    
-    #as.matrix(dist(CENTER_PCA_SCORE))
-    #DIST[USED,USED]
     used_p_index=which(OUT$p1 %in% USED_NAME & OUT$p2 %in% USED_NAME)
     used_p1=OUT$p1[used_p_index]
     used_p2=OUT$p2[used_p_index]
@@ -283,21 +278,15 @@ vector.calScore <-function(OUT,PCA,SHOW=TRUE){
             while(t<=length(this_index)){
                 this_orig_index=c(this_orig_index, INDEX_LIST[[USED[this_index[t]]]])
                 t=t+1}
-            #this_step=rep(this_step, length(this_orig_index))
-            
+               
             if(length(this_orig_index)>1){
-                #this_tmp=#abs(cor(PCA[this_orig_index,],method='spearman'))
-                #this_step_score=median(dist(PCA.N[this_orig_index,]))#
                 this_tmp=abs(cor(PCA[this_orig_index,],method='spearman'))
-                #this_step_score=mean(this_tmp[which(this_tmp!=1)])
-                this_step_score=mean(this_tmp)
+                this_step_score = mean(unique(this_tmp))
                 step_score=c(step_score,this_step_score)
                 used_list=c(used_list, this_step)
                 }
             j=j+1}
         
-        
-        #plot(used_list, step_score)
         this_score=cor(used_list, step_score,method='spearman')#mean(this_mut_list)
         SSS=c(SSS,this_score)
         
@@ -350,7 +339,6 @@ vector.calScore <-function(OUT,PCA,SHOW=TRUE){
 
 
 
-
 vector.gridValue <- function(OUT, VALUE， SHOW=TRUE){
     OUT=OUT
     INDEX_LIST=OUT$INDEX_LIST
@@ -366,6 +354,11 @@ vector.gridValue <- function(OUT, VALUE， SHOW=TRUE){
     ############
     CENTER_VEC=OUT$CENTER_VEC
 
+    ##################
+    VALUE=VALUE
+    N.VALUE=(VALUE-min(VALUE))/(max(VALUE)-min(VALUE))
+    VALUE.COL=vector.vcol(N.VALUE, c(0,0.5,1),c('#009FFF','#FFF200','#ec2F4B'))
+    ####################
     
     #################################
     VALUE=CENTER_VALUE
@@ -382,9 +375,19 @@ vector.gridValue <- function(OUT, VALUE， SHOW=TRUE){
     ################    
     OUT$CENTER_VALUE=CENTER_VALUE     
     OUT$ORIG.CENTER.COL=COL
+    OUT$VALUE=VALUE
+    OUT$VALUE.COL=VALUE.COL
     return(OUT)
     }
 
+
+
+vector.nonCenter<-function(OUT){
+    OUT=OUT
+    OUT$SCORE=OUT$CENTER_VALUE[OUT$USED]
+    OUT$COL=OUT$VALUE.COL
+    return(OUT)
+    }
 
 
 vector.autoCenterNew <- function(OUT,  SHOW=TRUE){
