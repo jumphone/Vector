@@ -62,6 +62,33 @@ VEC=pbmc@reductions$umap@cell.embeddings
 rownames(VEC)=colnames(pbmc)
 PCA= pbmc@reductions$pca@cell.embeddings
 
+
+
+OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+
+SCORE=vector.getValue(PCA)
+VALUE=SCORE#vector.getScore(PCA)
+
+OUT=vector.gridValue(OUT,VALUE, SHOW=TRUE)
+
+OUT=vector.autoCenterNew(OUT,SHOW=TRUE)
+#OUT=vector.selectCenter(OUT)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 SCORE=apply(apply(abs(PCA),2,rank),1,mean)
 
 pbmc@meta.data$score=apply(apply(abs(PCA),2,rank),1,mean)
