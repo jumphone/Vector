@@ -238,11 +238,19 @@ vector.buildNet<-function(OUT,CUT=1,SHOW=TRUE,COL='grey70'){
     if(SHOW==TRUE){
         points(OUT$CENTER_VEC[USED,],col='red',pch=16, cex=0.5)
         }
+    USED_INDEX=c()
+    i=1
+    while(i<=length(USED)){
+        USED_INDEX=c(USED_INDEX,INDEX_LIST[[USED[i]]])
+        i=i+1}
+    
+    
     ###################
     OUT$GRAPH=g
     OUT$DIST=DIST
     OUT$USED=USED
     OUT$USED_NAME=USED_NAME
+    OUT$USED_INDEX=USED_INDEX
     return(OUT)
     ###########################
     }
@@ -364,9 +372,9 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
    
     ####################
     
-    
+    SELECT=which(DIST_COR==min(DIST_COR))[1]
     #SELECT=which(LENGTH==max(LENGTH))[1]
-    SELECT=which(DIST_COR * LENGTH == min( DIST_COR*LENGTH ) )[1]
+    #SELECT=which( rank(-DIST_COR) * rank(LENGTH) == max( rank(-DIST_COR) * rank(LENGTH)  ) )[1]
     
     SUMMIT=CLUSTER[[SELECT]]
     #print(SELECT)
@@ -378,7 +386,8 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
     i=1
     while(i<=length(USED_NAME)){
         this_name=USED_NAME[i]
-        this_dist=DIST[which(colnames(DIST)==this_name),which(rownames(DIST) %in% paste0('P',SUMMIT))]
+        this_dist=DIST[which(colnames(DIST)==this_name),
+                       which(rownames(DIST) %in% paste0('P',SUMMIT))]
         this_dist=this_dist
         #this_value=CENTER_VALUE[USED]
         this_score=min(this_dist)#sum(rank(-this_dist) * rank(this_value))
@@ -412,10 +421,10 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
     if(SHOW==TRUE){
         #plot(OUT$VEC, col=OUT$COL, pch=16, cex=0.5 )
         plot(OUT$VEC, col=OUT$ORIG.COL, pch=16, cex=0.5)
-        text(CENTER_VEC[HIGH,],labels=PCH,cex=1,pos=2)
-        points(CENTER_VEC[HIGH,], col='black',pch=16,cex=1)
-        points(CENTER_VEC[SUMMIT,], col='black',pch=16,cex=1.5)
-        points(CENTER_VEC[SUMMIT,], col='red',pch=16,cex=1)  
+        text(CENTER_VEC[HIGH,1], CENTER_VEC[HIGH,2],labels=PCH,cex=1,pos=2)
+        points(CENTER_VEC[HIGH,1], CENTER_VEC[HIGH,2], col='black',pch=16,cex=1)
+        points(CENTER_VEC[SUMMIT,1],CENTER_VEC[SUMMIT,2], col='black',pch=16,cex=1.5)
+        points(CENTER_VEC[SUMMIT,1],CENTER_VEC[SUMMIT,2], col='red',pch=16,cex=1)  
         }
     
     ######################
