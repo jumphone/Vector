@@ -38,6 +38,8 @@ vector.getValue <-function(PCA){
 
 
 
+
+
 vector.buildGrid <- function(VEC, N=20, SHOW=TRUE, COL='grey70'){
     #############
     VEC.E=VEC
