@@ -34,7 +34,7 @@ pbmc <- ScaleData(pbmc, features = all.genes)
 ##########################
 
 pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 5000)
-pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs = 50)
+pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs = 100)
 pbmc <- RunUMAP(pbmc, dims = 1:50)
 DimPlot(pbmc, reduction = "umap")
 saveRDS(pbmc,file='pbmc.RDS')
@@ -43,11 +43,16 @@ saveRDS(pbmc,file='pbmc.RDS')
 
 
 
+
+
 #############################
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 
 setwd('F:/Vector/data/MouseOligo_GSE75330')
+
 pbmc=readRDS('pbmc.RDS')
+
+
 
 FeaturePlot(pbmc,features=c('Pdgfra','Bmp4','Sema4f','Mog'))
 
@@ -60,23 +65,50 @@ DimPlot(pbmc, group.by='type',label = TRUE,
 
 VEC=pbmc@reductions$umap@cell.embeddings
 rownames(VEC)=colnames(pbmc)
-PCA= pbmc@reductions$pca@cell.embeddings
-
-DATA=as.matrix(pbmc@assays$RNA@data)
+PCA= pbmc@reductions$pca@cell.embeddings[,1:50]
 
 
-OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
+
+OUT=vector.buildGrid(VEC, N=15,SHOW=TRUE)
 OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
-
-SCORE=vector.calScore(OUT,PCA,SHOW=TRUE)
-#VALUE=SCORE#vector.getScore(PCA)
-
-OUT=vector.gridValue(OUT,SCORE, SHOW=TRUE)
+OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+OUT=vector.gridValue(OUT,SHOW=TRUE)
 OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
-#OUT=vector.autoCenterNew(OUT,SHOW=TRUE)
-#OUT=vector.selectCenter(OUT)
-#OUT=vector.nonCenter(OUT)
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
+
+
+
+
+
+
+
+
+
+OUT=vector.selectCenter(OUT)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 OUT=vector.nonCenter(OUT)
 
@@ -107,6 +139,75 @@ OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
 
 
 
+
+
+
+GTEX=read.table('F:/Vector/data/GTEx_Analysis_2017-06-05_v8_RNASeQCv1.1.9_gene_median_tpm.gct',header=TRUE,row.names=1,sep='\t')
+GTEX=GTEX[GTEX[,1] %in% names(which(table(GTEX[,1])==1)),]
+RN=GTEX[,1]
+GTEX=GTEX[,c(2:ncol(GTEX))]
+rownames(GTEX)=RN
+colnames(GTEX)=paste0('GTEX_',1:ncol(GTEX))
+
+
+saveRDS(GTEX,file='F:/Vector/data/GTEX.RDS')
+
+
+
+vector.scoreGTEX <- function(pbmc){
+    pbmc=pbmc
+    D1=as.matrix(pbmc@assays$RNA@data)
+    rownames(D1)=toupper(rownames(D1))
+    D1=D1[which(rownames(D1) %in% names(which(table(rownames(D1))==1))),]
+    colnames(D1)=paste0('D1_',colnames(D1))
+    DGTEX=.simple_combine(D1, GTEX)$combine
+    pbmc <- CreateSeuratObject(counts = DGTEX, project = "pbmc3k", min.cells = 0, min.features = 0)
+    pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
+    pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 5000)
+    pbmc <- ScaleData(pbmc, features = VariableFeatures(pbmc))
+    pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs = 50)
+    D1_INDEX=which(pbmc@meta.data$orig.ident=='D1')
+    D2_INDEX=which(pbmc@meta.data$orig.ident=='GTEX')
+    PCA=pbmc@reductions$pca@cell.embeddings
+    PCA.N=apply(PCA,2,rank)
+    MEAN=apply(PCA[D2_INDEX,],2,mean)
+    MEAN.MAT=matrix(rep(MEAN,each=nrow(PCA)),nrow=nrow(PCA))
+    SCORE=apply(apply(abs(PCA-MEAN.MAT),2,rank),1,mean)
+    SCORE=SCORE[D1_INDEX]
+    return(SCORE)
+    }
+
+
+
+
+
+
+SD=apply(PCA[D2_INDEX,],2,sd)
+
+SD.MAT=matrix(rep(SD,each=nrow(PCA)),nrow=nrow(PCA))
+
+PCA.N=(PCA-MEAN.MAT)/SD.MAT
+
+
+
+PCA.N=()
+
+SCORE=apply(apply(abs(PCA.N),2,rank),1,mean)
+
+
+SCORE1=apply(apply(abs(PCA),2,rank),1,mean)
+
+
+pbmc1=readRDS('pbmc.RDS')
+pbmc@meta.data$orig.ident=as.character(pbmc@meta.data$orig.ident)
+pbmc@meta.data$orig.ident[D1_INDEX]=as.character(pbmc1@meta.data$type)
+
+
+
+
+DimPlot(pbmc,reductions='pca',dims=c(1,2),group.by='orig.ident')
+
+PCA=pbmc@reductions$pca@cell.embeddings[1:ncol(D1),]
 
 
 
