@@ -240,7 +240,7 @@ vector.calScore <-function(OUT,PCA,SHOW=TRUE){
             }else{
             CENTER_PCA=cbind(CENTER_PCA, apply(PCA[this_index,],2,mean))
             }
-        print(i)
+        #print(i)
         i=i+1}
     ######################################
     CENTER_PCA=t(CENTER_PCA)
@@ -290,8 +290,7 @@ vector.calScore <-function(OUT,PCA,SHOW=TRUE){
         this_score=cor(used_list, step_score,method='spearman')#mean(this_mut_list)
         SSS=c(SSS,this_score)
         
-        if(i %%10==1){print(i)
-        print(length(USED))}
+        if(i %%10==1){print(paste0(i,'/',length(USED)))}
         i=i+1}
         
         
