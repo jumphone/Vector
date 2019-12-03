@@ -36,20 +36,6 @@ vector.vcol<-function(VALUE, CV, CN){
 
 
 
-vector.getValue <-function(OUT, PCA){
-    OUT=OUT
-    PCA=PCA
-    PCA.RC=apply(apply(PCA,2,rank), 2, .normX)
-    PCA.RC=abs(PCA.RC-0.5)   
-    VALUE=apply(PCA.RC,1,mean)
-    #####
-    OUT$VALUE=VALUE
-    OUT$PCA=PCA
-    OUT$PCA.RC=PCA.RC
-    return(OUT)
-    }
-
-
 
 vector.showValue<-function(OUT){
     VEC=OUT$VEC
@@ -60,6 +46,31 @@ vector.showValue<-function(OUT){
     plot(VEC,col=COL,pch=16,cex=0.5)
     return(OUT)
     }
+
+
+
+vector.getValue <-function(OUT, PCA, SHOW=TRUE){
+    OUT=OUT
+    PCA=PCA
+    SHOW=SHOW
+    ############
+    PCA.RC=apply(apply(PCA,2,rank), 2, .normX)
+    PCA.RC=abs(PCA.RC-0.5)   
+    VALUE=apply(PCA.RC,1,mean)
+    ###############
+    OUT$VALUE=VALUE
+    OUT$PCA=PCA
+    OUT$PCA.RC=PCA.RC
+    ###############
+    if(SHOW==TRUE){
+        vector.showValue(OUT)
+        }
+    #####
+    return(OUT)
+    }
+
+
+
 
 
 
@@ -232,10 +243,10 @@ vector.buildNet<-function(OUT,CUT=1,SHOW=TRUE,COL='grey70'){
 
 
 
-vector.gridValue <- function(OUT, VALUE， SHOW=TRUE){
+vector.gridValue <- function(OUT, SHOW=TRUE){
     OUT=OUT
     INDEX_LIST=OUT$INDEX_LIST
-    VALUE=VALUE
+    VALUE=OUT$VALUE
     SHOW=SHOW
     USED=OUT$USED
     ################
