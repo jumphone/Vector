@@ -343,17 +343,31 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
     CLUSTER=list()
     LENGTH=c()
     PCH=rep(1,length(HIGH))
+    DIST_COR=c()
+    
+    
     i=1
     while(i<=SUB_CPT$no){
         this_name=names(which(SUB_CPT$membership==i))
         this_index=as.numeric(str_replace(this_name,'P',''))  
         PCH[which(HIGH %in% this_index)]=as.character(i)
         LENGTH=c(LENGTH, length(this_index))
+        if(length(this_index)==1){
+            this_dist=DIST[USED, this_index]
+        }else{
+            this_dist=apply(DIST[USED, this_index],1,mean)
+        }
+        this_cor=cor(this_dist, CENTER_VALUE[USED],method='spearman')
+        DIST_COR=c(DIST_COR,this_cor)
         CLUSTER=c(CLUSTER,list(this_index))       
         i=i+1}
    
     ####################
-    SELECT=which(LENGTH==max(LENGTH))[1]
+    
+    
+    #SELECT=which(LENGTH==max(LENGTH))[1]
+    SELECT=which(DIST_COR * LENGTH == min( DIST_COR*LENGTH ) )[1]
+    
     SUMMIT=CLUSTER[[SELECT]]
     #print(SELECT)
     #plot(OUT$CENTER_VEC[USED,])
@@ -411,6 +425,7 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
     OUT$CLUSTER=CLUSTER
     OUT$LENGTH=LENGTH
     OUT$PCH=PCH
+    OUT$DIST_COR=DIST_COR
     ################################
     
     #######################
