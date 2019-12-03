@@ -10,6 +10,13 @@ library('igraph')
 ##################
 
 
+.normX <- function(x){
+    y=(x-min(x))/(max(x)-min(x))
+    return(y)
+    }
+
+
+
 vector.lcol <- function(TAG){
     TAG=as.factor(TAG)
     require(scales)
@@ -29,14 +36,23 @@ vector.vcol<-function(VALUE, CV, CN){
 
 
 
+
 vector.getValue <-function(PCA){
     PCA=PCA
-    r.pca=apply(abs(PCA), 2, rank)
+    r.pca=apply(apply(PCA,2,rank), 2, .normX)
+    r.pca=abs(r.pca-0.5)   
     mean.r.pca=apply(r.pca,1,mean)
     return(mean.r.pca)
     }
 
 
+
+vector.getValue_old <-function(PCA){
+    PCA=PCA
+    r.pca=apply(abs(PCA), 2, rank)
+    mean.r.pca=apply(r.pca,1,mean)
+    return(mean.r.pca)
+    }
 
 
 
@@ -207,11 +223,6 @@ vector.buildNet<-function(OUT,CUT=1,SHOW=TRUE,COL='grey70'){
 
 
 
-
-.normX <- function(x){
-    y=(x-min(x))/(max(x)-min(x))
-    return(y)
-    }
 
 
 
