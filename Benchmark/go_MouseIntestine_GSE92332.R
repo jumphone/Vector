@@ -9,14 +9,14 @@ setwd('F:/Vector/data/MouseIntestine_GSE92332/')
 DATA=readRDS('REF.RDS')
 saveRDS(DATA,file='DATA.RDS')
 
+
+
 ########################################
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 setwd('F:/Vector/data/MouseIntestine_GSE92332/')
 
 #
 DATA=read.table('GSE92332_AtlasFullLength_TPM.txt',header=TRUE,row.names=1)
-
-
 
 TMP=strsplit(colnames(DATA),'_')
 LABEL=c()
@@ -50,10 +50,9 @@ PCA= pbmc@reductions$pca@cell.embeddings
 OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
 OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
 
-SCORE=vector.getValue(PCA)
-VALUE=SCORE#vector.getScore(PCA)
-
-OUT=vector.gridValue(OUT,VALUE, SHOW=TRUE)
+SCORE=vector.calScore(OUT,PCA,SHOW=TRUE)
+#VALUE=SCORE#vector.getScore(PCA)
+OUT=vector.gridValue(OUT,SCORE, SHOW=TRUE)
 OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
 #OUT=vector.autoCenterNew(OUT,SHOW=TRUE)
 #OUT=vector.selectCenter(OUT)
