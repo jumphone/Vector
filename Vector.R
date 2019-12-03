@@ -237,6 +237,82 @@ vector.gridValue <- function(OUT, VALUE， SHOW=TRUE){
 
 
 
+vector.autoCenterNew <- function(OUT,  SHOW=TRUE){
+    #####################
+    OUT=OUT
+    SHOW=TRUE
+    #############################
+    DIST=OUT$DIST
+    USED=OUT$USED
+    USED_NAME=OUT$USED_NAME
+    CENTER_VALUE=OUT$CENTER_VALUE
+    CENTER_VEC=OUT$CENTER_VEC
+    CENTER_INDEX=OUT$CENTER_INDEX
+    INDEX_LIST=OUT$INDEX_LIST
+    ############
+    .tmp<-function(x){
+        return(cor(x,CENTER_VALUE[USED],method='spearman'))
+        }
+    DIST_USED.COR=apply(DIST[USED,USED],2,.tmp)
+    SUMMIT=USED[which(DIST_USED.COR==min(DIST_USED.COR))]
+    SUMMIT_NAME=paste0('P',SUMMIT)
+    SCORE=c()
+    i=1
+    while(i<=length(USED_NAME)){
+        this_name=USED_NAME[i]
+        this_dist=DIST[which(colnames(DIST)==this_name),which(rownames(DIST) %in% paste0('P',SUMMIT))]
+        this_dist=this_dist
+        #this_value=CENTER_VALUE[USED]
+        this_score=min(this_dist)#sum(rank(-this_dist) * rank(this_value))
+        #this_cor=cor(-this_value, this_dist)#,method='spearman')
+        SCORE=c(SCORE, this_score)
+        i=i+1}
+    SCORE=max(SCORE)-SCORE
+    VALUE=SCORE
+    #plot(OUT$VEC, col='grey70',pch=16)
+    N.VALUE=(VALUE-min(VALUE))/(max(VALUE)-min(VALUE))
+    COL=vector.vcol(N.VALUE, c(0,0.5,1),c('#009FFF','#FFF200','#ec2F4B'))
+    
+    
+    ###################################################
+    OUT$COL=rep('grey70',nrow(OUT$VEC))
+    OUT$ORIG.COL=rep('grey70',nrow(OUT$VEC))
+    OUT$P.SCORE=rep(0,nrow(OUT$VEC))
+    i=1
+    while(i<=length(USED)){
+        this_index=INDEX_LIST[[USED[i]]]
+        OUT$COL[this_index]=COL[i]
+        OUT$ORIG.COL[this_index]=OUT$ORIG.CENTER.COL[USED][i]
+        OUT$P.SCORE[this_index]=SCORE[i]
+        i=i+1
+        }
+    ###########
+    ######################
+    ############
+    OUT$SCORE=SCORE
+    OUT$SUMMIT=SUMMIT
+    ################################
+    if(SHOW==TRUE){
+        #plot(OUT$VEC, col=OUT$COL, pch=16, cex=0.5 )
+        plot(OUT$VEC, col=OUT$ORIG.COL, pch=16, cex=0.5)
+        #text(CENTER_VEC[HIGH,],labels=PCH,cex=1,pos=2)
+        #points(CENTER_VEC[HIGH,], col='black',pch=16,cex=1)
+        points(CENTER_VEC[SUMMIT,1], CENTER_VEC[SUMMIT,2], col='black',pch=16,cex=1.5)
+        points(CENTER_VEC[SUMMIT,1], CENTER_VEC[SUMMIT,2], col='red',pch=16,cex=1)  
+        }
+    #######################
+    return(OUT)
+
+
+     }
+
+
+
+
+
+
+
+
 
 vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
     #####################
