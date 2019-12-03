@@ -99,7 +99,7 @@ vector.buildGrid <- function(VEC, N=20, SHOW=TRUE, COL='grey70'){
     }
 
 
-vector.buildNet<-function(OUT,CUT=3,SHOW=TRUE,COL='grey70'){
+vector.buildNet<-function(OUT,CUT=1,SHOW=TRUE,COL='grey70'){
     library(igraph)
     OUT=OUT
     SHOW=SHOW
@@ -166,16 +166,140 @@ vector.buildNet<-function(OUT,CUT=3,SHOW=TRUE,COL='grey70'){
             #if(i%%10==1){print(paste0(i,'/',CNUM))}
             i=i+1
        }
+    ##########################    
     ##########################
+    
     library(igraph)
     OUT$p1=p1
     OUT$p2=p2
     NET = cbind(p1,p2) 
     g <- make_graph(t(NET),directed = FALSE)
+    ##########################
+    DIST=distances(g, v = V(g), to = V(g), mode = c("all"))
+    library(stringr)
+    DIST.NUM=as.numeric(str_replace(colnames(DIST),'P',''))
+    DIST=DIST[order(DIST.NUM),order(DIST.NUM)]
+    ###########################
+    library(igraph)
+    CPT=components(g)
+    MAXC=which(CPT$csize==max(CPT$csize))[1]
+    ############
+    library(stringr)
+    ###############
+    USED_NAME=names(which(CPT$membership==MAXC))
+    USED=as.numeric(str_replace(USED_NAME,'P',''))
+    
+    USED_NAME=USED_NAME[order(USED)]
+    USED=USED[order(USED)]
+    if(SHOW==TRUE){
+        points(OUT$CENTER_VEC[USED,],col='red',pch=16, cex=0.5)
+        }
+    ###################
     OUT$GRAPH=g
+    OUT$DIST=DIST
+    OUT$USED=USED
+    OUT$USED_NAME=USED_NAME
     return(OUT)
     ###########################
     }
+
+
+
+
+
+
+.normX <- function(x){
+    y=(x-min(x))/(max(x)-min(x))
+    return(y)
+    }
+
+
+
+
+
+
+
+vector.calScore <-function(OUT,PCA,SHOW=TRUE){
+    OUT=OUT
+    INDEX_LIST=OUT$INDEX_LIST
+    PCA=PCA
+    SHOW=SHOW
+    DIST=OUT$DIST
+    CENTER_VEC=OUT$CENTER_VEC
+    #CENTER_PCA=c()
+    USED=OUT$USED
+    ################
+    CENTER_PCA=c()
+    i=1
+    while(i<=length(INDEX_LIST)){
+        this_index=INDEX_LIST[[i]]
+        if(length(this_index)==1){
+            CENTER_PCA=cbind(CENTER_PCA, PCA[this_index,])
+            }else{
+            CENTER_PCA=cbind(CENTER_PCA, apply(PCA[this_index,],2,mean))
+            }
+        i=i+1}
+    ######################################
+    CENTER_PCA=t(CENTER_PCA)
+    rownames(CENTER_PCA)=colnames(DIST)
+    colnames(CENTER_PCA)=colnames(PCA)
+    ####################################
+    #CENTER_PCA_NORM=apply(CENTER_PCA,2,.normX)
+    #CENTER_PCA_DIST=as.matrix(dist(CENTER_PCA_NORM))#1-cor(t(CENTER_PCA),method='spearman')
+    #CENTER_PCA_RANK=apply(abs(CENTER_PCA),2,rank)
+    CENTER_PCA_SCORE=apply(apply(abs(CENTER_PCA),2,rank),1,mean)#1-cor(t(CENTER_PCA_RANK),method='spearman')
+    CENTER_PCA_DIST=as.matrix(dist(CENTER_PCA_SCORE))
+    #DIST[USED,USED]
+    COR=c()
+    i=1
+    while(i<=length(USED)){
+        this_pca_dist=CENTER_PCA_DIST[USED[i],USED]
+        this_net_dist=DIST[USED[i],USED]
+        this_cor=cor(this_pca_dist,this_net_dist)
+        COR=c(COR,this_cor)
+        i=i+1}
+    
+    SUMMIT=USED[which(COR==min(COR))[1]]
+   
+    
+    #################################
+    VALUE=CENTER_PCA_SCORE
+    N.VALUE=(VALUE-min(VALUE))/(max(VALUE)-min(VALUE))
+    COL=vector.vcol(N.VALUE, c(0,0.5,1),c('#009FFF','#FFF200','#ec2F4B'))
+    
+    ################
+    if(SHOW==TRUE){
+        
+        plot(OUT$VEC,col='grey70',pch=16,cex=0.5)
+        points(OUT$CENTER_VEC,col=COL,pch=16)
+        points(OUT$CENTER_VEC[USED,],col='black',pch=0, cex=1.5)
+        points(OUT$CENTER_VEC[SUMMIT,1],
+               OUT$CENTER_VEC[SUMMIT,2],col='red',pch=16, cex=1.5)
+        }
+    ################
+    SUMMIT_DIST=DIST[,SUMMIT]
+    SUMMIT_NEG_DIST=rep(0,length(SUMMIT_DIST))
+    SUMMIT_NEG_DIST[USED]=1-.normX( SUMMIT_DIST[USED])
+    
+    SCORE=rep(0,nrow(OUT$VEC))
+    i=1
+    while(i<=length(USED)){
+        this_index=INDEX_LIST[[USED[i]]]
+        SCORE[this_index]=SUMMIT_NEG_DIST[USED[i]]
+        i=i+1
+        }
+    
+    names(SCORE)=rownames(OUT$VEC)
+    #OUT$CENTER_VALUE=CENTER_VALUE     
+    #OUT$ORIG.CENTER.COL=COL
+    return(SCORE)
+
+    }
+
+
+
+
+
 
 
 
@@ -193,21 +317,6 @@ vector.gridValue <- function(OUT, VALUE， SHOW=TRUE){
         CENTER_VALUE=c(CENTER_VALUE,mean(VALUE[INDEX_LIST[[i]]]))
         i=i+1}
     ############
-    
-    
-    ###########################
-    library(igraph)
-    CPT=components(OUT$GRAPH)
-    MAXC=which(CPT$csize==max(CPT$csize))
-    ############
-    library(stringr)
-    ###############
-    USED_NAME=names(which(CPT$membership==MAXC))
-    USED=as.numeric(str_replace(USED_NAME,'P',''))
-    
-    #plot(OUT$CENTER_VEC[USED,])
-    DIST=distances(OUT$GRAPH, v = V(OUT$GRAPH), to = V(OUT$GRAPH), mode = c("all"))
-    #CENTER_VALUE=OUT$CENTER_VALUE
     CENTER_VEC=OUT$CENTER_VEC
 
     
@@ -223,15 +332,9 @@ vector.gridValue <- function(OUT, VALUE， SHOW=TRUE){
         points(OUT$CENTER_VEC,col=COL,pch=16)
         points(OUT$CENTER_VEC[USED,],col='black',pch=0, cex=1.5)
         }
-    ################
-    
-    OUT$CENTER_VALUE=CENTER_VALUE 
-    OUT$USED=USED
-    OUT$USED_NAME=USED_NAME
-    OUT$DIST=DIST
+    ################    
+    OUT$CENTER_VALUE=CENTER_VALUE     
     OUT$ORIG.CENTER.COL=COL
-    #OUT$USED_CENTER_VALUE=USED_CENTER_VALUE
-    #OUT$USED_CENTER_VEC=USED_CENTER_VEC
     return(OUT)
     }
 
