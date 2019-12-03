@@ -29,9 +29,11 @@ pbmc@meta.data$type=TYPE
 ##########################
 
 pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
-pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 2000)
 all.genes <- rownames(pbmc)
 pbmc <- ScaleData(pbmc, features = all.genes)
+##########################
+
+pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 5000)
 pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs = 50)
 pbmc <- RunUMAP(pbmc, dims = 1:50)
 DimPlot(pbmc, reduction = "umap")
@@ -47,10 +49,12 @@ source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 setwd('F:/Vector/data/MouseOligo_GSE75330')
 pbmc=readRDS('pbmc.RDS')
 
+FeaturePlot(pbmc,features=c('Pdgfra','Bmp4','Sema4f','Mog'))
+
+
 
 DimPlot(pbmc, group.by='type',label = TRUE,
         label.size=5,pt.size=0.5)+NoLegend()
-FeaturePlot(pbmc,features=c('Pdgfra','Bmp4','Sema4f','Mog'))
 
 ###################################
 
@@ -72,7 +76,7 @@ dev.off()
 
 VCOL=vector.vcol(pbmc@meta.data$score, c(min(pbmc@meta.data$score),
                  median(pbmc@meta.data$score), max(pbmc@meta.data$score)),
-                 c('blue3','grey80','red3'))
+                 c('blue3','grey95','red3'))
 pdf('f2.pdf',width=3.5,height=4)
 plot(VEC,col=VCOL,pch=16,cex=0.2)
 dev.off()
@@ -87,54 +91,6 @@ dev.off()
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-VlnPlot(pbmc,features = 'score',group.by='celltype')
-Idents(pbmc)=pbmc@meta.data$celltype
-VlnPlot(pbmc,features = 'score',#group.by='celltype',
-       sort=TRUE, 
-       pt.size=0.5,
-       idents=c('Differentiation-committed OPC',
-                         'OPC',
-                         'Mature Oligodendrocytes',
-                         'Myelin-forming Oligodendrocytes',
-                         'Newly-formed Oligodendrocytes'))+NoLegend()
-
-
-
-
-
-DimPlot(pbmc,label = TRUE,
-        label.size=5,pt.size=0.5)+NoLegend()
 
 
 
