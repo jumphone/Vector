@@ -10,15 +10,19 @@ library('igraph')
 ##################
 
 
-vector.SeuratPCA <-function(pbmc){
+vector.SeuratPCA <-function(pbmc, CUT=0.7){
     pbmc=pbmc
+    CUT=CUT
     #####################
     library(gmodels)
     D=as.matrix(pbmc@assays$RNA@scale.data)
     PCA.OUT=fast.prcomp(t(D), retx = TRUE, center = FALSE, scale. = FALSE, tol = NULL)
     EXP=(cumsum(PCA.OUT$sdev^2)/sum(PCA.OUT$sdev^2))
+    N=min(which( cumsum(PCA.OUT$sdev^2)/sum(PCA.OUT$sdev^2) > CUT))
     #####################
     PCA.OUT$EXP=EXP
+    PCA.OUT$CUT=CUT
+    PCA.OUT$N=N
     #N=min(which( cumsum(PCA.OUT$sdev^2)/sum(PCA.OUT$sdev^2) > 0.7))
     return(PCA.OUT)
     }
