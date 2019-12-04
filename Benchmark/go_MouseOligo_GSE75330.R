@@ -74,8 +74,8 @@ OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
 OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
 
 
-USED_PC=which(apply(PCA[OUT$USED_INDEX,],2,sd)/apply(PCA,2,sd) > 0.5)
-PCA= PCA[,USED_PC]
+#USED_PC=which(apply(PCA[OUT$USED_INDEX,],2,sd)/apply(PCA,2,sd) > 0.5)
+#PCA= PCA[,USED_PC]
 
 OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
 OUT=vector.gridValue(OUT,SHOW=TRUE)
