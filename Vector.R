@@ -112,7 +112,7 @@ vector.calValue <- function(PCA){
     PCA.RC=apply(apply(PCA,2,rank), 2, .normX)
     PCA.RC=abs(PCA.RC-0.5)   
     VALUE=apply(PCA.RC,1,mean)
-    VALUE=rank(VALUE)
+    #VALUE=rank(VALUE)
     ###########################
     OUT$VALUE=VALUE
     OUT$PCA.RC=PCA.RC
@@ -341,11 +341,14 @@ vector.gridValue <- function(OUT, SHOW=TRUE){
     VALUE=OUT$VALUE
     SHOW=SHOW
     USED=OUT$USED
+    ######################
+    
     ################
     CENTER_VALUE=c()
     i=1
     while(i<=length(INDEX_LIST)){
-        CENTER_VALUE=c(CENTER_VALUE,mean(VALUE[INDEX_LIST[[i]]]))
+        this_value = mean(VALUE[INDEX_LIST[[i]]])
+        CENTER_VALUE=c(CENTER_VALUE,this_value)
         i=i+1}
     ############
     CENTER_VEC=OUT$CENTER_VEC
@@ -393,23 +396,32 @@ vector.gridValueSmooth <- function(OUT, SHOW=TRUE){
     p2=OUT$p2
     p1_index=as.numeric(str_replace(p1,'P',''))
     p2_index=as.numeric(str_replace(p2,'P',''))
+    library(igraph)
+    #################
+    VBT=betweenness(OUT$GRAPH,v = V(OUT$GRAPH), directed=FALSE)
+    names(VBT)=as_ids(V(OUT$GRAPH))
+    W=rank(VBT)/length(VBT)#VBT/max(VBT)
+    W=W[order(as.numeric(str_replace(names(VBT),'P','')))]
     
+    #################
     NEW_CENTER_VALUE=CENTER_VALUE
     NB_VALUE_MEAN=c()
     NB_VALUE_MIN=c()
     NB_VALUE_MAX=c()
     NB_VALUE_SD=c()
     ###########################################
+    
     i=1
     while(i<=length(CENTER_VALUE)){
+        this_value=CENTER_VALUE[i]
         neighbor_p1_index=p1_index[which(p2_index==i)]
         neighbor_p2_index=p2_index[which(p1_index==i)]
         neighbor_index=unique(sort(c(neighbor_p1_index,neighbor_p2_index)))
         nb_value=CENTER_VALUE[neighbor_index]
         nb_value_sd=sd(nb_value)
-        nb_value_mean=mean(nb_value)
-        nb_value_min=min(nb_value)
-        nb_value_max=max(nb_value)
+        nb_value_mean=mean(c(nb_value,this_value))
+        nb_value_min=min(c(nb_value,this_value))
+        nb_value_max=max(c(nb_value,this_value))
         #this_value=CENTER_VALUE[i]
         #this_value= nb_value_mean + (this_value-nb_value_mean)
         NB_VALUE_MEAN=c(NB_VALUE_MEAN,nb_value_mean)
@@ -417,8 +429,9 @@ vector.gridValueSmooth <- function(OUT, SHOW=TRUE){
         NB_VALUE_MAX=c(NB_VALUE_MAX,nb_value_max)
         NB_VALUE_SD=c(NB_VALUE_SD,nb_value_sd)    
         i=i+1}
-    RATIO=rank(-NB_VALUE_SD)/length(NB_VALUE_SD)
-    NEW_CENTER_VALUE = (NB_VALUE_MAX-NB_VALUE_MIN)*RATIO+ NB_VALUE_MIN       
+    #RATIO=rank( (CENTER_VALUE-NB_VALUE_MEAN)  /  NB_VALUE_SD   )/length(NB_VALUE_SD) 
+    RATIO=rank(NB_VALUE_SD)/length(NB_VALUE_SD) 
+    NEW_CENTER_VALUE = NB_VALUE_MIN + (CENTER_VALUE-NB_VALUE_MIN) * RATIO#((NB_VALUE_MAX-NB_VALUE_MIN)*RATIO+ NB_VALUE_MIN ) #* W
     
     
     #####################################
