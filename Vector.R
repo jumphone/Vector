@@ -365,7 +365,7 @@ vector.gridValue <- function(OUT, SHOW=TRUE){
 
 
 
-vector.gridValueSmooth <- function(OUT,CUT=0.95 SHOW=TRUE){
+vector.gridValueSmooth <- function(OUT,CUT=0.95, SHOW=TRUE){
     OUT=OUT
     SHOW=SHOW
     CUT=CUT
@@ -439,6 +439,9 @@ vector.gridValueSmooth <- function(OUT,CUT=0.95 SHOW=TRUE){
     OUT$COR_HIST=COR_HIST
     return(OUT)
     }
+
+
+
 
 
 vector.nonCenter<-function(OUT){
