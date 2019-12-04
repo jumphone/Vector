@@ -276,7 +276,28 @@ vector.buildNet<-function(OUT,CUT=1,SHOW=TRUE,COL='grey70'){
             #if(i%%10==1){print(paste0(i,'/',CNUM))}
             i=i+1
        }
-    ##########################    
+    ##########################  
+    TAG=c()
+    i=1
+    while(i<=length(p1)){
+        this_p1=p1[i]
+        this_p2=p2[i]
+        sorted_pair=sort(c(this_p1,this_p2))
+        this_tag=paste0(sorted_pair[1],'|',sorted_pair[2])
+        TAG=c(TAG, this_tag)
+        i=i+1}
+    TAG=unique(TAG)
+    #NET=tapply(NET,1,sort)
+    p1=c()
+    p2=c()
+    i=1
+    while(i<=length(TAG)){
+        this_p1=strsplit(TAG[i],'\\|')[[1]][1]
+        this_p2=strsplit(TAG[i],'\\|')[[1]][2]
+        p1=c(p1,this_p1)
+        p2=c(p2,this_p2)
+        i=i+1}
+    
     ##########################
     
     library(igraph)
@@ -398,10 +419,11 @@ vector.gridValueSmooth <- function(OUT, SHOW=TRUE){
     p2_index=as.numeric(str_replace(p2,'P',''))
     library(igraph)
     #################
-    VBT=betweenness(OUT$GRAPH,v = V(OUT$GRAPH), directed=FALSE)
-    names(VBT)=as_ids(V(OUT$GRAPH))
-    W=rank(VBT)/length(VBT)#VBT/max(VBT)
-    W=W[order(as.numeric(str_replace(names(VBT),'P','')))]
+    DEG=degree(OUT$GRAPH,v = V(OUT$GRAPH))
+    names(DEG)=as_ids(V(OUT$GRAPH))
+    #W=DEG/max(DEG)
+    #W=rank(DEG)/length(DEG)
+    DEG=DEG[order(as.numeric(str_replace(names(DEG),'P','')))]
     
     #################
     NEW_CENTER_VALUE=CENTER_VALUE
@@ -409,6 +431,7 @@ vector.gridValueSmooth <- function(OUT, SHOW=TRUE){
     NB_VALUE_MIN=c()
     NB_VALUE_MAX=c()
     NB_VALUE_SD=c()
+    NB_DEG_MEAN=c()
     ###########################################
     
     i=1
@@ -427,11 +450,20 @@ vector.gridValueSmooth <- function(OUT, SHOW=TRUE){
         NB_VALUE_MEAN=c(NB_VALUE_MEAN,nb_value_mean)
         NB_VALUE_MIN=c(NB_VALUE_MIN,nb_value_min)
         NB_VALUE_MAX=c(NB_VALUE_MAX,nb_value_max)
-        NB_VALUE_SD=c(NB_VALUE_SD,nb_value_sd)    
+        NB_VALUE_SD=c(NB_VALUE_SD,nb_value_sd) 
+        NB_DEG_MEAN=c(NB_DEG_MEAN, mean(DEG[c(neighbor_index,i)]) )
         i=i+1}
-    #RATIO=rank( (CENTER_VALUE-NB_VALUE_MEAN)  /  NB_VALUE_SD   )/length(NB_VALUE_SD) 
-    RATIO=rank(NB_VALUE_SD)/length(NB_VALUE_SD) 
-    NEW_CENTER_VALUE = NB_VALUE_MIN + (CENTER_VALUE-NB_VALUE_MIN) * RATIO#((NB_VALUE_MAX-NB_VALUE_MIN)*RATIO+ NB_VALUE_MIN ) #* W
+    
+    #RATIO = NB_VALUE_SD / max(NB_VALUE_SD)
+    #W = NB_DEG_MEAN/max(NB_DEG_MEAN)
+    #V =  NB_VALUE_MEAN / max(NB_VALUE_MEAN)
+    
+    RATIO=rank(NB_VALUE_SD)
+    W=rank(NB_DEG_MEAN)
+    V=rank(NB_VALUE_MEAN)
+    
+    
+    NEW_CENTER_VALUE =  V *  W  * RATIO# + NB_VALUE_MIN  #* W
     
     
     #####################################
