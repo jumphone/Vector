@@ -12,17 +12,17 @@ pbmc=readRDS(file='pbmc.RDS')
 #DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.1,label=F)
 
 
-pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs = 150)
-pbmc <- RunUMAP(pbmc, dims = 1:150,n.components = 20)
+#pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs = 150)
+#pbmc <- RunUMAP(pbmc, dims = 1:150,n.components = 20)
 
-UMAP= pbmc@reductions$umap@cell.embeddings
+#UMAP= pbmc@reductions$umap@cell.embeddings
 
 DimPlot(pbmc, reduction = "umap")
 DimPlot(pbmc, group.by='type',label = TRUE)+NoLegend()
 #FeaturePlot(pbmc,features=c('Nes','Olig2','Pdgfra','Gfap','Gdnf'))
 #######################################
 
-pbmc=readRDS(file='pbmc.RDS')
+#pbmc=readRDS(file='pbmc.RDS')
 
 
 VEC=pbmc@reductions$umap@cell.embeddings
@@ -38,6 +38,8 @@ OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
 
 
 OUT=vector.gridValue(OUT,SHOW=TRUE)
+OUT=vector.gridValueSmooth(OUT,CUT=0.95,SHOW=TRUE)
+
 OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
 
@@ -47,7 +49,13 @@ OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
 
 
 
+OUT=vector.gridValue(OUT,SHOW=TRUE)
 
+
+
+
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
 
 
 
