@@ -65,19 +65,36 @@ DimPlot(pbmc, group.by='type',label = TRUE,
 
 VEC=pbmc@reductions$umap@cell.embeddings
 rownames(VEC)=colnames(pbmc)
-PCA= pbmc@reductions$pca@cell.embeddings[,1:50]
+PCA= pbmc@reductions$pca@cell.embeddings
 
 
 
-OUT=vector.buildGrid(VEC, N=15,SHOW=TRUE)
+
+OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
 OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+
+
+USED_PC=which(apply(PCA[OUT$USED_INDEX,],2,sd)/apply(PCA,2,sd) > 0.5)
+PCA= PCA[,USED_PC]
+
 OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
 OUT=vector.gridValue(OUT,SHOW=TRUE)
 OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
 
+eigs <- pbmc@reductions$pca@stdev^2
 
 
+
+N=200
+X=1:N
+fit=lm(eigs[1:N]~X+I(X^2))
+
+
+
+
+sum(eigs[1:N])/sum(VAR)
+(sum(eigs[1:N])+(eigs[N]+0)*(length(VariableFeatures(pbmc))-N)/2)
 
 
 
