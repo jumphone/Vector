@@ -9,6 +9,18 @@ library('stringr')
 library('igraph')
 ##################
 
+vector.RPPCA <- function(PCA){
+    PCA=PCA
+    ##################
+    R.PCA=apply(PCA,2,rank)
+    library(gmodels)
+    D=t(R.PCA)
+    PCA.OUT=fast.prcomp(t(D), retx = TRUE, center = FALSE, scale. = FALSE, tol = NULL)
+    PPCA=PCA.OUT$x
+    return(PPCA)
+    }
+
+
 
 
 vector.SeuratPCA <-function(pbmc, CUT=0.5){
