@@ -418,13 +418,14 @@ vector.gridValueSmooth <- function(OUT,CUT=0.95, SHOW=TRUE){
         ABS_DIFF[this_max_index]=target_abs_diff
         COR_HIST=c(COR_HIST, ABS_DIFF_COR)
         POS_NUM=length(which(ABS_DIFF>0))
-        if(TIME %% 100==1){
-            print(TIME)
-            print(ABS_DIFF_COR)}
+        #if(TIME %% 100==1){
+        #   print(TIME)
+        #   print(ABS_DIFF_COR)}
         #print(POS_NUM)
         TIME=TIME+1
     }
-    ###################################################   
+    ###################################################
+    print(TIME-1)
     print(ABS_DIFF_COR)
   
    # VALUE=CENTER_VALUE
