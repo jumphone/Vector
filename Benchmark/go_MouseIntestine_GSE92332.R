@@ -57,7 +57,7 @@ PCA= pbmc@reductions$pca@cell.embeddings#[,1:100]#[,50:100]#[,30:50]
 
 
 
-OUT=vector.buildGrid(VEC, N=20,SHOW=TRUE)
+OUT=vector.buildGrid(VEC, N=40,SHOW=TRUE)
 OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
 OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
 
@@ -110,7 +110,100 @@ TYPE=TYPE[used_cell_index]
 BATCH=BATCH[used_cell_index]
 ####################################################
 
-mybeer=BEER(DATA, BATCH, GNUM=30, PCNUM=150, ROUND=1, GN=5000, SEED=1, COMBAT=TRUE )
+mybeer=BEER(DATA, BATCH, GNUM=30, PCNUM=100, ROUND=1, GN=2000, SEED=1, COMBAT=TRUE, RMG=NULL) 
+
+#mybeer=readRDS(file='mybeer.RDS')
+PCUSE=mybeer$select
+COL=rep('black',length(mybeer$cor))
+COL[PCUSE]='red'
+plot(mybeer$cor,mybeer$lcor,pch=16,col=COL,
+    xlab='Rank Correlation',ylab='Linear Correlation',xlim=c(0,1),ylim=c(0,1))
+#####################
+pbmc <- mybeer$seurat
+PCUSE=mybeer$select   
+pbmc=BEER.combat(pbmc) #Adjust PCs using ComBat
+umap=BEER.bbknn(pbmc, PCUSE, NB=2, NT=10)
+
+
+
+pbmc@reductions$umap@cell.embeddings=umap
+DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.1,label=F)
+pbmc@meta.data$type=TYPE
+DimPlot(pbmc, reduction = "umap",group.by='type')
+
+
+
+
+
+pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs =200)
+
+VEC=pbmc@reductions$umap@cell.embeddings
+rownames(VEC)=colnames(pbmc)
+PCA= pbmc@reductions$pca@cell.embeddings
+
+
+OUT=vector.buildGrid(VEC, N=20,SHOW=TRUE)
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+
+
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+OUT=vector.autoCenter(OUT,UP=0.8,SHOW=TRUE)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+
+SCORE=vector.getValue(PCA)
+
+
+OUT=vector.gridValue(OUT,VALUE, SHOW=TRUE)
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+#OUT=vector.selectCenter(OUT)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
