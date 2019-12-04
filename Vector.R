@@ -521,8 +521,8 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
     #SELECT=which(DIST_COR==min(DIST_COR))[1]
     #SELECT=which(rank(DIST_MEAN)*rank(DIST_COR) == min(rank(DIST_MEAN)*rank(DIST_COR)) )
     
-    #TMP=10^LENGTH - DIST_COR
-    TMP=rank(-DIST_COR) * rank(LENGTH )
+    TMP=10^LENGTH - DIST_COR
+    #TMP=rank(-DIST_COR) * rank(LENGTH )
     SELECT=which(TMP==max(TMP))[1]
     #SELECT=which(LENGTH==max(LENGTH))[1]
     #SELECT=which( rank(-DIST_COR) * rank(LENGTH) == max( rank(-DIST_COR) * rank(LENGTH)  ) )[1]
