@@ -42,10 +42,10 @@ DimPlot(pbmc, reduction = "umap")
 
 
 
-PCA.OUT=vector.SeuratRandomPCA(pbmc)
+#PCA.OUT=vector.SeuratRandomPCA(pbmc)
 
 
-PCA=PCA.OUT$PRED.PCA[,1:PCA.OUT$N]
+#PCA=PCA.OUT$PRED.PCA[,1:PCA.OUT$N]
 
 
 FeaturePlot(pbmc,features='Lgr5')
@@ -53,11 +53,11 @@ FeaturePlot(pbmc,features='Lgr5')
 
 VEC=pbmc@reductions$umap@cell.embeddings
 rownames(VEC)=colnames(pbmc)
-#PCA= pbmc@reductions$pca@cell.embeddings#[,1:100]#[,50:100]#[,30:50]
+PCA= pbmc@reductions$pca@cell.embeddings#[,1:100]#[,50:100]#[,30:50]
 
 
 
-OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
+OUT=vector.buildGrid(VEC, N=20,SHOW=TRUE)
 OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
 OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
 
