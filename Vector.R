@@ -296,7 +296,7 @@ vector.gridValue <- function(OUT, SHOW=TRUE){
     ################    
     OUT$CENTER_VALUE=CENTER_VALUE     
     OUT$ORIG.CENTER.COL=COL
-    OUT$VALUE=VALUE
+    #OUT$VALUE=VALUE
     OUT$VALUE.COL=VALUE.COL
     return(OUT)
     }
