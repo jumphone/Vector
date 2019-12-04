@@ -57,9 +57,12 @@ PCA= pbmc@reductions$pca@cell.embeddings#[,1:50]#[,1:100]#[,50:100]#[,30:50]
 
 
 
+RPPCA=vector.RPPCA(PCA)
 OUT=vector.buildGrid(VEC, N=40,SHOW=TRUE)
 OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
-OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+OUT=vector.getValue(OUT, RPPCA[,1:20], SHOW=TRUE)
+
+
 
 
 OUT=vector.gridValue(OUT,SHOW=TRUE)
