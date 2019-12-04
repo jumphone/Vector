@@ -20,6 +20,15 @@ vector.SeuratPCA <-function(pbmc){
     return(PCA.OUT)
     }
 
+vector.SeuratSelect <- function(pbmc){
+    pbmc=pbmc
+    ##################
+    ppp=DimPlot(pbmc, reduction.use='umap', pt.size=0.5)
+    used.cells <- CellSelector(plot = ppp)
+    #################
+    return(used.cells)
+    }
+
 
 .normX <- function(x){
     y=(x-min(x))/(max(x)-min(x))
