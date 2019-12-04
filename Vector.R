@@ -37,16 +37,22 @@ vector.SeuratRandomPCA <-function(pbmc, RN=1000, CUT=0.5){
     library(gmodels)
     D=as.matrix(pbmc@assays$RNA@scale.data)
     R_INDEX=sample(1:ncol(D), RN, replace =TRUE)
-    D=D[,R_INDEX]
-    PCA.OUT=fast.prcomp(t(D), retx = TRUE, center = FALSE, scale. = FALSE, tol = NULL)
+    ###########################
+    
+    RD=D[,R_INDEX]
+    PCA.OUT=fast.prcomp(t(RD), retx = TRUE, center = FALSE, scale. = FALSE, tol = NULL)
     EXP=(cumsum(PCA.OUT$sdev^2)/sum(PCA.OUT$sdev^2))
     N=min(which( cumsum(PCA.OUT$sdev^2)/sum(PCA.OUT$sdev^2) > CUT))
+    
+    PRED.PCA=t(D) %*% PCA.OUT$rotation
+    
     #####################
     PCA.OUT$EXP=EXP
     PCA.OUT$CUT=CUT
     PCA.OUT$N=N
     PCA.OUT$RN=RN
     PCA.OUT$R_INDEX
+    PCA.OUT$PRED.PCA
     #N=min(which( cumsum(PCA.OUT$sdev^2)/sum(PCA.OUT$sdev^2) > 0.7))
     return(PCA.OUT)
     }
