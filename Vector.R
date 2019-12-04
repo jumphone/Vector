@@ -51,8 +51,8 @@ vector.SeuratRandomPCA <-function(pbmc, RN=1000, CUT=0.5){
     PCA.OUT$CUT=CUT
     PCA.OUT$N=N
     PCA.OUT$RN=RN
-    PCA.OUT$R_INDEX
-    PCA.OUT$PRED.PCA
+    PCA.OUT$R_INDEX=R_INDEX
+    PCA.OUT$PRED.PCA=PRED.PCA
     #N=min(which( cumsum(PCA.OUT$sdev^2)/sum(PCA.OUT$sdev^2) > 0.7))
     return(PCA.OUT)
     }
