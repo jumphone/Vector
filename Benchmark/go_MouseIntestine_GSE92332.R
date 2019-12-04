@@ -53,7 +53,7 @@ FeaturePlot(pbmc,features='Lgr5')
 
 VEC=pbmc@reductions$umap@cell.embeddings
 rownames(VEC)=colnames(pbmc)
-PCA= pbmc@reductions$pca@cell.embeddings#[,1:100]#[,50:100]#[,30:50]
+PCA= pbmc@reductions$pca@cell.embeddings[,1:50]#[,1:100]#[,50:100]#[,30:50]
 
 
 
@@ -63,6 +63,7 @@ OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
 
 
 OUT=vector.gridValue(OUT,SHOW=TRUE)
+OUT=vector.gridValueSmooth(OUT,CUT=0.98,SHOW=TRUE)
 OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
 
