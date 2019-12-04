@@ -120,8 +120,14 @@ plot(mybeer$cor,mybeer$lcor,pch=16,col=COL,
     xlab='Rank Correlation',ylab='Linear Correlation',xlim=c(0,1),ylim=c(0,1))
 #####################
 pbmc <- mybeer$seurat
+
+pbmc=RunTSNE(pbmc,)
+
+
+
 PCUSE=mybeer$select   
-pbmc=BEER.combat(pbmc) #Adjust PCs using ComBat
+
+#pbmc=BEER.combat(pbmc) #Adjust PCs using ComBat
 umap=BEER.bbknn(pbmc, PCUSE, NB=2, NT=10)
 
 
@@ -136,6 +142,7 @@ DimPlot(pbmc, reduction = "umap",group.by='type')
 
 
 pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs =200)
+
 
 VEC=pbmc@reductions$umap@cell.embeddings
 rownames(VEC)=colnames(pbmc)
