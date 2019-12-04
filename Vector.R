@@ -10,6 +10,7 @@ library('igraph')
 ##################
 
 
+
 vector.SeuratPCA <-function(pbmc, CUT=0.7){
     pbmc=pbmc
     CUT=CUT
@@ -26,6 +27,32 @@ vector.SeuratPCA <-function(pbmc, CUT=0.7){
     #N=min(which( cumsum(PCA.OUT$sdev^2)/sum(PCA.OUT$sdev^2) > 0.7))
     return(PCA.OUT)
     }
+
+
+vector.SeuratRandomPCA <-function(pbmc, RN=1000, CUT=0.7){
+    pbmc=pbmc
+    CUT=CUT
+    RN=RN
+    #####################
+    library(gmodels)
+    D=as.matrix(pbmc@assays$RNA@scale.data)
+    R_INDEX=sample(1:ncol(D), RN, replace =TRUE)
+    D=D[,R_INDEX]
+    PCA.OUT=fast.prcomp(t(D), retx = TRUE, center = FALSE, scale. = FALSE, tol = NULL)
+    EXP=(cumsum(PCA.OUT$sdev^2)/sum(PCA.OUT$sdev^2))
+    N=min(which( cumsum(PCA.OUT$sdev^2)/sum(PCA.OUT$sdev^2) > CUT))
+    #####################
+    PCA.OUT$EXP=EXP
+    PCA.OUT$CUT=CUT
+    PCA.OUT$N=N
+    PCA.OUT$RN=RN
+    PCA.OUT$R_INDEX
+    #N=min(which( cumsum(PCA.OUT$sdev^2)/sum(PCA.OUT$sdev^2) > 0.7))
+    return(PCA.OUT)
+    }
+
+
+
 
 vector.SeuratSelect <- function(pbmc){
     pbmc=pbmc
