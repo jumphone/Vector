@@ -363,6 +363,84 @@ vector.gridValue <- function(OUT, SHOW=TRUE){
 
 
 
+
+
+vector.gridValueSmooth <- function(OUT,CUT=0.95 SHOW=TRUE){
+    OUT=OUT
+    SHOW=SHOW
+    CUT=CUT
+    INDEX_LIST=OUT$INDEX_LIST
+    VALUE=OUT$VALUE
+    USED=OUT$USED
+    ################
+    CENTER_VALUE=OUT$CENTER_VALUE
+    CENTER_VEC=OUT$CENTER_VEC
+    NEW_CENTER_VALUE=CENTER_VALUE
+    p1=OUT$p1
+    p2=OUT$p2
+    DIFF=c()
+    i=1
+    while(i<=length(p1)){
+        this_p1=p1[i]
+        this_p2=p2[i]
+        this_p1_index=as.numeric(str_replace(this_p1,'P',''))
+        this_p2_index=as.numeric(str_replace(this_p2,'P',''))
+        this_p1_value=NEW_CENTER_VALUE[this_p1_index]
+        this_p2_value=NEW_CENTER_VALUE[this_p2_index]
+        this_diff=this_p1_value-this_p2_value
+        DIFF=c(DIFF, this_diff)
+        i=i+1}    
+    ABS_DIFF=abs(DIFF)
+    POS_NUM=length(which(ABS_DIFF>0))
+    ##############################################
+    ABS_DIFF_COR=cor(1:length(ABS_DIFF),sort(ABS_DIFF))
+    ############################
+    COR_HIST=c()
+    TIME=1
+    while(ABS_DIFF_COR<CUT){
+
+        target_abs_diff= mean(ABS_DIFF)
+        this_max_index=which(ABS_DIFF==max(ABS_DIFF))[1]
+        #this_median_index=which( abs(ABS_DIFF-median(ABS_DIFF))==min(abs(ABS_DIFF-median(ABS_DIFF))))[1]            
+    
+        ABS_DIFF_COR=cor(1:length(ABS_DIFF),sort(ABS_DIFF))
+
+        max_p1_index=as.numeric(str_replace( p1[this_max_index] ,'P',''))
+        max_p2_index=as.numeric(str_replace( p2[this_max_index] ,'P',''))
+        
+        if(NEW_CENTER_VALUE[max_p1_index] < NEW_CENTER_VALUE[max_p2_index]){
+            NEW_CENTER_VALUE[max_p2_index]=NEW_CENTER_VALUE[max_p1_index]+target_abs_diff/2 
+            NEW_CENTER_VALUE[max_p1_index]= max(0, NEW_CENTER_VALUE[max_p1_index]- mean(target_abs_diff)/2)
+            }else{
+            NEW_CENTER_VALUE[max_p1_index]=NEW_CENTER_VALUE[max_p2_index]+target_abs_diff
+            NEW_CENTER_VALUE[max_p2_index]= max(0, NEW_CENTER_VALUE[max_p2_index]- mean(target_abs_diff)/2)
+            }
+        ABS_DIFF[this_max_index]=target_abs_diff
+        COR_HIST=c(COR_HIST, ABS_DIFF_COR)
+        POS_NUM=length(which(ABS_DIFF>0))
+        if(TIME %% 100==1){
+            print(TIME)
+            print(ABS_DIFF_COR)}
+        #print(POS_NUM)
+        TIME=TIME+1
+    }
+    ###################################################   
+    print(ABS_DIFF_COR)
+  
+   # VALUE=CENTER_VALUE
+    N.VALUE=.normX(NEW_CENTER_VALUE)#(VALUE-min(VALUE))/(max(VALUE)-min(VALUE))
+    ORIG.CENTER.COL=vector.vcol(N.VALUE, c(0,0.5,1),c('#009FFF','#FFF200','#ec2F4B'))    
+    if(SHOW==TRUE){
+        plot(CENTER_VEC[,1],CENTER_VEC[,2], col=ORIG.CENTER.COL, pch=16, cex=1)
+        }
+    ###############
+    OUT$CENTER_VALUE=NEW_CENTER_VALUE     
+    OUT$ORIG.CENTER.COL=ORIG.CENTER.COL
+    OUT$COR_HIST=COR_HIST
+    return(OUT)
+    }
+
+
 vector.nonCenter<-function(OUT){
     OUT=OUT
     OUT$SCORE=OUT$CENTER_VALUE[OUT$USED]
