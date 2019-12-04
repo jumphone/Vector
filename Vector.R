@@ -112,6 +112,7 @@ vector.calValue <- function(PCA){
     PCA.RC=apply(apply(PCA,2,rank), 2, .normX)
     PCA.RC=abs(PCA.RC-0.5)   
     VALUE=apply(PCA.RC,1,mean)
+    VALUE=rank(VALUE)
     ###########################
     OUT$VALUE=VALUE
     OUT$PCA.RC=PCA.RC
@@ -137,6 +138,9 @@ vector.getValue <-function(OUT, PCA, SHOW=TRUE){
     #####
     return(OUT)
     }
+
+
+
 
 
 
@@ -201,6 +205,8 @@ vector.buildGrid <- function(VEC, N=20, SHOW=TRUE, COL='grey70'){
     ########################################
     return(OUT)
     }
+
+
 
 
 vector.buildNet<-function(OUT,CUT=1,SHOW=TRUE,COL='grey70'){
@@ -320,6 +326,15 @@ vector.buildNet<-function(OUT,CUT=1,SHOW=TRUE,COL='grey70'){
 
 
 
+
+
+
+
+
+
+
+
+
 vector.gridValue <- function(OUT, SHOW=TRUE){
     OUT=OUT
     INDEX_LIST=OUT$INDEX_LIST
@@ -365,137 +380,60 @@ vector.gridValue <- function(OUT, SHOW=TRUE){
 
 
 
-vector.gridValueSmooth <- function(OUT,CUT=0.95, SHOW=TRUE, MAX=2000){
+vector.gridValueSmooth <- function(OUT, SHOW=TRUE){
     OUT=OUT
     SHOW=SHOW
-    CUT=CUT
-    MAX=MAX
-    INDEX_LIST=OUT$INDEX_LIST
-    VALUE=OUT$VALUE
+    ####################################
+    #INDEX_LIST=OUT$INDEX_LIST
+    #VALUE=OUT$VALUE
     USED=OUT$USED
-    ################
     CENTER_VALUE=OUT$CENTER_VALUE
     CENTER_VEC=OUT$CENTER_VEC
     p1=OUT$p1
     p2=OUT$p2
+    p1_index=as.numeric(str_replace(p1,'P',''))
+    p2_index=as.numeric(str_replace(p2,'P',''))
+    
+    NEW_CENTER_VALUE=CENTER_VALUE
+    NB_VALUE_MEAN=c()
+    NB_VALUE_MIN=c()
+    NB_VALUE_MAX=c()
+    NB_VALUE_SD=c()
+    ###########################################
+    i=1
+    while(i<=length(CENTER_VALUE)){
+        neighbor_p1_index=p1_index[which(p2_index==i)]
+        neighbor_p2_index=p2_index[which(p1_index==i)]
+        neighbor_index=unique(sort(c(neighbor_p1_index,neighbor_p2_index)))
+        nb_value=CENTER_VALUE[neighbor_index]
+        nb_value_sd=sd(nb_value)
+        nb_value_mean=mean(nb_value)
+        nb_value_min=min(nb_value)
+        nb_value_max=max(nb_value)
+        #this_value=CENTER_VALUE[i]
+        #this_value= nb_value_mean + (this_value-nb_value_mean)
+        NB_VALUE_MEAN=c(NB_VALUE_MEAN,nb_value_mean)
+        NB_VALUE_MIN=c(NB_VALUE_MIN,nb_value_min)
+        NB_VALUE_MAX=c(NB_VALUE_MAX,nb_value_max)
+        NB_VALUE_SD=c(NB_VALUE_SD,nb_value_sd)    
+        i=i+1}
+    RATIO=rank(-NB_VALUE_SD)/length(NB_VALUE_SD)
+    NEW_CENTER_VALUE = (NB_VALUE_MAX-NB_VALUE_MIN)*RATIO+ NB_VALUE_MIN       
     
     
-    vector.smooth <- function(CUT, MAX, CENTER_VALUE, p1, p2){
-    
-        NEW_CENTER_VALUE=CENTER_VALUE
-    
-        DIFF=c()
-        i=1
-        while(i<=length(p1)){
-            this_p1=p1[i]
-            this_p2=p2[i]
-            this_p1_index=as.numeric(str_replace(this_p1,'P',''))
-            this_p2_index=as.numeric(str_replace(this_p2,'P',''))
-            this_p1_value=NEW_CENTER_VALUE[this_p1_index]
-            this_p2_value=NEW_CENTER_VALUE[this_p2_index]
-            this_diff=this_p1_value-this_p2_value
-            DIFF=c(DIFF, this_diff)
-            i=i+1}    
-        ABS_DIFF=abs(DIFF)
-        POS_NUM=length(which(ABS_DIFF>0))
-        ##############################################
-        ABS_DIFF_COR=cor(1:length(ABS_DIFF),sort(ABS_DIFF))
-        ############################
-        COR_HIST=c()
-        TIME=1
-        while(ABS_DIFF_COR < CUT & TIME <= MAX){
-            ################
-            target_abs_diff= median(ABS_DIFF)
-        
-            ###############################
-        
-            this_max_index=which(ABS_DIFF==max(ABS_DIFF))[1]
-
-            max_p1_index=as.numeric(str_replace( p1[this_max_index] ,'P',''))
-            max_p2_index=as.numeric(str_replace( p2[this_max_index] ,'P',''))
-
-            #################################
-            if(NEW_CENTER_VALUE[max_p1_index] < NEW_CENTER_VALUE[max_p2_index]){
-            
-                NEW_CENTER_VALUE[max_p2_index]=NEW_CENTER_VALUE[max_p1_index] + target_abs_diff/2          
-                NEW_CENTER_VALUE[max_p1_index] = max(0, NEW_CENTER_VALUE[max_p1_index]- target_abs_diff/2)
-
-                }else{
-            
-                NEW_CENTER_VALUE[max_p1_index]=NEW_CENTER_VALUE[max_p2_index] + target_abs_diff/2
-                NEW_CENTER_VALUE[max_p2_index]= max(0, NEW_CENTER_VALUE[max_p2_index]- target_abs_diff/2)
-
-                }
-        
-            ABS_DIFF[this_max_index]= target_abs_diff
-        
-            ##############################################
-         
-            ###############################
-            ABS_DIFF_COR=cor(1:length(ABS_DIFF),sort(ABS_DIFF))
-        
-            ############################
-            COR_HIST=c(COR_HIST, ABS_DIFF_COR)
-            POS_NUM=length(which(ABS_DIFF>0))
-            TIME=TIME+1
-        }
-        ###################################################
-    
-        NEW_CENTER_VALUE[which(!c(1:nrow(OUT$CENTER_VEC)) %in% USED)]=0
-        NEW_CENTER_VALUE[USED]=.normX(NEW_CENTER_VALUE[USED])
-        
-        N.VALUE=.normX(NEW_CENTER_VALUE)#(VALUE-min(VALUE))/(max(VALUE)-min(VALUE))
-        ORIG.CENTER.COL=vector.vcol(N.VALUE, c(0,0.5,1),c('#009FFF','#FFF200','#ec2F4B')) 
-        #####################
-        OUT=list()
-        OUT$NEW_CENTER_VALUE=NEW_CENTER_VALUE
-        OUT$TIME=TIME
-        OUT$COR_HIST=COR_HIST
-        OUT$ABS_DIFF_COR=ABS_DIFF_COR
-        OUT$ORIG.CENTER.COL=ORIG.CENTER.COL
-        return(OUT)
-        }        
-        
-    SMOOTH.OUT= vector.smooth(CUT, MAX, CENTER_VALUE, p1, p2)
-    ABS_DIFF_COR=SMOOTH.OUT$ABS_DIFF_COR
-    NEW_CENTER_VALUE=SMOOTH.OUT$NEW_CENTER_VALUE
-    ORIG.CENTER.COL=SMOOTH.OUT$ORIG.CENTER.COL
-    COR_HIST=SMOOTH.OUT$COR_HIST
-    TIME=SMOOTH.OUT$TIME
-    ###############
-        
-    ####################################
-    if(ABS_DIFF_COR<CUT){
-        
-        print('CUT is too high!!!')
-        print(paste0('Max CUT should be less than: ', max(COR_HIST) ) )
-        print(paste0('CUT is changed to: ',  max(COR_HIST) ) )
-        ##########################
-        SMOOTH.OUT= vector.smooth(max(COR_HIST), MAX, CENTER_VALUE, p1, p2)
-        ABS_DIFF_COR=SMOOTH.OUT$ABS_DIFF_COR
-        NEW_CENTER_VALUE=SMOOTH.OUT$NEW_CENTER_VALUE
-        ORIG.CENTER.COL=SMOOTH.OUT$ORIG.CENTER.COL
-        COR_HIST=SMOOTH.OUT$COR_HIST
-        TIME=SMOOTH.OUT$TIME
-        
-        }
-    
+    #####################################
+    N.VALUE=.normX(NEW_CENTER_VALUE)#(VALUE-min(VALUE))/(max(VALUE)-min(VALUE))
+    ORIG.CENTER.COL=vector.vcol(N.VALUE, c(0,0.5,1),c('#009FFF','#FFF200','#ec2F4B')) 
+    #######################
     if(SHOW==TRUE){
             plot(OUT$VEC[,1],OUT$VEC[,2],col='grey80',cex=0.5, pch=16)
             points(CENTER_VEC[USED,1],CENTER_VEC[USED,2], col=ORIG.CENTER.COL[USED], pch=15, cex=1.5)
-            }   
-    OUT$CENTER_VALUE=NEW_CENTER_VALUE
+            }
+    #################
+    OUT$CENTER_VALUE=NEW_CENTER_VALUE       
     OUT$ORIG.CENTER.COL=ORIG.CENTER.COL
-    OUT$COR_HIST=COR_HIST
     return(OUT)
     }
-
-
-
-
-
-
-
 
 
 
