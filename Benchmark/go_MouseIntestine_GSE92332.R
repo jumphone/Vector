@@ -40,45 +40,27 @@ pbmc <- RunUMAP(pbmc, dims = 1:100)
 DimPlot(pbmc, reduction = "umap")
 
 
+
+
+PCA.OUT=vector.SeuratRandomPCA(pbmc)
+
+
+PCA=PCA.OUT$PRED.PCA[,1:PCA.OUT$N]
+
+
 FeaturePlot(pbmc,features='Lgr5')
 
 
 VEC=pbmc@reductions$umap@cell.embeddings
 rownames(VEC)=colnames(pbmc)
-PCA= pbmc@reductions$pca@cell.embeddings#[,1:100]#[,50:100]#[,30:50]
-
-eigs <- apply(PCA,2,var)
+#PCA= pbmc@reductions$pca@cell.embeddings#[,1:100]#[,50:100]#[,30:50]
 
 
 
-
-
-library(gmodels)
-D=as.matrix(pbmc@assays$RNA@scale.data)
-PCA.OUT=fast.prcomp(t(D), retx = TRUE, center = FALSE, scale. = FALSE, tol = NULL)
-N=min(which( cumsum(PCA.OUT$sdev^2)/sum(PCA.OUT$sdev^2) > 0.7))
-
-
-
-
-#N=300
-
-#sum(eigs[1:N]) / (sum(eigs[1:N])+(eigs[N]+0)*(length(VariableFeatures(pbmc))-N)/2)
-
-PCA=PCA.OUT$x[,1:N]
-
-
-
-OUT=vector.buildGrid(VEC, N=40,SHOW=TRUE)
+OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
 OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
 OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
 
-#TMP=apply(PCA,2,cor,OUT$VALUE,method='spearman')
-#OUT$VALUE=OUT$VALUE-predict(lm(OUT$VALUE~apply(OUT$PCA,2,.normX)))
-
-
-#OUT$VALUE=predict(lm(OUT$VALUE~apply(OUT$PCA,2,.normX)))
-#OUT=vector.getValue(OUT, PCA[,USED], SHOW=TRUE)
 
 OUT=vector.gridValue(OUT,SHOW=TRUE)
 OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
