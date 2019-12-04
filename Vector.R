@@ -412,7 +412,7 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
     LENGTH=c()
     PCH=rep(1,length(HIGH))
     DIST_COR=c()
-    
+    DIST_MEAN=c()
     
     i=1
     while(i<=SUB_CPT$no){
@@ -427,12 +427,18 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
         }
         this_cor=cor(this_dist, CENTER_VALUE[USED],method='spearman')
         DIST_COR=c(DIST_COR,this_cor)
+        
+        
+        DIST_MEAN=c(DIST_MEAN, mean(this_dist))
         CLUSTER=c(CLUSTER,list(this_index))       
         i=i+1}
    
     ####################
     
     SELECT=which(DIST_COR==min(DIST_COR))[1]
+    #SELECT=which(rank(DIST_MEAN)*rank(DIST_COR) == min(rank(DIST_MEAN)*rank(DIST_COR)) )
+    
+    
     #SELECT=which(LENGTH==max(LENGTH))[1]
     #SELECT=which( rank(-DIST_COR) * rank(LENGTH) == max( rank(-DIST_COR) * rank(LENGTH)  ) )[1]
     
@@ -487,6 +493,8 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
         points(CENTER_VEC[SUMMIT,1],CENTER_VEC[SUMMIT,2], col='red',pch=16,cex=1)  
         }
     
+    
+    
     ######################
     ############
     OUT$SCORE=SCORE
@@ -495,6 +503,7 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
     OUT$LENGTH=LENGTH
     OUT$PCH=PCH
     OUT$DIST_COR=DIST_COR
+    #OUT$DIST_MEAN=DIST_MEAN
     ################################
     
     #######################
