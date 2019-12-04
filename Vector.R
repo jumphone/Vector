@@ -369,6 +369,7 @@ vector.gridValueSmooth <- function(OUT,CUT=0.95, SHOW=TRUE){
     OUT=OUT
     SHOW=SHOW
     CUT=CUT
+    MAX=10000
     INDEX_LIST=OUT$INDEX_LIST
     VALUE=OUT$VALUE
     USED=OUT$USED
@@ -397,7 +398,7 @@ vector.gridValueSmooth <- function(OUT,CUT=0.95, SHOW=TRUE){
     ############################
     COR_HIST=c()
     TIME=1
-    while(ABS_DIFF_COR<CUT){
+    while(ABS_DIFF_COR<CUT & TIME < MAX){
 
         target_abs_diff= mean(ABS_DIFF)
         this_max_index=which(ABS_DIFF==max(ABS_DIFF))[1]
