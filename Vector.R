@@ -435,10 +435,12 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
    
     ####################
     
-    SELECT=which(DIST_COR==min(DIST_COR))[1]
+    #SELECT=which(DIST_COR==min(DIST_COR))[1]
     #SELECT=which(rank(DIST_MEAN)*rank(DIST_COR) == min(rank(DIST_MEAN)*rank(DIST_COR)) )
     
+    TMP=10^LENGTH - DIST_COR
     
+    SELECT=which(TMP==max(TMP))[1]
     #SELECT=which(LENGTH==max(LENGTH))[1]
     #SELECT=which( rank(-DIST_COR) * rank(LENGTH) == max( rank(-DIST_COR) * rank(LENGTH)  ) )[1]
     
@@ -492,9 +494,7 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
         points(CENTER_VEC[SUMMIT,1],CENTER_VEC[SUMMIT,2], col='black',pch=16,cex=1.5)
         points(CENTER_VEC[SUMMIT,1],CENTER_VEC[SUMMIT,2], col='red',pch=16,cex=1)  
         }
-    
-    
-    
+ 
     ######################
     ############
     OUT$SCORE=SCORE
