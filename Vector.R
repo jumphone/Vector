@@ -16,6 +16,9 @@ vector.SeuratPCA <-function(pbmc){
     library(gmodels)
     D=as.matrix(pbmc@assays$RNA@scale.data)
     PCA.OUT=fast.prcomp(t(D), retx = TRUE, center = FALSE, scale. = FALSE, tol = NULL)
+    EXP=(cumsum(PCA.OUT$sdev^2)/sum(PCA.OUT$sdev^2))
+    #####################
+    PCA.OUT$EXP=EXP
     #N=min(which( cumsum(PCA.OUT$sdev^2)/sum(PCA.OUT$sdev^2) > 0.7))
     return(PCA.OUT)
     }
