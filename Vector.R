@@ -11,7 +11,7 @@ library('igraph')
 
 
 
-vector.SeuratPCA <-function(pbmc, CUT=0.7){
+vector.SeuratPCA <-function(pbmc, CUT=0.5){
     pbmc=pbmc
     CUT=CUT
     #####################
@@ -29,7 +29,7 @@ vector.SeuratPCA <-function(pbmc, CUT=0.7){
     }
 
 
-vector.SeuratRandomPCA <-function(pbmc, RN=1000, CUT=0.7){
+vector.SeuratRandomPCA <-function(pbmc, RN=1000, CUT=0.5){
     pbmc=pbmc
     CUT=CUT
     RN=RN
