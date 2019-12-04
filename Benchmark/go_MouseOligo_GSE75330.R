@@ -73,10 +73,14 @@ PCA= pbmc@reductions$pca@cell.embeddings
 OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
 OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
 
-OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+RPPCA=vector.RPPCA(PCA)
+
+OUT=vector.getValue(OUT, RPPCA[,1:50], SHOW=TRUE)
 OUT=vector.gridValue(OUT,SHOW=TRUE)
 
 OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+
+
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
 
 eigs <- pbmc@reductions$pca@stdev^2
