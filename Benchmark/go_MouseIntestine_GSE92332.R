@@ -394,3 +394,14 @@ dev.off()
 
 
 
+tiff(paste0("IMG/SMART.Marker.tiff"),width=5,height=5,units='in',res=600)
+p <- FeaturePlot(pbmc, features=c('Lgr5','Pcna','Muc2','Dclk1'),order=TRUE, combine = FALSE)
+
+for(i in 1:length(p)) {
+  p[[i]] <- p[[i]] + NoLegend() + NoAxes()
+}
+
+cowplot::plot_grid(plotlist = p)
+dev.off()
+
+
