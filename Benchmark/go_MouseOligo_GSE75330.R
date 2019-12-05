@@ -208,15 +208,57 @@ dev.off()
 
 
 
+###################################
+
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+setwd('F:/Vector/data/MouseOligo_GSE75330')
+pbmc=readRDS('pbmc.RDS')
 
 
 
 
+VEC=pbmc@reductions$umap@cell.embeddings
+rownames(VEC)=colnames(pbmc)
+PCA= pbmc@reductions$pca@cell.embeddings
 
 
 
 
+tiff(paste0("IMG/VECTOR.1.tiff"),width=4,height=4,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.buildGrid(VEC, N=20,SHOW=TRUE)
+dev.off()
+
+
+tiff(paste0("IMG/VECTOR.2.tiff"),width=4,height=4,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+dev.off()
+
+tiff(paste0("IMG/VECTOR.3.tiff"),width=4,height=4,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+dev.off()
+
+tiff(paste0("IMG/VECTOR.4.tiff"),width=4,height=4,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+dev.off()
+
+tiff(paste0("IMG/VECTOR.5.tiff"),width=4,height=4,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+dev.off()
+
+tiff(paste0("IMG/VECTOR.6.tiff"),width=4,height=4,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
+dev.off()
 
 
 
 
+tiff(paste0("IMG/Pdgfra.tiff"),width=3.5,height=3.2,units='in',res=600)
+par(mar=c(0,0,0,0))
+FeaturePlot(pbmc,features='Pdgfra',order = TRUE)
+dev.off()
