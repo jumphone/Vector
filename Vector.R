@@ -506,7 +506,7 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
 
 
 
-vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70'){
+vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',AL=80){
     ################
     OUT=OUT
     SHOW=SHOW
@@ -519,7 +519,7 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70'){
     USED_CENTER_VEC=OUT$CENTER_VEC[USED,]
     USED_DIST=OUT$DIST[which(rownames(DIST) %in% USED_NAME),which(rownames(DIST) %in% USED_NAME)]
     SCORE=OUT$SCORE
-    
+    AL=AL
 
     ###################
     .norm_one <-function(x,one=1){
@@ -554,8 +554,11 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70'){
         final_vec=t(vector_list_norm) %*% vector_weight
         
         this_p2_loc=c(this_p1_loc[1]+final_vec[1],this_p1_loc[2]+final_vec[2])
-        this_arrow_length=0.5*sqrt(sum(final_vec^2))
-        
+                
+        #plot(ALL_VEC,col=COL,pch=16,cex=0.2)
+        #this_arrow_length=0.1*sqrt(sum(final_vec^2))
+        #this_arrow_length=sqrt(sum(final_vec^2))#0.1 #* (1+sqrt(sum(final_vec^2)))
+        this_arrow_length=dev.size()[1]/AL *  sqrt(sum(final_vec^2))/one   # * sqrt(sum(final_vec^2)) #0.25
         if(SHOW==TRUE){
             arrows(x0=this_p1_loc[1],y0=this_p1_loc[2],
                    x1=this_p2_loc[1],y1=this_p2_loc[2],
