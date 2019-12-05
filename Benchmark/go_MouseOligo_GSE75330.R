@@ -82,7 +82,7 @@ DrawHeatMap<-function(TAG){
     o.mat=mat
     col_fun =colorRamp2(c(0,1), c('white','#000080'))
 
-    tiff(paste0("IMG/",TAG,".HEAT.tiff"),width=5,height=1,units='in',res=600)
+    tiff(paste0("IMG/",TAG,".HEAT.tiff"),width=4,height=1,units='in',res=600)
     draw(Heatmap(o.mat,row_title='',name="",cluster_rows=FALSE,
         cluster_columns=FALSE,show_heatmap_legend=FALSE，
 	show_column_dend = FALSE, show_row_dend = FALSE, 
@@ -121,7 +121,7 @@ TAG='Mature Oligodendrocytes'
 DrawHeatMap(TAG)
 
 
-
+########################################################
 
 
 
