@@ -114,13 +114,29 @@ DrawHeatMap<-function(TAG){
     }
 
 #########################################
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+setwd('F:/Vector/data/MouseIntestine_GSE92332/')
 
-
+pbmc=readRDS(file='pbmc.RDS')
 table(pbmc@meta.data$type)
 
 # EIM   EM   EP STEM   TA 
 # 809  822 1589 1267 1073 
 
+VEC=pbmc@reductions$umap@cell.embeddings
+rownames(VEC)=colnames(pbmc)
+PCA= pbmc@reductions$pca@cell.embeddings
+
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('Enterocyte.Immature.Distal',
+                                 'Enterocyte.Immature.Proximal') )]='EIM'
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('Enterocyte.Mature.Distal',
+                                 'Enterocyte.Mature.Proximal') )]='EM'
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('Enterocyte.Progenitor',
+                                  'Enterocyte.Progenitor.Early',
+                                  'Enterocyte.Progenitor.Late') )]='EP'
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('TA.Early',
+                                  'TA.G1','TA.G1') )]='TA'
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('Stem') )]='STEM'
 
 
 #########################################
@@ -184,6 +200,7 @@ while(N<=150){
     }
 
 tiff(paste0("IMG/STEM.SCORE.tiff"),width=3,height=3,units='in',res=600)
+
 par(mar=c(2,2,2,2))
 plot(MEAN,type='l',lwd=5,ylim=c(0,1))
 points(LW,type='l',pch=16,cex=1,col='grey70')
@@ -194,7 +211,7 @@ segments(x0=c(1:length(MEAN)),
 	 x1=c(1:length(MEAN)),
 	 y1=UP,
 	 col='grey70',lwd=0.5)
-
+abline(h=0.5,lty=2, lwd=3)
 points(MEAN,type='l',lwd=5)
 
 dev.off()
