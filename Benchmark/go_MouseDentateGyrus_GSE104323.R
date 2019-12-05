@@ -1,4 +1,24 @@
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 setwd('F:/AIM/MouseDentateGyrus_GSE104323/')
 
