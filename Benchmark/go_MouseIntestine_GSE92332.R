@@ -141,7 +141,44 @@ DrawHeatMap(TAG)
 
 
 
+########################################################
+# Draw rank curve
 
+
+TAG='STEM'
+R.PCA=apply(PCA,2,rank)
+THIS.INDEX=which(pbmc@meta.data$type==TAG)
+#THIS.R.PCA=R.PCA[THIS.INDEX,]
+
+MEAN=c()
+
+N=1
+PCA.RC=.normX(rank(PCA[,1]))
+PCA.RC=abs(PCA.RC-0.5)   
+VALUE=PCA.RC
+R.VALUE=rank(VALUE)/length(VALUE)
+this_mean=mean(R.VALUE[THIS.INDEX])
+
+MEAN=c(MEAN, this_mean)
+
+
+
+N=2
+while(N<=150){
+    PCA.RC=apply(apply(PCA[,1:N],2,rank), 2, .normX)
+    PCA.RC=abs(PCA.RC-0.5)   
+    VALUE=apply(PCA.RC,1,mean)
+    R.VALUE=rank(VALUE)/length(VALUE)
+    this_mean=mean(R.VALUE[THIS.INDEX])
+    MEAN=c(MEAN, this_mean)
+    print(N)
+    N=N+1
+    }
+
+tiff(paste0("IMG/STEM.SCORE.tiff"),width=3,height=3,units='in',res=600)
+par(mar=c(2,2,2,2))
+plot(MEAN,type='l',lwd=5,ylim=c(min(MEAN),1))
+dev.off()
 
 
 
