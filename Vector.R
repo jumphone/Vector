@@ -534,6 +534,9 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',AL=80){
         plot(ALL_VEC,col=COL,pch=16,cex=0.2)
         }
     
+    N.SCORE=.normX(SCORE)
+    SCORE.COL=vector.vcol(N.SCORE, c(0,0.5,1),c('#009FFF','#FFF200','#ec2F4B'))
+    
     A1_VEC=c()
     A2_VEC=c()
     A_LENGTH=c()
@@ -564,6 +567,7 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',AL=80){
                    x1=this_p2_loc[1],y1=this_p2_loc[2],
                    lwd=2, length=this_arrow_length,
                    col='black'
+                   #col=SCORE.COL[i]
                    )
             }
         A1_VEC=cbind(A1_VEC,this_p1_loc)
@@ -578,6 +582,7 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',AL=80){
     OUT$A1_VEC=A1_VEC
     OUT$A2_VEC=A2_VEC
     OUT$A_LENGTH=A_LENGTH
+    OUT$A_COL=SCORE.COL
     ###########
     return(OUT)
     }
@@ -702,6 +707,7 @@ vector.reDrawArrow <- function(OUT, COL='grey70'){
     A1_VEC=OUT$A1_VEC
     A2_VEC=OUT$A2_VEC
     A_LENGTH=OUT$A_LENGTH
+    #A_COL=OUT$A_COL
     VEC=OUT$VEC
     COL=COL
     #####################
@@ -712,6 +718,7 @@ vector.reDrawArrow <- function(OUT, COL='grey70'){
                    x1=A2_VEC[i,1],y1=A2_VEC[i,2],
                    lwd=2, length=A_LENGTH[i],
                    col='black'
+                   #col=A_COL[i]
                    )
         i=i+1
         }
