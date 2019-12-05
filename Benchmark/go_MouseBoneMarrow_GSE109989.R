@@ -27,6 +27,45 @@ pbmc=readRDS(file='pbmc.RDS')
 
 FeaturePlot(pbmc, features=c('Gfi1','Cenpa','Cd79a','Mpeg1','Cd47'))
 
+#######################
+VEC=pbmc@reductions$umap@cell.embeddings
+rownames(VEC)=colnames(pbmc)
+PCA= pbmc@reductions$pca@cell.embeddings
+
+
+
+
+OUT=vector.buildGrid(VEC, N=50,SHOW=TRUE)
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+
+
+OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+
+
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 VEC=pbmc@reductions$umap@cell.embeddings
 rownames(VEC)=colnames(pbmc)
 PCA= pbmc@reductions$pca@cell.embeddings
