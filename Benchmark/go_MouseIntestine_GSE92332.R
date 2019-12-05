@@ -232,6 +232,82 @@ points(MEAN,type='l',lwd=2)
 dev.off()
 
 
+#######################################################################################
+#Draw heatmap
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+setwd('F:/Vector/data/MouseIntestine_GSE92332/')
+
+pbmc=readRDS(file='pbmc.RDS')
+
+
+
+
+VEC=pbmc@reductions$umap@cell.embeddings
+rownames(VEC)=colnames(pbmc)
+PCA= pbmc@reductions$pca@cell.embeddings
+#######################
+
+
+
+tiff(paste0("IMG/VECTOR.1.tiff"),width=1,height=1,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.buildGrid(VEC, N=8,SHOW=TRUE)
+dev.off()
+
+
+tiff(paste0("IMG/VECTOR.2.tiff"),width=1,height=1,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+dev.off()
+
+tiff(paste0("IMG/VECTOR.3.tiff"),width=1,height=1,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+dev.off()
+
+tiff(paste0("IMG/VECTOR.4.tiff"),width=1,height=1,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+dev.off()
+
+tiff(paste0("IMG/VECTOR.5.tiff"),width=1,height=1,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.autoCenter(OUT,UP=0.65,SHOW=TRUE)
+dev.off()
+
+tiff(paste0("IMG/VECTOR.6.tiff"),width=1,height=1,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.drawArrow(OUT,P=1,SHOW=TRUE, COL=OUT$COL)
+dev.off()
+
+
+
+
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('Enterocyte.Immature.Distal',
+                                 'Enterocyte.Immature.Proximal') )]='EIM'
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('Enterocyte.Mature.Distal',
+                                 'Enterocyte.Mature.Proximal') )]='EM'
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('Enterocyte.Progenitor',
+                                  'Enterocyte.Progenitor.Early',
+                                  'Enterocyte.Progenitor.Late') )]='EP'
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('TA.Early',
+                                  'TA.G1','TA.G1') )]='TA'
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('Stem') )]='STEM'
+
+
+
+tiff(paste0("IMG/TYPE.tiff"),width=3,height=3,units='in',res=600)
+par(mar=c(0,0,0,0))
+DimPlot(pbmc,group.by='type',label=TRUE,pt.size=0.01)+NoLegend()
+dev.off()
+
+tiff(paste0("IMG/LGR5.tiff"),width=3.5,height=3.2,units='in',res=600)
+par(mar=c(0,0,0,0))
+FeaturePlot(pbmc,features='Lgr5',order = TRUE)
+dev.off()
+
+
+
 
 
 
@@ -276,26 +352,6 @@ dev.off()
 
 DATA=readRDS('REF.RDS')
 saveRDS(DATA,file='DATA.RDS')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
