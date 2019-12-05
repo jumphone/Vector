@@ -174,6 +174,7 @@ while(N<=150){
     }
 
 tiff(paste0("IMG/OPC.SCORE.tiff"),width=3,height=3,units='in',res=600)
+
 par(mar=c(2,2,2,2))
 plot(MEAN,type='l',lwd=5,ylim=c(0,1))
 points(LW,type='l',pch=16,cex=1,col='grey70')
@@ -184,7 +185,7 @@ segments(x0=c(1:length(MEAN)),
 	 x1=c(1:length(MEAN)),
 	 y1=UP,
 	 col='grey70',lwd=0.5)
-
+abline(h=0.5,lty=2, lwd=3)
 points(MEAN,type='l',lwd=5)
 
 dev.off()
