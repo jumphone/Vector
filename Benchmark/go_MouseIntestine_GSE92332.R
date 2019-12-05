@@ -3,11 +3,213 @@
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 setwd('F:/Vector/data/MouseIntestine_GSE92332/')
 
+#######################################
+# Load data of GSE92332
+DATA=readRDS('DATA.RDS')
+TYPE=readRDS('LABEL.RDS')
+pbmc <- CreateSeuratObject(counts = DATA, project = "pbmc3k", min.cells = 0, min.features = 0)
+BATCH=pbmc@meta.data$orig.ident
+
+
+used_cell_index=which( TYPE %in% c('Enterocyte.Immature.Distal',
+                                 'Enterocyte.Immature.Proximal',
+                                 'Enterocyte.Mature.Distal',
+                                  'Enterocyte.Mature.Proximal',
+                                  'Enterocyte.Progenitor',
+                                  'Enterocyte.Progenitor.Early',
+                                  'Enterocyte.Progenitor.Late',
+                                  'Stem',
+                                  'TA.Early',
+                                  'TA.G1','TA.G1'
+                                 ))
+
+
+###################################
+# Select enterocyte lineage cells
+
+DATA=DATA[,used_cell_index]
+TYPE=TYPE[used_cell_index]
+BATCH=BATCH[used_cell_index]
+####################################################
+
+
+mybeer=BEER(DATA, BATCH, GNUM=30, PCNUM=150, ROUND=1, GN=2000, SEED=1, COMBAT=TRUE, RMG=NULL) 
+saveRDS(mybeer, file='mybeer.RDS')
+
+#mybeer=readRDS(file='mybeer.RDS')
+pbmc <- mybeer$seurat
+PCUSE=mybeer$select   
+pbmc=BEER.combat(pbmc)
+umap=BEER.bbknn(pbmc, PCUSE, NB=3, NT=10)
+
+pbmc@reductions$umap@cell.embeddings=umap
+#DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.1,label=F)
+pbmc@meta.data$type=TYPE
+DimPlot(pbmc, reduction = "umap",group.by='type')
+saveRDS(pbmc, file='pbmc.RDS')
+saveRDS(PCUSE, file='PCUSE.RDS')
+
+#####################################################
+
+VEC=pbmc@reductions$umap@cell.embeddings
+rownames(VEC)=colnames(pbmc)
+PCA= pbmc@reductions$pca@cell.embeddings
+
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('Enterocyte.Immature.Distal',
+                                 'Enterocyte.Immature.Proximal') )]='EIM'
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('Enterocyte.Mature.Distal',
+                                 'Enterocyte.Mature.Proximal') )]='EM'
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('Enterocyte.Progenitor',
+                                  'Enterocyte.Progenitor.Early',
+                                  'Enterocyte.Progenitor.Late') )]='EP'
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('TA.Early',
+                                  'TA.G1','TA.G1') )]='TA'
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('Stem') )]='STEM'
+
+
+length(pbmc@meta.data$type)
+#[1] 5560
+
+table(pbmc@meta.data$type)
+
+# EIM   EM   EP STEM   TA 
+# 809  822 1589 1267 1073 
+
+###########################################
+#Draw heatmap
+
+DrawHeatMap<-function(TAG){
+    TAG=TAG
+    R.PCA=apply(PCA,2,rank)
+    THIS.INDEX=which(pbmc@meta.data$type == TAG)
+    THIS.R.PCA=R.PCA[THIS.INDEX,]
+
+
+    MAT=matrix(0,nrow=ncol(PCA),ncol=nrow(PCA))
+    rownames(MAT)=colnames(PCA)
+    colnames(MAT)=paste0('R_',1:nrow(PCA))
+    #print(MAT[1:3,1:3])
+	
+    i=1
+    while(i<=ncol(PCA)){
+        MAT[i,THIS.R.PCA[,i]]=1
+        i=i+1}
+
+    library('ComplexHeatmap')
+    library('circlize')
+    library('seriation')
+
+    mat=MAT
+    o.mat=mat
+    col_fun =colorRamp2(c(0,1), c('white','#000080'))
+
+    tiff(paste0("IMG/",TAG,".HEAT.tiff"),width=4,height=1,units='in',res=600)
+    draw(Heatmap(o.mat,row_title='',name="",cluster_rows=FALSE,
+        cluster_columns=FALSE,show_heatmap_legend=FALSE，
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=FALSE,
+	col=col_fun, border = TRUE
+	))
+    dev.off()
+    }
+
+#########################################
+
+
+table(pbmc@meta.data$type)
+
+# EIM   EM   EP STEM   TA 
+# 809  822 1589 1267 1073 
+
+
+
+#########################################
+TAG='STEM'
+DrawHeatMap(TAG)
+###################################################
+TAG='TA'
+DrawHeatMap(TAG)
+###################################################
+TAG='EP'
+DrawHeatMap(TAG)
+###################################################
+TAG='EIM'
+DrawHeatMap(TAG)
+###################################################
+TAG='EM'
+DrawHeatMap(TAG)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 DATA=readRDS('REF.RDS')
 saveRDS(DATA,file='DATA.RDS')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
