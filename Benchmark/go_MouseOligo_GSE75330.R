@@ -7,24 +7,27 @@ DATA=read.table(file='GSE75330_Marques_et_al_mol_counts2.tab',sep='\t',header=TR
 saveRDS(DATA,file='DATA.RDS')
 
 ###############################
-# Load cell type labels
-LABEL=readRDS('GSE75330.LABEL.RDS')
-
-############################################
-# Analyze data
+# Reload data and cell labels
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 setwd('F:/Vector/data/MouseOligo_GSE75330')
+LABEL=readRDS('GSE75330.LABEL.RDS')
 DATA=readRDS('DATA.RDS')
+
+############################################
+# Analyze all data
 pbmc <- CreateSeuratObject(counts = DATA, project = "pbmc3k", min.cells = 0, min.features = 0)
 pbmc@meta.data$type=readRDS('GSE75330.LABEL.RDS')
 pbmc@meta.data$type[which(pbmc@meta.data$type=='Differentiation-committed oligodendrocyte precursors')]='Differentiation-committed OPC'
 
 
-############################################
+###############################################
+# Remove non-oligodendrocyte lineage cells
 used_cell_index=which( pbmc@meta.data$type != 'PPR')
-
 DATA=DATA[,used_cell_index]
 TYPE=pbmc@meta.data$type[used_cell_index]
+
+############################################
+# Analyze oligodendrocyte lineage cells
 pbmc <- CreateSeuratObject(counts = DATA, project = "pbmc3k", min.cells = 0, min.features = 0)
 pbmc@meta.data$type=TYPE
 ##########################
@@ -35,7 +38,7 @@ pbmc <- ScaleData(pbmc, features = all.genes)
 ##########################
 
 pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 5000)
-pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs = 100)
+pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs = 300)
 pbmc <- RunUMAP(pbmc, dims = 1:50)
 DimPlot(pbmc, reduction = "umap")
 saveRDS(pbmc,file='pbmc.RDS')
