@@ -54,21 +54,11 @@ rownames(VEC)=colnames(pbmc)
 PCA= pbmc@reductions$pca@cell.embeddings
 
 
-
-table(TYPE)
-#Differentiation-committed OPC         Mature Oligodendrocytes 
-#                            140                            2748 
-#Myelin-forming Oligodendrocytes   Newly-formed Oligodendrocytes 
-#                           1283                             512 
-#                            OPC 
-#                            310 
-
-
 ###########################################
 #Draw heatmap
 
 DrawHeatMap<-function(TAG){
-
+    TAG=TAG
     R.PCA=apply(PCA,2,rank)
     THIS.INDEX=which(pbmc@meta.data$type==TAG)
     THIS.R.PCA=R.PCA[THIS.INDEX,]
@@ -77,9 +67,8 @@ DrawHeatMap<-function(TAG){
     MAT=matrix(0,nrow=ncol(PCA),ncol=nrow(PCA))
     rownames(MAT)=colnames(PCA)
     colnames(MAT)=paste0('R_',1:nrow(PCA))
-    MAT[1:3,1:3]
-
-
+    print(MAT[1:3,1:3])
+	
     i=1
     while(i<=ncol(PCA)){
         MAT[i,THIS.R.PCA[,i]]=1
@@ -93,28 +82,65 @@ DrawHeatMap<-function(TAG){
     o.mat=mat
     col_fun =colorRamp2(c(0,1), c('white','#000080'))
 
-    Heatmap(o.mat,row_title='',name="",cluster_rows=FALSE,
+    tiff(paste0("IMG/",TAG,".HEAT.tiff"),width=5,height=1,units='in',res=600)
+    draw(Heatmap(o.mat,row_title='',name="",cluster_rows=FALSE,
         cluster_columns=FALSE,show_heatmap_legend=FALSE，
 	show_column_dend = FALSE, show_row_dend = FALSE, 
 	show_column_names=FALSE, show_row_names=FALSE,
 	col=col_fun, border = TRUE
-	)
-    tiff(paste0("IMG/",TAG,".HEAT.tiff"),width=6,height=2,units='in',res=600)
-    Heatmap(o.mat,row_title='',name="",cluster_rows=FALSE,
-        cluster_columns=FALSE,show_heatmap_legend=FALSE，
-	show_column_dend = FALSE, show_row_dend = FALSE, 
-	show_column_names=FALSE, show_row_names=FALSE,
-	col=col_fun, border = TRUE
-	)
+	))
     dev.off()
     }
 
+#########################################
+length(TYPE)
+#4993
+
+table(TYPE)
+#Differentiation-committed OPC         Mature Oligodendrocytes 
+#                            140                            2748 
+#Myelin-forming Oligodendrocytes   Newly-formed Oligodendrocytes 
+#                           1283                             512 
+#                            OPC 
+#                            310 
 
 #########################################
 TAG='OPC'
 DrawHeatMap(TAG)
 ###################################################
 TAG='Differentiation-committed OPC'
+DrawHeatMap(TAG)
+###################################################
+TAG='Newly-formed Oligodendrocytes'
+DrawHeatMap(TAG)
+###################################################
+TAG='Myelin-forming Oligodendrocytes'
+DrawHeatMap(TAG)
+###################################################
+TAG='Mature Oligodendrocytes'
+DrawHeatMap(TAG)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 R.PCA=apply(PCA,2,rank)
 THIS.INDEX=which(pbmc@meta.data$type==TAG)
