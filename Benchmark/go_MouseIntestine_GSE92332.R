@@ -309,6 +309,107 @@ dev.off()
 
 
 
+##########################################################################################
+# Smart-seq
+
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+setwd('F:/Vector/data/MouseIntestine_GSE92332/')
+DATA=read.table('GSE92332_AtlasFullLength_TPM.txt',header=TRUE,row.names=1)
+
+TMP=strsplit(colnames(DATA),'_')
+LABEL=c()
+i=1
+while(i<=length(TMP)){
+    LABEL=c(LABEL,TMP[[i]][5])
+    i=i+1}
+
+TYPE=LABEL
+
+
+pbmc <- CreateSeuratObject(counts = DATA, project = "pbmc3k", min.cells = 0, min.features = 0)
+
+all.genes <- rownames(pbmc)
+pbmc <- ScaleData(pbmc, features = all.genes)
+
+pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 5000)
+
+pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs=150)
+pbmc <- RunUMAP(pbmc, dims = 1:150)
+DimPlot(pbmc, reduction = "umap")
+saveRDS(pbmc,file='pbmc_smart.RDS')
+
+#################################
+
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+setwd('F:/Vector/data/MouseIntestine_GSE92332/')
+pbmc=readRDS(file='pbmc_smart.RDS')
+
+
+VEC=pbmc@reductions$umap@cell.embeddings
+rownames(VEC)=colnames(pbmc)
+PCA= pbmc@reductions$pca@cell.embeddings
+
+
+
+
+tiff(paste0("IMG/SMART.VECTOR.1.tiff"),width=4,height=4,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
+dev.off()
+
+
+tiff(paste0("IMG/SMART.VECTOR.2.tiff"),width=4,height=4,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+dev.off()
+
+tiff(paste0("IMG/SMART.VECTOR.3.tiff"),width=4,height=4,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+dev.off()
+
+tiff(paste0("IMG/SMART.VECTOR.4.tiff"),width=4,height=4,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+dev.off()
+
+tiff(paste0("IMG/SMART.VECTOR.5.tiff"),width=4,height=4,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+dev.off()
+
+tiff(paste0("IMG/SMART.VECTOR.6.tiff"),width=4,height=4,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
+dev.off()
+
+
+
+
+tiff(paste0("IMG/SMART.Lgr5.tiff"),width=3.5,height=3.2,units='in',res=600)
+par(mar=c(0,0,0,0))
+FeaturePlot(pbmc,features='Lgr5',order = TRUE)
+dev.off()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
