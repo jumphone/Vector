@@ -14,7 +14,7 @@ LABEL=readRDS('GSE75330.LABEL.RDS')
 DATA=readRDS('DATA.RDS')
 
 ############################################
-# Analyze all data
+# Analyze all cells
 pbmc <- CreateSeuratObject(counts = DATA, project = "pbmc3k", min.cells = 0, min.features = 0)
 pbmc@meta.data$type=readRDS('GSE75330.LABEL.RDS')
 pbmc@meta.data$type[which(pbmc@meta.data$type=='Differentiation-committed oligodendrocyte precursors')]='Differentiation-committed OPC'
