@@ -262,3 +262,18 @@ tiff(paste0("IMG/Pdgfra.tiff"),width=3.5,height=3.2,units='in',res=600)
 par(mar=c(0,0,0,0))
 FeaturePlot(pbmc,features='Pdgfra',order = TRUE)
 dev.off()
+
+
+
+
+tiff(paste0("IMG/Marker.tiff"),width=5,height=5,units='in',res=600)
+p <- FeaturePlot(pbmc, features=c('Pdgfra','Bmp4','Erbb3','Mog'),order=TRUE, combine = FALSE)
+
+for(i in 1:length(p)) {
+  p[[i]] <- p[[i]] + NoLegend() + NoAxes()
+}
+
+cowplot::plot_grid(plotlist = p)
+dev.off()
+
+
