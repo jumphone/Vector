@@ -309,13 +309,6 @@ vector.buildNet<-function(OUT,CUT=1,SHOW=TRUE,COL='grey70'){
 
 
 
-
-
-
-
-
-
-
 vector.gridValue <- function(OUT, SHOW=TRUE){
     OUT=OUT
     INDEX_LIST=OUT$INDEX_LIST
@@ -506,7 +499,7 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
 
 
 
-vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',AL=80){
+vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',AL=70){
     ################
     OUT=OUT
     SHOW=SHOW
