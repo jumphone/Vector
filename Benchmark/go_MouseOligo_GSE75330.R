@@ -1,16 +1,17 @@
 
 setwd('F:/Vector/data/MouseOligo_GSE75330')
+
+##########################
+# Read raw data
 DATA=read.table(file='GSE75330_Marques_et_al_mol_counts2.tab',sep='\t',header=TRUE,row.names=1)
 saveRDS(DATA,file='DATA.RDS')
 
-L=readRDS('LABEL.RDS')
-L=L[(length(L)-5069+1):length(L)]
-library(stringr)
-L=str_replace(L, '_batch2', '')
-saveRDS(L,file='GSE75330.LABEL.RDS')
-
+###############################
+# Load cell type labels
+LABEL=readRDS('GSE75330.LABEL.RDS')
 
 ############################################
+# Analyze data
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 setwd('F:/Vector/data/MouseOligo_GSE75330')
 DATA=readRDS('DATA.RDS')
