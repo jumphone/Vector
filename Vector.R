@@ -522,9 +522,10 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70'){
     
 
     ###################
-    .norm_one <-function(x){
+    .norm_one <-function(x,one=1){
+        one=one
         if(var(x)!=0){
-            x=x/sqrt(sum(x^2))}
+            x=x/sqrt(sum(x^2)) * one }
         return(x)
         }
     
@@ -536,12 +537,13 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70'){
     A1_VEC=c()
     A2_VEC=c()
     A_LENGTH=c()
+    one=min(dist(USED_CENTER_VEC))
     i=1
     while(i<=length(USED)){
         this_p1_loc=USED_CENTER_VEC[i,]
         
         vector_list=cbind(USED_CENTER_VEC[,1]-this_p1_loc[1],USED_CENTER_VEC[,2]-this_p1_loc[2])
-        vector_list_norm=t(apply(vector_list,1,.norm_one))
+        vector_list_norm=t(apply(vector_list,1,.norm_one, one))
         
         vector_weight_1= DIV^-(rank(USED_DIST[i,])-1)  
         vector_weight_2= SCORE[i]-SCORE
@@ -552,7 +554,7 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70'){
         final_vec=t(vector_list_norm) %*% vector_weight
         
         this_p2_loc=c(this_p1_loc[1]+final_vec[1],this_p1_loc[2]+final_vec[2])
-        this_arrow_length=0.1*sqrt(sum(final_vec^2))
+        this_arrow_length=0.5*sqrt(sum(final_vec^2))
         
         if(SHOW==TRUE){
             arrows(x0=this_p1_loc[1],y0=this_p1_loc[2],
