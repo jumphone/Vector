@@ -141,6 +141,8 @@ THIS.INDEX=which(pbmc@meta.data$type==TAG)
 #THIS.R.PCA=R.PCA[THIS.INDEX,]
 
 MEAN=c()
+UP=c()
+LW=c()
 
 N=1
 PCA.RC=.normX(rank(PCA[,1]))
@@ -148,9 +150,11 @@ PCA.RC=abs(PCA.RC-0.5)
 VALUE=PCA.RC
 R.VALUE=rank(VALUE)/length(VALUE)
 this_mean=mean(R.VALUE[THIS.INDEX])
-
+this_up=quantile(R.VALUE[THIS.INDEX],0.975)
+this_lw=quantile(R.VALUE[THIS.INDEX],0.025)
 MEAN=c(MEAN, this_mean)
-
+UP=c(UP,this_up)
+LW=c(LW,this_lw)
 
 
 N=2
@@ -160,14 +164,29 @@ while(N<=150){
     VALUE=apply(PCA.RC,1,mean)
     R.VALUE=rank(VALUE)/length(VALUE)
     this_mean=mean(R.VALUE[THIS.INDEX])
+    this_up=quantile(R.VALUE[THIS.INDEX],0.975)
+    this_lw=quantile(R.VALUE[THIS.INDEX],0.025)
     MEAN=c(MEAN, this_mean)
+    UP=c(UP,this_up)
+    LW=c(LW,this_lw)
     print(N)
     N=N+1
     }
 
 tiff(paste0("IMG/OPC.SCORE.tiff"),width=3,height=3,units='in',res=600)
 par(mar=c(2,2,2,2))
-plot(MEAN,type='l',lwd=5,ylim=c(min(MEAN),1))
+plot(MEAN,type='l',lwd=5,ylim=c(0,1))
+points(LW,type='l',pch=16,cex=1,col='grey70')
+points(UP,type='l',pch=16,cex=1, col='grey70')
+
+segments(x0=c(1:length(MEAN)),
+	 y0=LW,
+	 x1=c(1:length(MEAN)),
+	 y1=UP,
+	 col='grey70',lwd=0.5)
+
+points(MEAN,type='l',lwd=5)
+
 dev.off()
 
 
