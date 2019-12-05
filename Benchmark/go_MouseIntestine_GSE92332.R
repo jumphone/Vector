@@ -77,47 +77,62 @@ table(pbmc@meta.data$type)
 
 ###########################################
 #Draw heatmap
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+setwd('F:/Vector/data/MouseIntestine_GSE92332/')
+
+pbmc=readRDS(file='pbmc.RDS')
+
 
 DrawHeatMap<-function(TAG){
     TAG=TAG
     R.PCA=apply(PCA,2,rank)
-    THIS.INDEX=which(pbmc@meta.data$type == TAG)
+    THIS.INDEX=which(pbmc@meta.data$type==TAG)
     THIS.R.PCA=R.PCA[THIS.INDEX,]
 
 
     MAT=matrix(0,nrow=ncol(PCA),ncol=nrow(PCA))
     rownames(MAT)=colnames(PCA)
     colnames(MAT)=paste0('R_',1:nrow(PCA))
-    #print(MAT[1:3,1:3])
+    print(MAT[1:3,1:3])
 	
     i=1
     while(i<=ncol(PCA)){
         MAT[i,THIS.R.PCA[,i]]=1
         i=i+1}
-
+    #######################
+    #MAT=t(apply(t(MAT),2,smooth))
+    ########################
+	
     library('ComplexHeatmap')
     library('circlize')
     library('seriation')
-
+    
     mat=MAT
     o.mat=mat
     col_fun =colorRamp2(c(0,1), c('white','#000080'))
-
+     
+    LLL=apply(mat,2,mean)
+    ha = HeatmapAnnotation(
+	M = anno_lines(LLL, add_points = FALSE,smooth=FALSE,
+		       gp = gpar(col = 'grey50',lwd=0.5),
+		      axis=FALSE),
+	name=c(''),
+	show_annotation_name=FALSE
+        )	
+	
     tiff(paste0("IMG/",TAG,".HEAT.tiff"),width=4,height=1,units='in',res=600)
     draw(Heatmap(o.mat,row_title='',name="",cluster_rows=FALSE,
         cluster_columns=FALSE,show_heatmap_legend=FALSE，
 	show_column_dend = FALSE, show_row_dend = FALSE, 
 	show_column_names=FALSE, show_row_names=FALSE,
-	col=col_fun, border = TRUE
+	col=col_fun, border = TRUE,
+        top_annotation = ha
 	))
     dev.off()
     }
 
 #########################################
-source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
-setwd('F:/Vector/data/MouseIntestine_GSE92332/')
 
-pbmc=readRDS(file='pbmc.RDS')
 table(pbmc@meta.data$type)
 
 # EIM   EM   EP STEM   TA 
