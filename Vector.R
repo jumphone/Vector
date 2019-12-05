@@ -223,6 +223,7 @@ vector.buildGrid <- function(VEC, N=20, SHOW=TRUE, COL='grey70'){
 
 vector.buildNet<-function(OUT,CUT=1,SHOW=TRUE,COL='grey70'){
     library(igraph)
+    library(stringr)
     OUT=OUT
     SHOW=SHOW
     CUT=CUT
@@ -253,7 +254,7 @@ vector.buildNet<-function(OUT,CUT=1,SHOW=TRUE,COL='grey70'){
     #############################
     CNUM=length(CENTER_LIST)
     i=1
-    while(i<CNUM){
+    while(i<=CNUM){
     
         this_p1_loc=CENTER_LIST[[i]] 
         this_p1=paste0('P',as.character(i))
@@ -289,6 +290,9 @@ vector.buildNet<-function(OUT,CUT=1,SHOW=TRUE,COL='grey70'){
             i=i+1
        }
     ##########################  
+    
+    
+    
     TAG=c()
     i=1
     while(i<=length(p1)){
@@ -317,6 +321,10 @@ vector.buildNet<-function(OUT,CUT=1,SHOW=TRUE,COL='grey70'){
     OUT$p2=p2
     NET = cbind(p1,p2) 
     g <- make_graph(t(NET),directed = FALSE)
+    ALLNAME=paste0('P',1:CNUM)
+    ADD=ALLNAME[which(! ALLNAME %in% as_ids(V(g)))]
+    g <- g + ADD
+    
     ##########################
     DIST=distances(g, v = V(g), to = V(g), mode = c("all"))
     library(stringr)
@@ -477,7 +485,7 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
         DIST_MEAN=c(DIST_MEAN, mean(this_dist))
         CLUSTER=c(CLUSTER,list(this_index))       
         i=i+1}
-   
+    
     ####################
     
     #SELECT=which(DIST_COR==min(DIST_COR))[1]
