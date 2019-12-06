@@ -1,2 +1,2 @@
 # Vector
-Developing vector inference on the map of single cells
+Vector inference on the map of single cells
