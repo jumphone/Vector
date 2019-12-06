@@ -206,6 +206,8 @@ OUT=vector.reDrawArrow(OUT, COL=OUT$COL)
 OUT=vector.selectRegion(OUT)
 
 
+saveRDS(OUT,'Select.OUT.RDS')
+
 
 SELECT_SCORE=OUT$SELECT_SCORE
 SELECT_INDEX=OUT$SELECT_INDEX
@@ -227,32 +229,51 @@ while(i<=nrow(EXP)){
 names(COR)=rownames(EXP)
 
 head(sort(COR),n=10)
-# Tubb4a      Aplp1      Stmn4       Plp1      Cryab     Slain1        App       Qdpr        Mbp 
-#-0.8363392 -0.8004671 -0.7275945 -0.7040098 -0.6983233 -0.6754448 -0.6709485 -0.6688818 -0.6659579 
-#     Cntn2 
-#-0.6651465
+#Tubb4a      Aplp1      Stmn4      Cryab       Plp1     Slain1      Cntn2        App 
+#-0.8320211 -0.7922493 -0.7217838 -0.6819902 -0.6730290 -0.6663356 -0.6648373 -0.6537134 
+#      Ank3      Pacs2 
+#-0.6534026 -0.6464254
 
 
 tail(sort(COR),n=10)
-#Rpl22l1      Sox9       Ran     Hmgb3     Hmgb2     Fabp7     H2afv    Slc1a3     Hmgn1     H2afz 
-#0.5529178 0.5648042 0.5658522 0.5674023 0.6034539 0.6041718 0.6155595 0.6251123 0.6455395 0.7021575 
+#Rpl22l1     Hmgb3       Ran     Fabp7      Sox9     Hmgb2     H2afv    Slc1a3     Hmgn1 
+#0.5718373 0.5811396 0.5818859 0.5865809 0.5908710 0.6133952 0.6231035 0.6544590 0.6549967 
+#    H2afz 
+#0.7163760 
+
 
 ORDER=order(-SELECT_SCORE)
+
+
 SOX9=EXP[which(rownames(EXP)=='Sox9'),ORDER]
 INDEX=1:length(SOX9)
-USED=which(SOX9>0)
-
-INDEX=INDEX[USED]
-SOX9=SOX9[USED]
-
-
-SOX9.fit=lm(SOX9~INDEX)
+SOX9.USED=which(SOX9>0)
+SOX9.INDEX=INDEX[SOX9.USED]
+SOX9=SOX9[SOX9.USED]
+SOX9.fit=lm(SOX9~SOX9.INDEX)
 
 
-tiff(paste0("IMG/SOX9.tiff"),width=2,height=2,units='in',res=600)
+
+TUBB=EXP[which(rownames(EXP)=='Tubb4a'),ORDER]
+TUBB.INDEX=1:length(TUBB)
+TUBB.USED=which(TUBB>0)
+TUBB.INDEX=INDEX[TUBB.USED]
+TUBB=TUBB[TUBB.USED]
+TUBB.fit=lm(TUBB~TUBB.INDEX)
+
+
+
+
+
+tiff(paste0("IMG/SOX9_TUBB.tiff"),width=2,height=2,units='in',res=600)
+
 par(mar=c(0,0,0,0))
-plot(INDEX, SOX9, pch=16,col='grey70',cex=0.5)
-abline(SOX9.fit,col='red',lwd=2)
+par(mfrow=c(2,1))
+plot(SOX9.INDEX, SOX9, pch=16,col=OUT$COL[OUT$SELECT_INDEX[ORDER][SOX9.INDEX]],cex=0.5,axes=FALSE,frame.plot=FALSE)
+abline(SOX9.fit,col='black',lwd=2)
+plot(TUBB.INDEX, TUBB, pch=16,col=OUT$COL[OUT$SELECT_INDEX[ORDER][TUBB.INDEX]],cex=0.5,axes=FALSE,frame.plot=FALSE)
+abline(TUBB.fit,col='black',lwd=2)
+
 dev.off()
 
 
