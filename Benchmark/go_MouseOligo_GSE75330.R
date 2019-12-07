@@ -256,9 +256,9 @@ LW=c(LW,this_lw)
 
 N=2
 while(N<=nrow(PCA)){
-    PCA.RC=apply(apply(PCA[,1:N],2,rank), 2, .normX)
-    PCA.RC=abs(PCA.RC-0.5)   
-    VALUE=apply(PCA.RC,1,mean)
+    PCA.RC=.normX(rank(PCA[,N]))
+    PCA.RC=abs(PCA.RC-0.5)      
+    VALUE = VALUE+PCA.RC
     R.VALUE=rank(VALUE)/length(VALUE)
     this_mean=median(R.VALUE[THIS.INDEX])
     this_up=quantile(R.VALUE[THIS.INDEX],0.975)
@@ -270,20 +270,29 @@ while(N<=nrow(PCA)){
     N=N+1
     }
 
+
 tiff(paste0("IMG/OPC.SCORE.500.tiff"),width=3,height=3,units='in',res=600)
 
-par(mar=c(2,2,2,2))
-plot(MEAN,type='l',lwd=1,ylim=c(0,1))
-points(LW,type='l',pch=16,cex=1,col='grey70')
-points(UP,type='l',pch=16,cex=1, col='grey70')
 
-segments(x0=c(1:length(MEAN)),
+INDEX=c(1:ncol(PCA))
+INDEX=log(INDEX,2)
+par(mar=c(2,2,2,2))
+plot( INDEX,MEAN,type='l',lwd=1,ylim=c(0,1))
+points( INDEX, LW,type='p',pch=16,cex=0.5,col='grey70')
+points( INDEX, UP,type='p',pch=16,cex=0.5, col='grey70')
+
+segments(x0=INDEX,
 	 y0=LW,
-	 x1=c(1:length(MEAN)),
+	 x1=INDEX,
 	 y1=UP,
 	 col='grey70',lwd=0.5)
 abline(h=0.5,lty=2, lwd=2)
-points(MEAN,type='l',lwd=2)
+#abline(v=INDEX[150],lty=2, lwd=2,col='blue3')
+points(INDEX,MEAN,type='l',lwd=2)
+
+EXP.VAR=cumsum(PCA.OUT$sdev^2)/sum(PCA.OUT$sdev^2)
+points( INDEX, EXP.VAR,type='l',pch=16, lwd=2, col='red3')
+
 
 dev.off()
 
