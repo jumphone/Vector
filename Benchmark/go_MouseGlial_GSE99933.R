@@ -81,7 +81,7 @@ dev.off()
 
 tiff(paste0("IMG/VECTOR.6.tiff"),width=4,height=4,units='in',res=600)
 par(mar=c(0,0,0,0))
-OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL,AL=90)
 dev.off()
 
 
@@ -93,5 +93,105 @@ p <- FeaturePlot(pbmc, features=c('Sox10','Htr3a','Th','Cartpt'),order=TRUE, com
 for(i in 1:length(p)) {
   p[[i]] <- p[[i]] + NoLegend() + NoAxes()
 }
+
+cowplot::plot_grid(plotlist = p)
 dev.off()
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',AL=70){
+    ################
+    OUT=OUT
+    SHOW=SHOW
+    P=P
+    COL=COL
+    USED=OUT$USED
+    DIST=OUT$DIST
+    ALL_VEC=OUT$VEC
+    USED_NAME=OUT$USED_NAME
+    USED_CENTER_VEC=OUT$CENTER_VEC[USED,]
+    USED_DIST=OUT$DIST[which(rownames(DIST) %in% USED_NAME),which(rownames(DIST) %in% USED_NAME)]
+    SCORE=OUT$SCORE
+    AL=AL
+
+    ###################
+    .norm_one <-function(x,one=1){
+        one=one
+        if(var(x)!=0){
+            x=x/sqrt(sum(x^2)) * one }
+        return(x)
+        }
+    
+    DIV=1/P
+    if(SHOW==TRUE){
+        plot(ALL_VEC,col=COL,pch=16,cex=0.2)
+        }
+    
+    N.SCORE=.normX(SCORE)
+    SCORE.COL=vector.vcol(N.SCORE, c(0,0.5,1),c('#009FFF','#FFF200','#ec2F4B'))
+    
+    A1_VEC=c()
+    A2_VEC=c()
+    A_LENGTH=c()
+    one=1
+    #one=min(dist(USED_CENTER_VEC))
+    i=1
+    while(i<=length(USED)){
+        this_p1_loc=USED_CENTER_VEC[i,]
+        
+        vector_list=cbind(USED_CENTER_VEC[,1]-this_p1_loc[1],USED_CENTER_VEC[,2]-this_p1_loc[2])
+        vector_list_norm=t(apply(vector_list,1,.norm_one, one))
+        
+        vector_weight_1= DIV^-(rank(USED_DIST[i,])-1)  
+        vector_weight_2= SCORE[i]-SCORE
+        
+        vector_weight = vector_weight_1 * vector_weight_2        
+        vector_weight = vector_weight/sum(abs(vector_weight))
+        
+        final_vec=t(vector_list_norm) %*% vector_weight
+        
+        this_p2_loc=c(this_p1_loc[1]+final_vec[1],this_p1_loc[2]+final_vec[2])
+                
+        #plot(ALL_VEC,col=COL,pch=16,cex=0.2)
+        this_arrow_length=0.1*sqrt(sum(final_vec^2))
+        #this_arrow_length=sqrt(sum(final_vec^2))#0.1 #* (1+sqrt(sum(final_vec^2)))
+        #this_arrow_length=dev.size()[1]/AL *  sqrt(sum(final_vec^2))/one   # * sqrt(sum(final_vec^2)) #0.25
+        if(SHOW==TRUE){
+            arrows(x0=this_p1_loc[1],y0=this_p1_loc[2],
+                   x1=this_p2_loc[1],y1=this_p2_loc[2],
+                   lwd=2, length=this_arrow_length,
+                   col='black'
+                   #col=SCORE.COL[i]
+                   )
+            }
+        A1_VEC=cbind(A1_VEC,this_p1_loc)
+        A2_VEC=cbind(A2_VEC,this_p2_loc)
+        A_LENGTH=c(A_LENGTH,this_arrow_length)
+        i=i+1}
+    #################################
+    A1_VEC=t(A1_VEC)
+    A2_VEC=t(A2_VEC)
+   ######
+    #OUT=list()
+    OUT$A1_VEC=A1_VEC
+    OUT$A2_VEC=A2_VEC
+    OUT$A_LENGTH=A_LENGTH
+    OUT$A_COL=SCORE.COL
+    ###########
+    return(OUT)
+    }
