@@ -208,6 +208,93 @@ dev.off()
 
 
 
+############################################################################
+# PC500
+
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+setwd('F:/Vector/data/MouseOligo_GSE75330')
+pbmc=readRDS('pbmc.RDS')
+#pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs = 500)
+#saveRDS(pbmc,file='pbmc_500.RDS')
+
+library(gmodels)
+D=as.matrix(pbmc@assays$RNA@scale.data)
+D=D[which(rownames(D) %in% VariableFeatures(pbmc)),]
+PCA.OUT=fast.prcomp(t(D), retx = TRUE, center = FALSE, scale. = FALSE, tol = NULL)
+PCA=PCA.OUT$x
+
+saveRDS(PCA.OUT,file='PCA.OUT_500.RDS')
+
+
+VEC=pbmc@reductions$umap@cell.embeddings
+rownames(VEC)=colnames(pbmc)
+PCA=PCA #pbmc@reductions$pca@cell.embeddings
+
+
+
+TAG='OPC'
+R.PCA=apply(PCA,2,rank)
+THIS.INDEX=which(pbmc@meta.data$type==TAG)
+#THIS.R.PCA=R.PCA[THIS.INDEX,]
+
+MEAN=c()
+UP=c()
+LW=c()
+
+N=1
+PCA.RC=.normX(rank(PCA[,1]))
+PCA.RC=abs(PCA.RC-0.5)   
+VALUE=PCA.RC
+R.VALUE=rank(VALUE)/length(VALUE)
+this_mean=median(R.VALUE[THIS.INDEX])
+this_up=quantile(R.VALUE[THIS.INDEX],0.975)
+this_lw=quantile(R.VALUE[THIS.INDEX],0.025)
+MEAN=c(MEAN, this_mean)
+UP=c(UP,this_up)
+LW=c(LW,this_lw)
+
+
+N=2
+while(N<=nrow(PCA)){
+    PCA.RC=apply(apply(PCA[,1:N],2,rank), 2, .normX)
+    PCA.RC=abs(PCA.RC-0.5)   
+    VALUE=apply(PCA.RC,1,mean)
+    R.VALUE=rank(VALUE)/length(VALUE)
+    this_mean=median(R.VALUE[THIS.INDEX])
+    this_up=quantile(R.VALUE[THIS.INDEX],0.975)
+    this_lw=quantile(R.VALUE[THIS.INDEX],0.025)
+    MEAN=c(MEAN, this_mean)
+    UP=c(UP,this_up)
+    LW=c(LW,this_lw)
+    print(N)
+    N=N+1
+    }
+
+tiff(paste0("IMG/OPC.SCORE.500.tiff"),width=3,height=3,units='in',res=600)
+
+par(mar=c(2,2,2,2))
+plot(MEAN,type='l',lwd=1,ylim=c(0,1))
+points(LW,type='l',pch=16,cex=1,col='grey70')
+points(UP,type='l',pch=16,cex=1, col='grey70')
+
+segments(x0=c(1:length(MEAN)),
+	 y0=LW,
+	 x1=c(1:length(MEAN)),
+	 y1=UP,
+	 col='grey70',lwd=0.5)
+abline(h=0.5,lty=2, lwd=2)
+points(MEAN,type='l',lwd=2)
+
+dev.off()
+
+########################################
+
+
+
+
+
+
+
 ###################################
 
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
