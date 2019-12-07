@@ -233,7 +233,122 @@ dev.off()
 
 
 #######################################################################################
-#Draw heatmap
+
+
+
+
+
+############################################################################
+# PC500
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+setwd('F:/Vector/data/MouseIntestine_GSE92332/')
+
+pbmc=readRDS('pbmc.RDS')
+#pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs = 500)
+#saveRDS(pbmc,file='pbmc_500.RDS')
+
+library(gmodels)
+D=as.matrix(pbmc@assays$RNA@scale.data)
+D=D[which(rownames(D) %in% VariableFeatures(pbmc)),]
+PCA.OUT=fast.prcomp(t(D), retx = TRUE, center = FALSE, scale. = FALSE, tol = NULL)
+PCA=PCA.OUT$x
+
+saveRDS(PCA.OUT,file='PCA.OUT_500.RDS')
+
+
+VEC=pbmc@reductions$umap@cell.embeddings
+rownames(VEC)=colnames(pbmc)
+PCA=PCA #pbmc@reductions$pca@cell.embeddings
+
+
+
+TAG='Stem'
+R.PCA=apply(PCA,2,rank)
+THIS.INDEX=which(pbmc@meta.data$type==TAG)
+#THIS.R.PCA=R.PCA[THIS.INDEX,]
+
+MEAN=c()
+UP=c()
+LW=c()
+
+N=1
+PCA.RC=.normX(rank(PCA[,1]))
+PCA.RC=abs(PCA.RC-0.5)   
+VALUE=PCA.RC
+R.VALUE=rank(VALUE)/length(VALUE)
+this_mean=median(R.VALUE[THIS.INDEX])
+this_up=quantile(R.VALUE[THIS.INDEX],0.975)
+this_lw=quantile(R.VALUE[THIS.INDEX],0.025)
+MEAN=c(MEAN, this_mean)
+UP=c(UP,this_up)
+LW=c(LW,this_lw)
+
+
+N=2
+while(N<=nrow(PCA)){
+    PCA.RC=.normX(rank(PCA[,N]))
+    PCA.RC=abs(PCA.RC-0.5)      
+    VALUE = VALUE+PCA.RC
+    R.VALUE=rank(VALUE)/length(VALUE)
+    this_mean=median(R.VALUE[THIS.INDEX])
+    this_up=quantile(R.VALUE[THIS.INDEX],0.975)
+    this_lw=quantile(R.VALUE[THIS.INDEX],0.025)
+    MEAN=c(MEAN, this_mean)
+    UP=c(UP,this_up)
+    LW=c(LW,this_lw)
+    print(N)
+    N=N+1
+    }
+
+
+tiff(paste0("IMG/OPC.SCORE.500.tiff"),width=3,height=3,units='in',res=600)
+
+INDEX=c(1:ncol(PCA))
+INDEX=log(INDEX,2)
+par(mar=c(2,2,2,2))
+plot( INDEX,MEAN,type='l',lwd=1,ylim=c(0,1))
+points( INDEX, LW,type='p',pch=16,cex=0.5,col='grey70')
+points( INDEX, UP,type='p',pch=16,cex=0.5, col='grey70')
+
+segments(x0=INDEX,
+	 y0=LW,
+	 x1=INDEX,
+	 y1=UP,
+	 col='grey70',lwd=0.5)
+abline(h=0.5,lty=2, lwd=2)
+#abline(v=INDEX[150],lty=2, lwd=2,col='blue3')
+points(INDEX,MEAN,type='l',lwd=2)
+
+EXP.VAR=cumsum(PCA.OUT$sdev^2)/sum(PCA.OUT$sdev^2)
+points( INDEX, EXP.VAR,type='l',pch=16, lwd=2, col='red3')
+
+
+dev.off()
+
+########################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#####################
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 setwd('F:/Vector/data/MouseIntestine_GSE92332/')
 
