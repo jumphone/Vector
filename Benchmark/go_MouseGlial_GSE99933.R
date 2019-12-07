@@ -93,5 +93,5 @@ p <- FeaturePlot(pbmc, features=c('Sox10','Htr3a','Th','Cartpt'),order=TRUE, com
 for(i in 1:length(p)) {
   p[[i]] <- p[[i]] + NoLegend() + NoAxes()
 }
-
+dev.off()
 
