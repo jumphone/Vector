@@ -256,6 +256,15 @@ PCA=PCA.OUT$x
 saveRDS(PCA.OUT,file='PCA.OUT_500.RDS')
 
 
+####
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+setwd('F:/Vector/data/MouseIntestine_GSE92332/')
+PCA.OUT=readRDS(file='PCA.OUT_500.RDS')
+pbmc=readRDS('pbmc.RDS')
+
+PCA=PCA.OUT$x
+
+
 VEC=pbmc@reductions$umap@cell.embeddings
 rownames(VEC)=colnames(pbmc)
 PCA=PCA #pbmc@reductions$pca@cell.embeddings
@@ -316,7 +325,7 @@ segments(x0=INDEX,
 	 y1=UP,
 	 col='grey70',lwd=0.5)
 abline(h=0.5,lty=2, lwd=2)
-#abline(v=INDEX[150],lty=2, lwd=2,col='blue3')
+abline(v=INDEX[150],lty=2, lwd=2,col='black')
 points(INDEX,MEAN,type='l',lwd=2)
 
 EXP.VAR=cumsum(PCA.OUT$sdev^2)/sum(PCA.OUT$sdev^2)
