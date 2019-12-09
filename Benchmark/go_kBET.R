@@ -62,6 +62,15 @@ DimPlot(pbmc, reduction = "umap",group.by='type',label=TRUE)+NoLegend()+NoAxes()
 
 
 saveRDS(pbmc,file='pbmc.RDS')
+######################################
+
+
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+setwd('F:/Vector/data/kBET/')
+
+pbmc=readRDS(file='pbmc.RDS')
+
+
 
 
 PCA=pbmc@reductions$pca@cell.embeddings[,c(1:150)]
@@ -69,7 +78,7 @@ VEC=pbmc@reductions$umap@cell.embeddings#pbmc@reductions$pca@cell.embeddings[,c(
 
 
 
-OUT=vector.buildGrid(VEC, N=15,SHOW=TRUE)
+OUT=vector.buildGrid(VEC, N=20,SHOW=TRUE)
 OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
 OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
 OUT=vector.gridValue(OUT,SHOW=TRUE)
@@ -84,7 +93,7 @@ OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
 
 tiff(paste0("IMG/VECTOR.1.tiff"),width=4,height=4,units='in',res=600)
 par(mar=c(0,0,0,0))
-OUT=vector.buildGrid(VEC, N=15,SHOW=TRUE)
+OUT=vector.buildGrid(VEC, N=20,SHOW=TRUE)
 dev.off()
 
 
@@ -367,4 +376,9 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',AL=70){
     return(OUT)
     }
 
+
+tiff(paste0("IMG/VECTOR.6.tiff"),width=4,height=4,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
+dev.off()
 
