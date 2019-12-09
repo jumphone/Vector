@@ -6,8 +6,22 @@ setwd('F:/Vector/data/Try/')
 PCA.OUT.1=readRDS('F:/Vector/data/MouseIntestine_GSE92332/PCA.OUT_500.RDS')
 PCA.OUT.2=readRDS('F:/Vector/data/MouseOligo_GSE75330/PCA.OUT_500.RDS')
 
+PCA.1=PCA.OUT.1$x
+PCA.2=PCA.OUT.2$x
+
+COR.1=cor(PCA.1,method='spearman')
+
+
+
+
+
+
 ROT.1=PCA.OUT.1$rotation
 ROT.2=PCA.OUT.2$rotation
+
+
+
+
 
 ROT.1.NAME.UP=toupper(rownames(ROT.1))
 ROT.2.NAME.UP=toupper(rownames(ROT.2))
