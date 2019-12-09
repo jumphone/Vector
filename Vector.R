@@ -11,6 +11,28 @@ library('igraph')
 
 
 
+vector.medCurv <- function(PCA,MAX=1000){
+    PCA=PCA
+    MAX=MAX
+    MS=vector.calValue(PCA)$PCA.RC
+    COR=cor(MS)
+    MED=c()
+    ALL=c()
+    i=1
+    while(i<=ncol(COR) & i<=MAX){
+        this_col=COR[1:i,i]
+        ALL=c(ALL,this_col)
+        ALL[which(ALL==1)]=NA
+        this_med=median(ALL,na.rm = TRUE)
+        MED=c(MED,this_med)
+        if(i %%100==1){print(i)}
+        i=i+1}
+    MED[1]=MED[2]
+    return(MED)
+    }
+
+
+
 
 vector.SeuratSelect <- function(pbmc){
     pbmc=pbmc
