@@ -9,6 +9,15 @@ PCA.OUT.2=readRDS('F:/Vector/data/MouseOligo_GSE75330/PCA.OUT_500.RDS')
 PCA.1=PCA.OUT.1$x
 PCA.2=PCA.OUT.2$x
 
+
+MS.1=vector.calValue(PCA.1)$PCA.RC
+
+COR.1=cor(MS.1)
+
+
+
+
+
 COR.1=cor(PCA.1,method='spearman')
 
 
