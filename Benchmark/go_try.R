@@ -1,6 +1,32 @@
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 setwd('F:/Vector/data/Try/')
 
+#####################################
+
+
+
+pbmc=readRDS('pbmc.RDS')
+PCA=pbmc@reductions$pca@cell.embeddings
+
+VEC=pbmc@reductions$umap@cell.embeddings
+
+
+
+MED=vector.medCurv(PCA)
+
+PCA=PCA[,1:which(MED==max(MED))]
+
+
+    OUT=vector.buildGrid(VEC, N=10,SHOW=TRUE)
+    OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+    OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+    OUT=vector.gridValue(OUT,SHOW=TRUE)
+    OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+    OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
+
+
+
+
 
 
 PCA.OUT.1=readRDS('F:/Vector/data/MouseIntestine_GSE92332/PCA.OUT_500.RDS')
