@@ -1,28 +1,79 @@
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+
+setwd('F:/Vector/data/kBET/')
+
+#/home/zy/single_cell/mouse_EED
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 setwd('F:/Vector/data/Try/')
 
 #####################################
 
 
 
+
+#DATA=apply(DATA,2,rank)
+
+#pbmc@assays$RNA@counts=apply(pbmc@assays$RNA@counts,2,rank)
 pbmc=readRDS('pbmc.RDS')
-PCA=pbmc@reductions$pca@cell.embeddings
 
-VEC=pbmc@reductions$umap@cell.embeddings
+################
+
+FeaturePlot(pbmc,features=c('NANOG'))
+
+#####################################
 
 
+
+
+
+DATA=read.csv('F:/Vector/data/STEM/Goolam_et_al_2015_count_table.tsv',header=TRUE,row.names=1,sep='\t')
+
+pbmc <- CreateSeuratObject(counts = DATA, project = "pbmc3k", min.cells = 0, min.features = 0)
+
+pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
+pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 8000)
+all.genes <- rownames(pbmc)
+pbmc <- ScaleData(pbmc, features = all.genes)
+pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs = 100)
+
+
+DimPlot(pbmc, reduction = "pca")
+
+PCA=pbmc@reductions$pca@cell.embeddings[,c(1:100)]
+VEC=pbmc@reductions$pca@cell.embeddings[,c(1, 2)]
 
 MED=vector.medCurv(PCA)
 
-PCA=PCA[,1:which(MED==max(MED))]
+plot(MED)
 
-
-    OUT=vector.buildGrid(VEC, N=10,SHOW=TRUE)
-    OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
-    OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
-    OUT=vector.gridValue(OUT,SHOW=TRUE)
-    OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
-    OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
+PCA=PCA[,1:20]
+OUT=vector.buildGrid(VEC, N=5,SHOW=TRUE)
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
 
 
 
