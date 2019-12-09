@@ -16,9 +16,62 @@ COR.1=cor(MS.1)
 
 
 
+vector.corCurv <- function(PCA,MAX=1000){
+    PCA=PCA
+    MAX=MAX
+    MS=vector.calValue(PCA)$PCA.RC
+    COR=cor(MS)
+    MED=c()
+    ALL=c()
+    i=1
+    while(i<=ncol(COR) & i<=MAX){
+        this_col=COR[1:i,i]
+        ALL=c(ALL,this_col)
+        ALL[which(ALL==1)]=NA
+        this_med=median(ALL,na.rm = TRUE)
+        MED=c(MED,this_med)
+        if(i %%100==1){print(i)}
+        i=i+1}
+    MED[1]=MED[2]
+    return(MED)
+    }
 
 
-COR.1=cor(PCA.1,method='spearman')
+
+
+
+
+
+MS.2=vector.calValue(PCA.2)$PCA.RC
+
+COR.2=cor(MS.2)
+
+
+
+LLL.1=c(0)
+
+i=2
+while(i<=ncol(COR.1)){
+    this_lll=median(unique(COR.1[1:i,1:i]))
+    LLL.1=c(LLL.1,this_lll)
+
+    i=i+1}
+
+plot(LLL.1[20:length(LLL.1)])
+
+
+
+
+LLL.2=c(0)
+
+i=2
+while(i<=ncol(COR.2)){
+    this_lll=median(unique(COR.2[1:i,1:i]))
+    LLL.2=c(LLL.2,this_lll)
+
+    i=i+1}
+
+plot(LLL.2[20:length(LLL.2)])
 
 
 
