@@ -60,6 +60,7 @@ vector.showValue<-function(OUT){
     }
 
 vector.calValue <- function(PCA){
+    OUT=list()
     PCA=PCA
     PCA.RC=apply(apply(PCA,2,rank), 2, .normX)
     PCA.RC=abs(PCA.RC-0.5)   
