@@ -391,7 +391,7 @@ OUT=vector.drawArrow(OUT,P=1,SHOW=TRUE,  COL=OUT$COL,AL=40)
 
 tiff(paste0("IMG/NEW_VECTOR.6.tiff"),width=1,height=1,units='in',res=600)
 par(mar=c(0,0,0,0))
-OUT=vector.drawArrow(OUT,P=1,SHOW=TRUE, COL=OUT$COL,AL=20,CEX=0.2)
+OUT=vector.drawArrow(OUT,P=1,SHOW=TRUE, COL=OUT$COL,AL=20,CEX=0.2,SHOW.SUMMIT=TRUE)
 dev.off()
 
 
