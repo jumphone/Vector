@@ -409,13 +409,15 @@ dev.off()
 
 # Try other features
 
-
-
-
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 setwd('F:/Vector/data/MouseOligo_GSE75330')
 pbmc=readRDS('pbmc.RDS')
 
+
+###########################################
+
+
+VALUE=list()
 VEC=pbmc@reductions$umap@cell.embeddings
 rownames(VEC)=colnames(pbmc)
 PCA= pbmc@reductions$pca@cell.embeddings
@@ -426,51 +428,54 @@ OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
 OUT=vector.gridValue(OUT,SHOW=TRUE)
 OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=FALSE)
+VALUE$msPCA=OUT$VALUE
 
-
-pdf('./IMG/TEST_nCount_RNA.pdf')
-OUT$VALUE=pbmc@meta.data$nCount_RNA
-OUT=vector.gridValue(OUT,SHOW=TRUE)
-OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
-OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=FALSE)
-dev.off()
 
 
 pdf('./IMG/TEST_nFeature_RNA.pdf')
 OUT$VALUE=pbmc@meta.data$nFeature_RNA
 OUT=vector.gridValue(OUT,SHOW=TRUE)
 OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
-OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=FALSE)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
 dev.off()
+VALUE$nGene=OUT$VALUE
 
 
 
-
-pdf('./IMG/TEST_VGENE.pdf')
+pdf('./IMG/TEST_MS_VGENE.pdf')
 VGENE=t(as.matrix(pbmc@assays$RNA@data[which(rownames(pbmc) %in% VariableFeatures(pbmc)),]))
 OUT=vector.getValue(OUT, VGENE, SHOW=TRUE)
 OUT=vector.gridValue(OUT,SHOW=TRUE)
 OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
-OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=FALSE)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
 dev.off()
+VALUE$msGene=OUT$VALUE
 
-
-
-pdf('./IMG/TEST_SD_PCA.pdf')
-#VGENE=t(as.matrix(pbmc@assays$RNA@data[which(rownames(pbmc) %in% VariableFeatures(pbmc)),]))
-#OUT=vector.getValue(OUT, VGENE, SHOW=TRUE)
-OUT$VALUE=apply(PCA,1,sd)
-OUT=vector.gridValue(OUT,SHOW=TRUE)
-OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
-OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=FALSE)
-dev.off()
 
 
 pdf('./IMG/TEST_VAR_PCA.pdf')
-#VGENE=t(as.matrix(pbmc@assays$RNA@data[which(rownames(pbmc) %in% VariableFeatures(pbmc)),]))
-#OUT=vector.getValue(OUT, VGENE, SHOW=TRUE)
 OUT$VALUE=apply(PCA,1,var)
 OUT=vector.gridValue(OUT,SHOW=TRUE)
 OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
-OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=FALSE)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
 dev.off()
+VALUE$varPCA=OUT$VALUE
+
+
+
+saveRDS(VALUE,'TEST_VALUE.RDS')
+
+
+MAT <- matrix(unlist(VALUE), ncol = 4, byrow = FALSE)
+
+colnames(MAT)=names(VALUE)
+
+COR=cor(MAT, method='spearman')
+
+COR
+#              nGene     msGene       varPCA      msPCA
+#nGene   1.000000000 -0.9777115 -0.009727229 -0.1511525
+#msGene -0.977711473  1.0000000  0.152003156  0.2610355
+#varPCA -0.009727229  0.1520032  1.000000000  0.8849274
+#msPCA  -0.151152482  0.2610355  0.884927414  1.0000000
+
