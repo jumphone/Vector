@@ -29,7 +29,7 @@ saveRDS(pbmc,file='pbmc.RDS')
 
 
 ###########################
-setwd('F:/AIM/MouseBoneMarrow_GSE109989/')
+setwd('F:/Vector/data/MouseBoneMarrow_GSE109989/')
 pbmc=readRDS(file='pbmc.RDS')
 
 FeaturePlot(pbmc, features=c('Gfi1','Cenpa','Cd79a','Mpeg1','Cd47'))
@@ -38,6 +38,21 @@ FeaturePlot(pbmc, features=c('Gfi1','Cenpa','Cd79a','Mpeg1','Cd47'))
 VEC=pbmc@reductions$umap@cell.embeddings
 rownames(VEC)=colnames(pbmc)
 PCA= pbmc@reductions$pca@cell.embeddings
+
+
+
+
+OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+tiff(paste0("IMG/NEW_VECTOR.6.tiff"),width=4,height=4,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL,AL=40)
+dev.off()
+
+
 
 
 
