@@ -522,7 +522,7 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
 
 
 
-vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',AL=70){
+vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',AL=70, AC=TRUE){
     ################
     OUT=OUT
     SHOW=SHOW
@@ -536,6 +536,7 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',AL=70){
     USED_DIST=OUT$DIST[which(rownames(DIST) %in% USED_NAME),which(rownames(DIST) %in% USED_NAME)]
     SCORE=OUT$SCORE
     AL=AL
+    AC=AC
 
     ###################
     .norm_one <-function(x,one=1){
@@ -579,17 +580,33 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',AL=70){
         #this_arrow_length=sqrt(sum(final_vec^2))#0.1 #* (1+sqrt(sum(final_vec^2)))
         this_arrow_length=dev.size()[1]/AL *  sqrt(sum(final_vec^2))/one   # * sqrt(sum(final_vec^2)) #0.25
         if(SHOW==TRUE){
+            this_arrow_col='grey50'
+            #if(AC==TRUE){this_arrow_col=SCORE.COL[i]}
             arrows(x0=this_p1_loc[1],y0=this_p1_loc[2],
                    x1=this_p2_loc[1],y1=this_p2_loc[2],
                    lwd=2, length=this_arrow_length,
-                   col='black'
-                   #col=SCORE.COL[i]
+                   col=this_arrow_col
+                   #col=this_arrow_col#SCORE.COL[i]
                    )
+            
             }
         A1_VEC=cbind(A1_VEC,this_p1_loc)
         A2_VEC=cbind(A2_VEC,this_p2_loc)
         A_LENGTH=c(A_LENGTH,this_arrow_length)
         i=i+1}
+    
+    ###############################
+    if(SHOW==TRUE){   
+        #points(OUT$CENTER_VEC[OUT$SUMMIT,],col='black',pch=16,cex=1)
+        #points(OUT$CENTER_VEC[OUT$SUMMIT,],col='red',pch=16,cex=0.5)
+        X1=min(OUT$CENTER_VEC[OUT$SUMMIT,1])-one/10
+        X2=max(OUT$CENTER_VEC[OUT$SUMMIT,1])+one/10
+        Y1=min(OUT$CENTER_VEC[OUT$SUMMIT,2])-one/10
+        Y2=max(OUT$CENTER_VEC[OUT$SUMMIT,2])+one/10
+        
+        rect(xleft=X1, ybottom=Y1, xright=X2, ytop=Y2, density = NULL, angle = 45,
+        col = NA, border = 'red', lty = par("lty"), lwd = 2)
+        }
     #################################
     A1_VEC=t(A1_VEC)
     A2_VEC=t(A2_VEC)
@@ -602,6 +619,11 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',AL=70){
     ###########
     return(OUT)
     }
+
+
+
+
+
 
 
 VECTOR <- function(VEC, PCA, N=20){
