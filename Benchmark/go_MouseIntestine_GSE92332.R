@@ -585,6 +585,10 @@ rownames(VEC)=colnames(pbmc)
 PCA= pbmc@reductions$pca@cell.embeddings
 
 
+OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+
 
 pdf('./IMG/TEST_nCount_RNA.pdf')
 OUT$VALUE=pbmc@meta.data$nCount_RNA
