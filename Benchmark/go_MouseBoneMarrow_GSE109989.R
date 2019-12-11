@@ -130,52 +130,66 @@ OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
 OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
 
 
-pdf('./IMG/TEST_nCount_RNA.pdf')
-OUT$VALUE=pbmc@meta.data$nCount_RNA
+
+###########################################
+VALUE=list()
+#######################
+OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
 OUT=vector.gridValue(OUT,SHOW=TRUE)
 OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=FALSE)
-dev.off()
+VALUE$msPCA=OUT$VALUE
+############################
 
 
 pdf('./IMG/TEST_nFeature_RNA.pdf')
 OUT$VALUE=pbmc@meta.data$nFeature_RNA
 OUT=vector.gridValue(OUT,SHOW=TRUE)
 OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
-OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=FALSE)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
 dev.off()
+VALUE$nGene=OUT$VALUE
 
 
 
-
-pdf('./IMG/TEST_VGENE.pdf')
+pdf('./IMG/TEST_MS_VGENE.pdf')
 VGENE=t(as.matrix(pbmc@assays$RNA@data[which(rownames(pbmc) %in% VariableFeatures(pbmc)),]))
 OUT=vector.getValue(OUT, VGENE, SHOW=TRUE)
 OUT=vector.gridValue(OUT,SHOW=TRUE)
 OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
-OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=FALSE)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
 dev.off()
+VALUE$msGene=OUT$VALUE
 
-
-
-pdf('./IMG/TEST_SD_PCA.pdf')
-#VGENE=t(as.matrix(pbmc@assays$RNA@data[which(rownames(pbmc) %in% VariableFeatures(pbmc)),]))
-#OUT=vector.getValue(OUT, VGENE, SHOW=TRUE)
-OUT$VALUE=apply(PCA,1,sd)
-OUT=vector.gridValue(OUT,SHOW=TRUE)
-OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
-OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=FALSE)
-dev.off()
 
 
 pdf('./IMG/TEST_VAR_PCA.pdf')
-#VGENE=t(as.matrix(pbmc@assays$RNA@data[which(rownames(pbmc) %in% VariableFeatures(pbmc)),]))
-#OUT=vector.getValue(OUT, VGENE, SHOW=TRUE)
 OUT$VALUE=apply(PCA,1,var)
 OUT=vector.gridValue(OUT,SHOW=TRUE)
 OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
-OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=FALSE)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
 dev.off()
+VALUE$varPCA=OUT$VALUE
+
+
+
+saveRDS(VALUE,'IMG/TEST_VALUE.RDS')
+
+###############
+MAT <- matrix(unlist(VALUE), ncol = 4, byrow = FALSE)
+colnames(MAT)=names(VALUE)
+rownames(MAT)=colnames(pbmc)
+saveRDS(MAT,'IMG/TEST_MAT.RDS')
+####################
+
+COR=cor(MAT, method='spearman')
+
+COR
+#msPCA      nGene     msGene     varPCA
+#msPCA   1.0000000  0.6178928 -0.6173950  0.9674628
+#nGene   0.6178928  1.0000000 -0.9819733  0.6700861
+#msGene -0.6173950 -0.9819733  1.0000000 -0.6523595
+#varPCA  0.9674628  0.6700861 -0.6523595  1.0000000
 
 
 
