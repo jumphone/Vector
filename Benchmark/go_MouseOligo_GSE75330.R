@@ -402,9 +402,6 @@ dev.off()
 
 
 
-
-
-
 ###################################################
 
 # Try other features
@@ -463,12 +460,14 @@ VALUE$varPCA=OUT$VALUE
 
 
 
-saveRDS(VALUE,'TEST_VALUE.RDS')
+saveRDS(VALUE,'IMG/TEST_VALUE.RDS')
 
-
+###############
 MAT <- matrix(unlist(VALUE), ncol = 4, byrow = FALSE)
-
 colnames(MAT)=names(VALUE)
+rownames(MAT)=colnames(pbmc)
+saveRDS(MAT,'IMG/TEST_MAT.RDS')
+####################
 
 COR=cor(MAT, method='spearman')
 
@@ -478,4 +477,7 @@ COR
 #msGene -0.977711473  1.0000000  0.152003156  0.2610355
 #varPCA -0.009727229  0.1520032  1.000000000  0.8849274
 #msPCA  -0.151152482  0.2610355  0.884927414  1.0000000
+
+
+
 
