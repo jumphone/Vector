@@ -522,7 +522,7 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
 
 
 
-vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',OL=1.5,AL=60,CEX=0.5){
+vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',OL=1.5,AL=60,CEX=0.5, SHOW.SUMMIT=TRUE){
     ################
     OUT=OUT
     SHOW=SHOW
@@ -600,7 +600,7 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',OL=1.5,AL=60,CE
         i=i+1}
     
     ###############################
-    if(SHOW==TRUE){   
+    if(SHOW==TRUE & SHOW.SUMMIT==TRUE){   
         #points(OUT$CENTER_VEC[OUT$SUMMIT,],col='black',pch=16,cex=1)
         #points(OUT$CENTER_VEC[OUT$SUMMIT,],col='red',pch=16,cex=0.5)
         X1=min(OUT$CENTER_VEC[OUT$SUMMIT,1])-one/10
