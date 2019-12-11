@@ -335,6 +335,13 @@ OUT=vector.gridValue(OUT,SHOW=TRUE)
 OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
 
+tiff(paste0("IMG/NEW_VECTOR.6.tiff"),width=4,height=4,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL,AL=40)
+dev.off()
+
+
+
 
 tiff(paste0("IMG/VECTOR.1.tiff"),width=4,height=4,units='in',res=600)
 par(mar=c(0,0,0,0))
@@ -367,14 +374,6 @@ tiff(paste0("IMG/VECTOR.6.tiff"),width=4,height=4,units='in',res=600)
 par(mar=c(0,0,0,0))
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
 dev.off()
-
-
-
-tiff(paste0("IMG/NEW_VECTOR.6.tiff"),width=4,height=4,units='in',res=600)
-par(mar=c(0,0,0,0))
-OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL,AL=40)
-dev.off()
-
 
 
 
