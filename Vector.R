@@ -522,7 +522,7 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
 
 
 
-vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',OL=1.5,AL=60, AC=TRUE){
+vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',OL=1.5,AL=60,CEX=0.5){
     ################
     OUT=OUT
     SHOW=SHOW
@@ -536,8 +536,8 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',OL=1.5,AL=60, A
     USED_DIST=OUT$DIST[which(rownames(DIST) %in% USED_NAME),which(rownames(DIST) %in% USED_NAME)]
     SCORE=OUT$SCORE
     AL=AL
-    AC=AC
     OL=OL
+    CEX=CEX
 
     ###################
     .norm_one <-function(x,one=1){
@@ -550,7 +550,7 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',OL=1.5,AL=60, A
     DIV=1/P
     ####################
     if(SHOW==TRUE){
-        plot(ALL_VEC,col=COL,pch=16,cex=0.5)
+        plot(ALL_VEC,col=COL,pch=16,cex=CEX)
         }
     ##########################
     N.SCORE=.normX(SCORE)
