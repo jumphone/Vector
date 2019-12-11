@@ -609,7 +609,7 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',OL=1.5,AL=60, A
         Y2=max(OUT$CENTER_VEC[OUT$SUMMIT,2])+one/10
         
         rect(xleft=X1, ybottom=Y1, xright=X2, ytop=Y2, angle = 45,
-        col = NA, border = 'red', lty = 1, lwd = 3)
+        col = NA, border = 'black', lty = 1, lwd = 3)
         }
     #################################
     A1_VEC=t(A1_VEC)
