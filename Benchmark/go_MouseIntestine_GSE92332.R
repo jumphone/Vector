@@ -49,7 +49,15 @@ DimPlot(pbmc, reduction = "umap",group.by='type')
 saveRDS(pbmc, file='pbmc.RDS')
 saveRDS(PCUSE, file='PCUSE.RDS')
 
+
+
+
 #####################################################
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+setwd('F:/Vector/data/MouseIntestine_GSE92332/')
+pbmc=readRDS( file='pbmc.RDS')
+
+
 
 VEC=pbmc@reductions$umap@cell.embeddings
 rownames(VEC)=colnames(pbmc)
@@ -74,6 +82,8 @@ table(pbmc@meta.data$type)
 
 # EIM   EM   EP STEM   TA 
 # 809  822 1589 1267 1073 
+
+
 
 ###########################################
 #Draw heatmap
@@ -370,6 +380,19 @@ VEC=pbmc@reductions$umap@cell.embeddings
 rownames(VEC)=colnames(pbmc)
 PCA= pbmc@reductions$pca@cell.embeddings
 #######################
+
+
+OUT=vector.buildGrid(VEC, N=8,SHOW=TRUE)
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+OUT=vector.autoCenter(OUT,UP=0.65,SHOW=TRUE)
+OUT=vector.drawArrow(OUT,P=1,SHOW=TRUE,  COL=OUT$COL,AL=40)
+
+tiff(paste0("IMG/NEW_VECTOR.6.tiff"),width=1,height=1,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.drawArrow(OUT,P=1,SHOW=TRUE, COL=OUT$COL,AL=20,CEX=0.2)
+dev.off()
 
 
 
