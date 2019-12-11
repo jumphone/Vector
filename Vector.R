@@ -538,6 +538,7 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',OL=1.5,AL=60,CE
     AL=AL
     OL=OL
     CEX=CEX
+    SHOW.SUMMIT=SHOW.SUMMIT
 
     ###################
     .norm_one <-function(x,one=1){
