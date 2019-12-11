@@ -547,10 +547,11 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',AL=70, AC=TRUE)
         }
     
     DIV=1/P
+    ####################
     if(SHOW==TRUE){
-        plot(ALL_VEC,col=COL,pch=16,cex=0.2)
+        plot(ALL_VEC,col=COL,pch=16,cex=0.5)
         }
-    
+    ##########################
     N.SCORE=.normX(SCORE)
     SCORE.COL=vector.vcol(N.SCORE, c(0,0.5,1),c('#009FFF','#FFF200','#ec2F4B'))
     
