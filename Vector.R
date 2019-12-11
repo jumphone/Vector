@@ -522,7 +522,7 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
 
 
 
-vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',AL=70, AC=TRUE){
+vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',OL=1.5,AL=60, AC=TRUE){
     ################
     OUT=OUT
     SHOW=SHOW
@@ -537,6 +537,7 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',AL=70, AC=TRUE)
     SCORE=OUT$SCORE
     AL=AL
     AC=AC
+    OL=OL
 
     ###################
     .norm_one <-function(x,one=1){
@@ -558,7 +559,9 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',AL=70, AC=TRUE)
     A1_VEC=c()
     A2_VEC=c()
     A_LENGTH=c()
-    one=min(dist(USED_CENTER_VEC))
+    #####################
+    one=min(dist(USED_CENTER_VEC)) * OL
+    #####################
     i=1
     while(i<=length(USED)){
         this_p1_loc=USED_CENTER_VEC[i,]
@@ -581,7 +584,7 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',AL=70, AC=TRUE)
         #this_arrow_length=sqrt(sum(final_vec^2))#0.1 #* (1+sqrt(sum(final_vec^2)))
         this_arrow_length=dev.size()[1]/AL *  sqrt(sum(final_vec^2))/one   # * sqrt(sum(final_vec^2)) #0.25
         if(SHOW==TRUE){
-            this_arrow_col='grey50'
+            this_arrow_col='grey20'
             #if(AC==TRUE){this_arrow_col=SCORE.COL[i]}
             arrows(x0=this_p1_loc[1],y0=this_p1_loc[2],
                    x1=this_p2_loc[1],y1=this_p2_loc[2],
@@ -605,8 +608,8 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',AL=70, AC=TRUE)
         Y1=min(OUT$CENTER_VEC[OUT$SUMMIT,2])-one/10
         Y2=max(OUT$CENTER_VEC[OUT$SUMMIT,2])+one/10
         
-        rect(xleft=X1, ybottom=Y1, xright=X2, ytop=Y2, density = NULL, angle = 45,
-        col = NA, border = 'red', lty = par("lty"), lwd = 2)
+        rect(xleft=X1, ybottom=Y1, xright=X2, ytop=Y2, angle = 45,
+        col = NA, border = 'red', lty = 1, lwd = 3)
         }
     #################################
     A1_VEC=t(A1_VEC)
