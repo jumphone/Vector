@@ -460,16 +460,6 @@ VALUE$varPCA=OUT$VALUE
 
 
 
-pdf('./IMG/TEST_VAR_rPCA.pdf')
-rPCA=apply(PCA,2,rank)
-OUT$VALUE=apply(rPCA,1,var)
-OUT=vector.gridValue(OUT,SHOW=TRUE)
-OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
-OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
-dev.off()
-VALUE$varRPCA=OUT$VALUE
-
-
 
 saveRDS(VALUE,'IMG/TEST_VALUE.RDS')
 
