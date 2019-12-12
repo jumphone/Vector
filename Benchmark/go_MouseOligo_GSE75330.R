@@ -467,7 +467,7 @@ OUT=vector.gridValue(OUT,SHOW=TRUE)
 OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
 dev.off()
-VALUE$varPCA=OUT$VALUE
+VALUE$varRPCA=OUT$VALUE
 
 
 
