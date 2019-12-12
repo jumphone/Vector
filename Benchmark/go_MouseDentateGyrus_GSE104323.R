@@ -363,7 +363,6 @@ dev.off()
 VALUE$varPCA=OUT$VALUE
 
 
-
 saveRDS(VALUE,'IMG/TEST_VALUE.RDS')
 
 ###############
