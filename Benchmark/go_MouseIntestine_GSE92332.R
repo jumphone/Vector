@@ -186,6 +186,10 @@ DrawHeatMap(TAG)
 
 
 
+
+
+
+
 ###############
 
 #Biological Pathway
@@ -221,6 +225,7 @@ colnames(BIO.MAT)=colnames(EXP)
 rownames(BIO.MAT)=names(BIO)
 
 
+
 i=1
 while(i<=length(BIO)){
     used=which(rownames(EXP) %in% BIO[[i]])
@@ -236,11 +241,26 @@ while(i<=length(BIO)){
 SUM=apply(BIO.MAT,1,sum)
 BIO.MAT=BIO.MAT[which(SUM>0),]
 
+BIO.MAT.ABS=vector.calValue(t(BIO.MAT))$PCA.RC
+
+
+
+
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('Enterocyte.Immature.Distal',
+                                 'Enterocyte.Immature.Proximal') )]='EIM'
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('Enterocyte.Mature.Distal',
+                                 'Enterocyte.Mature.Proximal') )]='EM'
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('Enterocyte.Progenitor',
+                                  'Enterocyte.Progenitor.Early',
+                                  'Enterocyte.Progenitor.Late') )]='EP'
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('TA.Early',
+                                  'TA.G1','TA.G1') )]='TA'
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('Stem') )]='STEM'
 TYPE=pbmc@meta.data$type
 
 
 DrawHeatMap<-function(TAG){
-    PCA=t(BIO.MAT)
+    PCA=BIO.MAT.ABS
     TAG=TAG
     R.PCA=apply(PCA,2,rank)
     THIS.INDEX=which(pbmc@meta.data$type==TAG)
