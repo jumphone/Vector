@@ -228,6 +228,8 @@ saveRDS(PCA.OUT,file='PCA.OUT_500.RDS')
 
 #####
 
+
+
 ####
 
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
@@ -308,6 +310,57 @@ points( INDEX, EXP.VAR,type='l',pch=16, lwd=2, col='red3')
 dev.off()
 
 ########################################
+
+###############
+
+#Biological Pathway
+
+####
+
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+setwd('F:/Vector/data/MouseOligo_GSE75330')
+PCA.OUT=readRDS(file='PCA.OUT_500.RDS')
+pbmc=readRDS('pbmc.RDS')
+
+PCA=PCA.OUT$x
+
+VEC=pbmc@reductions$umap@cell.embeddings
+rownames(VEC)=colnames(pbmc)
+PCA=PCA #pbmc@reductions$pca@cell.embeddings
+
+
+library(qusage)
+KEGG=read.gmt('KEGG_2019_Mouse.gmt')
+
+EXP=as.matrix(pbmc@assays$RNA@data)
+
+
+
+KEGG.MAT=matrix(0,nrow=length(KEGG),ncol=ncol(S.LOG.TRA.MAT))
+colnames(KEGG.MAT)=colnames(S.LOG.TRA.MAT)
+rownames(KEGG.MAT)=names(KEGG)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
