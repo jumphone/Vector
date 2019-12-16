@@ -1,4 +1,140 @@
 
+
+
+
+###############
+
+#Biological Pathway
+
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+setwd('F:/Vector/data/MouseOligo_GSE75330')
+PCA.OUT=readRDS(file='PCA.OUT_500.RDS')
+pbmc=readRDS('pbmc.RDS')
+
+PCA=PCA.OUT$x
+
+VEC=pbmc@reductions$umap@cell.embeddings
+rownames(VEC)=colnames(pbmc)
+PCA=PCA #pbmc@reductions$pca@cell.embeddings
+
+
+
+EXP=as.matrix(pbmc@assays$RNA@data)
+UP=toupper(rownames(EXP))
+USED=which(UP %in% names(which(table(UP)==1)))
+EXP=EXP[USED,]
+rownames(EXP)=UP[USED]
+
+
+
+
+library(qusage)
+BIO=read.gmt('MSigDB_Computational.gmt')
+
+BIO.MAT=matrix(0,nrow=length(BIO),ncol=ncol(EXP))
+colnames(BIO.MAT)=colnames(EXP)
+rownames(BIO.MAT)=names(BIO)
+
+
+i=1
+while(i<=length(BIO)){
+    used=which(rownames(EXP) %in% BIO[[i]])
+    if(length(used)>1){
+        BIO.MAT[i,]=apply(EXP[used,],2,mean) 
+    }else if(length(used)==1){
+	BIO.MAT[i,]=EXP[used,]
+    }else{
+        BIO.MAT[i,]=0}
+    
+    i=i+1}
+
+SUM=apply(BIO.MAT,1,sum)
+BIO.MAT=BIO.MAT[which(SUM>0),]
+
+TYPE=pbmc@meta.data$type
+
+
+DrawHeatMap<-function(TAG){
+    PCA=t(BIO.MAT)
+    TAG=TAG
+    R.PCA=apply(PCA,2,rank)
+    THIS.INDEX=which(pbmc@meta.data$type==TAG)
+    THIS.R.PCA=R.PCA[THIS.INDEX,]
+
+
+    MAT=matrix(0,nrow=ncol(PCA),ncol=nrow(PCA))
+    rownames(MAT)=colnames(PCA)
+    colnames(MAT)=paste0('R_',1:nrow(PCA))
+    print(MAT[1:3,1:3])
+	
+    i=1
+    while(i<=ncol(PCA)){
+        MAT[i,THIS.R.PCA[,i]]=1
+        i=i+1}
+    #######################
+    #MAT=t(apply(t(MAT),2,smooth))
+    ########################
+	
+    library('ComplexHeatmap')
+    library('circlize')
+    library('seriation')
+    
+    mat=MAT
+    o.mat=mat
+    col_fun =colorRamp2(c(0,1), c('white','#000080'))
+     
+    LLL=apply(mat,2,mean)
+    ha = HeatmapAnnotation(
+	M = anno_lines(LLL, add_points = FALSE,smooth=FALSE,
+		       gp = gpar(col = 'grey50',lwd=0.5),
+		      axis=FALSE),
+	name=c(''),
+	show_annotation_name=FALSE
+        )	
+	
+    tiff(paste0("IMG/",TAG,".BIO.HEAT.tiff"),width=4,height=1,units='in',res=600)
+    draw(Heatmap(o.mat,row_title='',name="",cluster_rows=FALSE,
+        cluster_columns=FALSE,show_heatmap_legend=FALSE，
+	show_column_dend = FALSE, show_row_dend = FALSE, 
+	show_column_names=FALSE, show_row_names=FALSE,
+	col=col_fun, border = TRUE,
+        top_annotation = ha
+	))
+    dev.off()
+    }
+
+#########################################
+#########################################
+TAG='OPC'
+DrawHeatMap(TAG)
+###################################################
+TAG='Differentiation-committed OPC'
+DrawHeatMap(TAG)
+###################################################
+TAG='Newly-formed Oligodendrocytes'
+DrawHeatMap(TAG)
+###################################################
+TAG='Myelin-forming Oligodendrocytes'
+DrawHeatMap(TAG)
+###################################################
+TAG='Mature Oligodendrocytes'
+DrawHeatMap(TAG)
+
+
+
+
+#####################################################################
+
+
+
+
+
+
+
+
+
+
+
 ###############
 
 #Biological Pathway
