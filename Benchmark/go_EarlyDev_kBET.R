@@ -517,7 +517,11 @@ VALUE$msPCA=OUT$VALUE
 ###########
 #Prepare EXP
 
-EXP=as.matrix(pbmc@assays$RNA@data)
+#EXP=as.matrix(pbmc@assays$RNA@data)
+
+EXP=as.matrix(pbmc@assays$RNA@scale.data[which(rownames(pbmc@assays$RNA@scale.data) %in% VariableFeatures(pbmc)),])
+
+
 
 #############
 #BiocManager::install("EnsDb.Mmusculus.v79")
@@ -528,8 +532,8 @@ geneIDs1 <- ensembldb::select(EnsDb.Mmusculus.v79, keys= ensembl.genes, keytype 
 EXP=EXP[which(rownames(EXP) %in% geneIDs1[,2]),]
 rownames(EXP)=geneIDs1[match(rownames(EXP),geneIDs1[,2]),1]
 #############
-EXP=t(apply(t(EXP),2,scale))
-EXP[which(is.na(EXP))]=0
+#EXP=t(apply(t(EXP),2,scale))
+#EXP[which(is.na(EXP))]=0
 colnames(EXP)=colnames(pbmc)
 UP=toupper(rownames(EXP))
 USED=which(UP %in% names(which(table(UP)==1)))
