@@ -151,9 +151,12 @@ VEC=pbmc@reductions$umap@cell.embeddings
 rownames(VEC)=colnames(pbmc)
 PCA=PCA #pbmc@reductions$pca@cell.embeddings
 
-
-
 EXP=as.matrix(pbmc@assays$RNA@data)
+EXP=t(apply(t(EXP),2,scale))
+EXP[which(is.na(EXP))]=0
+colnames(EXP)=colnames(pbmc)
+
+
 UP=toupper(rownames(EXP))
 USED=which(UP %in% names(which(table(UP)==1)))
 EXP=EXP[USED,]
@@ -183,10 +186,10 @@ while(i<=length(BIO)){
     
     i=i+1}
 
-SUM=apply(BIO.MAT,1,sum)
-BIO.MAT=BIO.MAT[which(SUM>0),]
+VAR=apply(BIO.MAT,1,var)
+BIO.MAT=BIO.MAT[which(VAR>0 & (!is.na(VAR))),]
 
-BIO.MAT.ABS=vector.calValue(t(BIO.MAT))$PCA.RC
+#BIO.MAT.ABS=vector.calValue(t(BIO.MAT))$PCA.RC
 
 
 
@@ -205,7 +208,7 @@ TYPE=pbmc@meta.data$type
 
 
 DrawHeatMap<-function(TAG){
-    PCA=BIO.MAT.ABS
+    PCA=t(BIO.MAT)#.ABS
     TAG=TAG
     R.PCA=apply(PCA,2,rank)
     THIS.INDEX=which(pbmc@meta.data$type==TAG)
