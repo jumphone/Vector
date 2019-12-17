@@ -484,6 +484,103 @@ COR
 #varPCA -0.009727229  0.1520032  1.000000000  0.8849274
 #msPCA  -0.151152482  0.2610355  0.884927414  1.0000000
 
+###########################
+
+
+
+
+
+
+
+######################
+# Test pathway feature
+
+
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+setwd('F:/Vector/data/MouseOligo_GSE75330')
+pbmc=readRDS('pbmc.RDS')
+
+
+
+###########################################
+
+
+VALUE=list()
+VEC=pbmc@reductions$umap@cell.embeddings
+rownames(VEC)=colnames(pbmc)
+PCA= pbmc@reductions$pca@cell.embeddings
+
+OUT=vector.buildGrid(VEC, N=20,SHOW=TRUE)
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=FALSE)
+VALUE$msPCA=OUT$VALUE
+
+###########
+#Pathway
+
+EXP=as.matrix(pbmc@assays$RNA@data)
+EXP=t(apply(t(EXP),2,scale))
+EXP[which(is.na(EXP))]=0
+colnames(EXP)=colnames(pbmc)
+UP=toupper(rownames(EXP))
+USED=which(UP %in% names(which(table(UP)==1)))
+EXP=EXP[USED,]
+rownames(EXP)=UP[USED]
+
+
+
+library(qusage)
+BIO=read.gmt('../KEGG_2019_Mouse.gmt')
+BIO.MAT=matrix(0,nrow=length(BIO),ncol=ncol(EXP))
+colnames(BIO.MAT)=colnames(EXP)
+rownames(BIO.MAT)=names(BIO)
+
+i=1
+while(i<=length(BIO)){
+    used=which(rownames(EXP) %in% BIO[[i]])
+    if(length(used)>1){
+        BIO.MAT[i,]=apply(EXP[used,],2,mean) 
+    }else if(length(used)==1){
+	BIO.MAT[i,]=EXP[used,]
+    }else{
+        BIO.MAT[i,]=0}
+    
+    i=i+1}
+
+VAR=apply(BIO.MAT,1,var)
+BIO.MAT=BIO.MAT[which(VAR>0 & (!is.na(VAR))),]
+VALUE=vector.calValue(t(BIO.MAT))$VALUE
+####################################
+
+pdf('./IMG/TEST_msKEGG.pdf')
+OUT$VALUE=VALUE
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
+dev.off()
+VALUE$nGene=OUT$VALUE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
