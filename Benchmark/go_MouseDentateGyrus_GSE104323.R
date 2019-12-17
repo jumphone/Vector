@@ -422,9 +422,11 @@ VALUE$msPCA=OUT$VALUE
 ###########
 #Prepare EXP
 
-EXP=as.matrix(pbmc@assays$RNA@data)
-EXP=t(apply(t(EXP),2,scale))
-EXP[which(is.na(EXP))]=0
+#EXP=as.matrix(pbmc@assays$RNA@data)
+#=t(apply(t(EXP),2,scale))
+#EXP[which(is.na(EXP))]=0
+
+EXP=as.matrix(pbmc@assays$RNA@scale.data)
 colnames(EXP)=colnames(pbmc)
 UP=toupper(rownames(EXP))
 USED=which(UP %in% names(which(table(UP)==1)))
