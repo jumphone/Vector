@@ -795,6 +795,50 @@ saveRDS(MAT,'IMG/TEST_BIO_MAT.RDS')
 
 
 
+######################
+# Test random feature
+
+
+##########################
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+setwd('F:/Vector/data/MouseIntestine_GSE92332/')
+pbmc=readRDS(file='pbmc_smart.RDS')
+
+
+VEC=pbmc@reductions$umap@cell.embeddings
+rownames(VEC)=colnames(pbmc)
+PCA= pbmc@reductions$pca@cell.embeddings
+
+OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+
+
+
+###########################################
+VALUE=list()
+#######################
+OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=FALSE)
+VALUE$msPCA=OUT$VALUE
+############################
+
+
+###########
+
+set.seed(123)
+
+pdf('./IMG/TEST_random.pdf')
+OUT$VALUE=rnorm(length(OUT$VALUE))
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
+dev.off()
+VALUE$random=OUT$VALUE
+
+saveRDS(MAT,'IMG/TEST_RANDOM_MAT.RDS')
+
 
 
 
