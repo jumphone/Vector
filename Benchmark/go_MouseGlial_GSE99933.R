@@ -309,5 +309,148 @@ COR
 
 
 
+######################
+# Test pathway feature
+
+
+
+###########################
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+setwd('F:/Vector/data/MouseGlial_GSE99933')
+
+pbmc=readRDS(file='pbmc.RDS')
+
+VEC=pbmc@reductions$umap@cell.embeddings
+rownames(VEC)=colnames(pbmc)
+PCA= pbmc@reductions$pca@cell.embeddings
+
+
+OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+
+
+
+###########################################
+VALUE=list()
+#######################
+OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=FALSE)
+VALUE$msPCA=OUT$VALUE
+############################
+
+
+###########
+#Prepare EXP
+
+EXP=as.matrix(pbmc@assays$RNA@data)
+EXP=t(apply(t(EXP),2,scale))
+EXP[which(is.na(EXP))]=0
+colnames(EXP)=colnames(pbmc)
+UP=toupper(rownames(EXP))
+USED=which(UP %in% names(which(table(UP)==1)))
+EXP=EXP[USED,]
+rownames(EXP)=UP[USED]
+
+
+###########
+#KEGG
+library(qusage)
+BIO=read.gmt('../KEGG_2019_Mouse.gmt')
+BIO.MAT=matrix(0,nrow=length(BIO),ncol=ncol(EXP))
+colnames(BIO.MAT)=colnames(EXP)
+rownames(BIO.MAT)=names(BIO)
+
+i=1
+while(i<=length(BIO)){
+    used=which(rownames(EXP) %in% BIO[[i]])
+    if(length(used)>1){
+        BIO.MAT[i,]=apply(EXP[used,],2,mean) 
+    }else if(length(used)==1){
+	BIO.MAT[i,]=EXP[used,]
+    }else{
+        BIO.MAT[i,]=0}
+    
+    i=i+1}
+
+VAR=apply(BIO.MAT,1,var)
+BIO.MAT=BIO.MAT[which(VAR>0 & (!is.na(VAR))),]
+this_value=vector.calValue(t(BIO.MAT))$VALUE
+####################################
+
+pdf('./IMG/TEST_msKEGG.pdf')
+OUT$VALUE=this_value
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
+dev.off()
+VALUE$msKEGG=OUT$VALUE
+
+##########################################################
+
+
+###########
+#MSigDB
+library(qusage)
+BIO=read.gmt('../MSigDB_Computational.gmt')
+BIO.MAT=matrix(0,nrow=length(BIO),ncol=ncol(EXP))
+colnames(BIO.MAT)=colnames(EXP)
+rownames(BIO.MAT)=names(BIO)
+
+i=1
+while(i<=length(BIO)){
+    used=which(rownames(EXP) %in% BIO[[i]])
+    if(length(used)>1){
+        BIO.MAT[i,]=apply(EXP[used,],2,mean) 
+    }else if(length(used)==1){
+	BIO.MAT[i,]=EXP[used,]
+    }else{
+        BIO.MAT[i,]=0}
+    
+    i=i+1}
+
+VAR=apply(BIO.MAT,1,var)
+BIO.MAT=BIO.MAT[which(VAR>0 & (!is.na(VAR))),]
+this_value=vector.calValue(t(BIO.MAT))$VALUE
+####################################
+
+pdf('./IMG/TEST_msMSigDB.pdf')
+OUT$VALUE=this_value
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
+dev.off()
+VALUE$msMSigDB=OUT$VALUE
+
+##########################################################
+
+
+
+MAT <- matrix(unlist(VALUE), ncol = 3, byrow = FALSE)
+colnames(MAT)=names(VALUE)
+rownames(MAT)=colnames(pbmc)
+saveRDS(MAT,'IMG/TEST_BIO_MAT.RDS')
+
+
+########################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
