@@ -492,6 +492,17 @@ COR
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 ######################
 # Test pathway feature
 
@@ -519,7 +530,7 @@ OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=FALSE)
 VALUE$msPCA=OUT$VALUE
 
 ###########
-#Pathway
+#Prepare EXP
 
 EXP=as.matrix(pbmc@assays$RNA@data)
 EXP=t(apply(t(EXP),2,scale))
@@ -531,7 +542,8 @@ EXP=EXP[USED,]
 rownames(EXP)=UP[USED]
 
 
-
+###########
+#KEGG
 library(qusage)
 BIO=read.gmt('../KEGG_2019_Mouse.gmt')
 BIO.MAT=matrix(0,nrow=length(BIO),ncol=ncol(EXP))
@@ -552,26 +564,64 @@ while(i<=length(BIO)){
 
 VAR=apply(BIO.MAT,1,var)
 BIO.MAT=BIO.MAT[which(VAR>0 & (!is.na(VAR))),]
-VALUE=vector.calValue(t(BIO.MAT))$VALUE
+this_value=vector.calValue(t(BIO.MAT))$VALUE
 ####################################
 
 pdf('./IMG/TEST_msKEGG.pdf')
-OUT$VALUE=VALUE
+OUT$VALUE=this_value
 OUT=vector.gridValue(OUT,SHOW=TRUE)
 OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
 dev.off()
-VALUE$nGene=OUT$VALUE
+VALUE$msKEGG=OUT$VALUE
+
+##########################################################
+
+
+###########
+#MSigDB
+library(qusage)
+BIO=read.gmt('../MSigDB_Computational.gmt')
+BIO.MAT=matrix(0,nrow=length(BIO),ncol=ncol(EXP))
+colnames(BIO.MAT)=colnames(EXP)
+rownames(BIO.MAT)=names(BIO)
+
+i=1
+while(i<=length(BIO)){
+    used=which(rownames(EXP) %in% BIO[[i]])
+    if(length(used)>1){
+        BIO.MAT[i,]=apply(EXP[used,],2,mean) 
+    }else if(length(used)==1){
+	BIO.MAT[i,]=EXP[used,]
+    }else{
+        BIO.MAT[i,]=0}
+    
+    i=i+1}
+
+VAR=apply(BIO.MAT,1,var)
+BIO.MAT=BIO.MAT[which(VAR>0 & (!is.na(VAR))),]
+this_value=vector.calValue(t(BIO.MAT))$VALUE
+####################################
+
+pdf('./IMG/TEST_msMSigDB.pdf')
+OUT$VALUE=this_value
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
+dev.off()
+VALUE$msMSigDB=OUT$VALUE
+
+##########################################################
 
 
 
+MAT <- matrix(unlist(VALUE), ncol = 4, byrow = FALSE)
+colnames(MAT)=names(VALUE)
+rownames(MAT)=colnames(pbmc)
+saveRDS(MAT,'IMG/TEST_BIO_MAT.RDS')
 
 
-
-
-
-
-
+########################################
 
 
 
