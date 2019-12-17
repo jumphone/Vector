@@ -615,7 +615,7 @@ VALUE$msMSigDB=OUT$VALUE
 
 
 
-MAT <- matrix(unlist(VALUE), ncol = 4, byrow = FALSE)
+MAT <- matrix(unlist(VALUE), ncol = 3, byrow = FALSE)
 colnames(MAT)=names(VALUE)
 rownames(MAT)=colnames(pbmc)
 saveRDS(MAT,'IMG/TEST_BIO_MAT.RDS')
