@@ -76,6 +76,19 @@ setwd('F:/Vector/data/MouseDentateGyrus_GSE104323/')
 pbmc=readRDS(file='pbmc.RDS')
 
 
+LABEL=rep(NA,ncol(pbmc))
+LABEL[which(pbmc@assays$RNA@data[which(rownames(pbmc)=='Mog'),]>0)]='Mog+'
+LABEL[which(pbmc@assays$RNA@data[which(rownames(pbmc)=='Aqp4'),]>0)]='Aqp4+'
+LABEL[which(pbmc@assays$RNA@data[which(rownames(pbmc)=='Nes'),]>0)]='Nes+'
+LABEL[which(pbmc@assays$RNA@data[which(rownames(pbmc)=='Rbfox3'),]>0)]='Rbfox3+'
+pbmc@meta.data$label=LABEL
+DimPlot(pbmc, group.by='label',label = TRUE)+NoLegend()+NoAxes()
+
+
+
+tiff(paste0("IMG/ALL_NEW.tiff"),width=5.5,height=5.5,units='in',res=600)
+DimPlot(pbmc, group.by='label',label = TRUE,label.size=7)+NoLegend()+NoAxes()
+dev.off()
 
 
 tiff(paste0("IMG/ALL.tiff"),width=5.5,height=5.5,units='in',res=600)
