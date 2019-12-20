@@ -11,7 +11,11 @@
     install.packages('stringr')
     install.packages('igraph')
 
-## Usage (please prepare a Seurat object with 150 PCs, https://satijalab.org/seurat/):
+## Usage:
+
+Please prepare a Seurat object with 150 PCs
+
+Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     
     # pbmc: a Seurat object
 
