@@ -643,8 +643,8 @@ VECTOR <- function(VEC, PCA, N=20){
     OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
     OUT=vector.gridValue(OUT,SHOW=TRUE)
     OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
-    OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
-
+    OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
+    
     par(mfrow=c(1,1))
     return(OUT)
     #####
