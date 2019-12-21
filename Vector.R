@@ -460,6 +460,7 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
     
     
     SCORE=c()
+    PS=c()
     i=1
     while(i<=length(USED_NAME)){
         this_name=USED_NAME[i]
@@ -470,6 +471,7 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
         this_score=min(this_dist)#sum(rank(-this_dist) * rank(this_value))
         #this_cor=cor(-this_value, this_dist)#,method='spearman')
         SCORE=c(SCORE, this_score)
+        PS=c(PS, this_score)
         i=i+1}
     SCORE=max(SCORE)-SCORE
     ##########################################
@@ -484,12 +486,14 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
     OUT$COL=rep('grey70',nrow(OUT$VEC))
     OUT$ORIG.COL=rep('grey70',nrow(OUT$VEC))
     OUT$P.SCORE=rep(0,nrow(OUT$VEC))
+    OUT$P.PS=rep(NA,nrow(OUT$VEC))
     i=1
     while(i<=length(USED)){
         this_index=INDEX_LIST[[USED[i]]]
         OUT$COL[this_index]=COL[i]
         OUT$ORIG.COL[this_index]=OUT$ORIG.CENTER.COL[USED][i]
         OUT$P.SCORE[this_index]=SCORE[i]
+        OUT$P.PS[this_index]=PS[i]
         i=i+1
         }
     ###########
@@ -512,6 +516,7 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
     OUT$LENGTH=LENGTH
     OUT$PCH=PCH
     OUT$DIST_COR=DIST_COR
+    OUT$PS=PS
     #OUT$DIST_MEAN=DIST_MEAN
     ################################
     
@@ -830,6 +835,7 @@ vector.selectRegion <- function(OUT){
     OUT$SELECT_NAME=SELECT_NAME
     OUT$SELECT_INDEX=SELECT_INDEX
     OUT$SELECT_SCORE=P.SCORE[SELECT_INDEX]
+    OUT$SELECT_PS=P.PS[SELECT_INDEX]
     ########################
     return(OUT)
     }
@@ -894,6 +900,7 @@ vector.reDrawRegion <- function(OUT){
     OUT$SELECT_NAME=SELECT_NAME
     OUT$SELECT_INDEX=SELECT_INDEX
     OUT$SELECT_SCORE=P.SCORE[SELECT_INDEX]
+    OUT$SELECT_PS=P.PS[SELECT_INDEX]
     ########################
     return(OUT)
     }
