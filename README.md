@@ -82,7 +82,7 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     OUT=vector.reDrawArrow(OUT, COL=OUT$COL)
     OUT=vector.selectRegion(OUT)
 
-    SELECT_SCORE=OUT$SELECT_SCORE
+    SELECT_PS=OUT$SELECT_PS
     SELECT_INDEX=OUT$SELECT_INDEX
 
 
