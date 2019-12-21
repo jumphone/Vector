@@ -696,6 +696,7 @@ vector.selectCenter <- function(OUT){
     
     
     SCORE=c()
+    
     i=1
     while(i<=length(USED_NAME)){
         this_name=USED_NAME[i]
@@ -706,6 +707,9 @@ vector.selectCenter <- function(OUT){
         #this_cor=cor(-this_value, this_dist)#,method='spearman')
         SCORE=c(SCORE, this_score)
         i=i+1}
+    
+    PS=SCORE
+    
     SCORE=max(SCORE)-SCORE
     ##########################################
     
@@ -719,12 +723,14 @@ vector.selectCenter <- function(OUT){
     OUT$COL=rep('grey70',nrow(OUT$VEC))
     OUT$ORIG.COL=rep('grey70',nrow(OUT$VEC))
     OUT$P.SCORE=rep(0,nrow(OUT$VEC))
+    OUT$P.PS=rep(NA,nrow(OUT$VEC))
     i=1
     while(i<=length(USED)){
         this_index=INDEX_LIST[[USED[i]]]
         OUT$COL[this_index]=COL[i]
         OUT$ORIG.COL[this_index]=OUT$ORIG.CENTER.COL[USED][i]
         OUT$P.SCORE[this_index]=SCORE[i]
+        OUT$P.PS[this_index]=PS[i]
         i=i+1
         }
     ###########
@@ -739,6 +745,7 @@ vector.selectCenter <- function(OUT){
     ######################
     ############
     OUT$SCORE=SCORE
+    OUT$PS=PS
     OUT$SUMMIT=SUMMIT
     ################################
     
