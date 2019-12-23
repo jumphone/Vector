@@ -31,3 +31,51 @@ saveRDS(pbmc,file='pbmc_D4.RDS')
 
 
 
+tiff(paste0("IMG/VECTOR.1.tiff"),width=4,height=4,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
+dev.off()
+
+
+tiff(paste0("IMG/VECTOR.2.tiff"),width=4,height=4,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+dev.off()
+
+tiff(paste0("IMG/VECTOR.3.tiff"),width=4,height=4,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+dev.off()
+
+tiff(paste0("IMG/VECTOR.4.tiff"),width=4,height=4,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+dev.off()
+
+tiff(paste0("IMG/VECTOR.5.tiff"),width=4,height=4,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+dev.off()
+
+tiff(paste0("IMG/VECTOR.6.tiff"),width=4,height=4,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL,AL=90)
+dev.off()
+
+
+
+
+tiff(paste0("IMG/Marker.tiff"),width=5,height=5,units='in',res=600)
+p <- FeaturePlot(pbmc, features=c('Mafb','Olig3','Dlx5','Ret'),order=TRUE, combine = FALSE)
+
+for(i in 1:length(p)) {
+  p[[i]] <- p[[i]] + NoLegend() + NoAxes()
+}
+
+cowplot::plot_grid(plotlist = p)
+dev.off()
+
+
+
+
+
