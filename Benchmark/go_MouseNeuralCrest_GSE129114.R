@@ -30,10 +30,16 @@ saveRDS(pbmc,file='pbmc_D4.RDS')
 
 
 
+OUT=vector.buildGrid(VEC, N=10,SHOW=TRUE)
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL,AL=90)
 
 tiff(paste0("IMG/VECTOR.1.tiff"),width=4,height=4,units='in',res=600)
 par(mar=c(0,0,0,0))
-OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
+OUT=vector.buildGrid(VEC, N=10,SHOW=TRUE)
 dev.off()
 
 
@@ -76,6 +82,16 @@ cowplot::plot_grid(plotlist = p)
 dev.off()
 
 
+
+tiff(paste0("IMG/Marker2.tiff"),width=5,height=5,units='in',res=600)
+p <- FeaturePlot(pbmc, features=c('Ascl1','Zfp488','Twist1','Neurod1'),order=TRUE, combine = FALSE)
+
+for(i in 1:length(p)) {
+  p[[i]] <- p[[i]] + NoLegend() + NoAxes()
+}
+
+cowplot::plot_grid(plotlist = p)
+dev.off()
 
 
 
