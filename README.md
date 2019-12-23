@@ -13,7 +13,7 @@
 
 ## Usage:
 
-Please prepare a Seurat object with 150 PCs
+Please prepare a Seurat object with UMAP and 150 PCs.
 
 Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     
