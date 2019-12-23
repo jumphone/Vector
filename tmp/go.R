@@ -1,6 +1,124 @@
 
 
 
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+setwd('F:/Vector/data/MouseNeuralCrest_GSE129114')
+
+
+D1=read.table('GSE129114_E8.5_whole_embryo_Wnt1_counts.txt',sep=' ',header=T,row.names=1)
+D2=read.table('GSE129114_E9.5_anterior_Sox10_counts.txt',sep=' ',header=T,row.names=1)
+D3=read.table('GSE129114_E9.5_posterior_Sox10_counts.txt',sep=' ',header=T,row.names=1)
+D4=read.table('GSE129114_E9.5_trunk_Wnt1_counts.txt',sep=' ',header=T,row.names=1)
+D5=read.table('GSE129114_E10.5_post-otic_Sox10_counts.txt',sep=' ',header=T,row.names=1)
+D6=read.table('GSE129114_E10.5_tail_Wnt1_counts.txt',sep=' ',header=T,row.names=1)
+D7=read.table('GSE129114_E10.5_trunk_Wnt1_counts.txt',sep=' ',header=T,row.names=1)
+
+BATCH=c(rep('E8.5.WH',ncol(D1)),
+	rep('E9.5.AN.SOX10',ncol(D2)),
+	rep('E9.5.PO.SOX10',ncol(D3)),
+	rep('E9.5.TR.WNT1',ncol(D4)),
+	rep('E10.5.PP.SOX10',ncol(D5)),
+	rep('E10.5.TA.WNT1',ncol(D6)),
+	rep('E10.5.TR.WNT1',ncol(D7))
+	   )
+
+
+       
+D12=.simple_combine(D1,D2)$combine
+D34=.simple_combine(D3,D4)$combine
+D56=.simple_combine(D5,D6)$combine
+D1234=.simple_combine(D12,D34)$combine
+D123456=.simple_combine(D1234,D56)$combine
+DATA=.simple_combine(D123456,D7)$combine
+
+saveRDS(DATA,file='DATA.RDS')
+saveRDS(BATCH,file='BATCH.RDS')
+
+##################################
+
+
+
+mybeer=BEER(DATA, BATCH, GNUM=30, PCNUM=150, ROUND=1, GN=5000, SEED=1, COMBAT=TRUE, RMG=NULL)   
+saveRDS(mybeer,file='mybeer.RDS')
+
+
+
+
+################
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+setwd('F:/Vector/data/MouseNeuralCrest_GSE129114')
+mybeer=readRDS(file='mybeer.RDS')
+#####################
+
+
+##########
+#E9.5.TR.WNT1
+pbmc <- CreateSeuratObject(counts = D4, project = "pbmc3k", min.cells = 0, min.features = 0)
+pbmc@meta.data$type=TYPE
+
+pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
+all.genes <- rownames(pbmc)
+pbmc <- ScaleData(pbmc, features = all.genes)
+
+pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 5000)
+pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs = 150)
+pbmc <- RunUMAP(pbmc, dims = 1:50)
+DimPlot(pbmc, reduction = "umap")
+
+
+FeaturePlot(pbmc,features = c('Sox9','Mafb','Olig3','Dlx5','Ret'))
+
+saveRDS(pbmc,file='pbmc_D4.RDS')
+
+
+
+
+
+
+
+
+VEC=pbmc@reductions$umap@cell.embeddings
+rownames(VEC)=colnames(pbmc)
+PCA= pbmc@reductions$pca@cell.embeddings
+
+OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ###############
 
