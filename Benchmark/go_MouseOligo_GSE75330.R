@@ -245,7 +245,30 @@ VEC=pbmc@reductions$umap@cell.embeddings
 rownames(VEC)=colnames(pbmc)
 PCA=PCA #pbmc@reductions$pca@cell.embeddings
 
+###############
 
+tiff(paste0("IMG/VAR_EXP.tiff"),width=3,height=2.5,units='in',res=600)
+
+par(mar=c(2,2,2,2))
+EXP.VAR=cumsum(PCA.OUT$sdev^2)/sum(PCA.OUT$sdev^2)
+INDEX=c(1:ncol(PCA))
+INDEX=log(INDEX,2)
+
+plot( INDEX, EXP.VAR,type='l',pch=16, lwd=5, col='grey70')
+
+THIS=150
+segments(x0=INDEX[THIS],
+	 y0=0,
+	 x1=INDEX[THIS],
+	 y1=EXP.VAR[THIS],
+	 col='black',lwd=2,lty=5)
+segments(x0=-10,
+	 y0=EXP.VAR[THIS],
+	 x1=INDEX[THIS],
+	 y1=EXP.VAR[THIS],
+	 col='black',lwd=2,lty=5)
+dev.off()
+###############
 
 TAG='OPC'
 R.PCA=apply(PCA,2,rank)
@@ -347,6 +370,27 @@ dev.off()
 
 
 
+
+#################
+table(TYPE)
+#Differentiation-committed OPC         Mature Oligodendrocytes 
+#                            140                            2748 
+#Myelin-forming Oligodendrocytes   Newly-formed Oligodendrocytes 
+#                           1283                             512 
+#                            OPC 
+#                            310 
+
+
+TTT=as.factor(pbmc@meta.data$type)
+TTT=factor(TTT , levels=c("OPC",'Differentiation-committed OPC','Newly-formed Oligodendrocytes','Myelin-forming Oligodendrocytes','Mature Oligodendrocytes'))
+
+tiff(paste0("IMG/CHANGE.tiff"),width=3,height=1,units='in',res=600)
+par(mar=c(0,0,0,0))
+boxplot(OUT$VALUE~TTT,outline=FALSE,xlab='',ylab='',las=2)
+dev.off()
+
+
+###################
 
 tiff(paste0("IMG/VECTOR.1.tiff"),width=4,height=4,units='in',res=600)
 par(mar=c(0,0,0,0))
