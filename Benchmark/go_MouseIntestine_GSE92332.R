@@ -434,6 +434,32 @@ dev.off()
 
 
 
+tiff(paste0("IMG/VECTOR.6.big.tiff"),width=2,height=2,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.drawArrow(OUT,P=1,SHOW=TRUE, COL=OUT$COL,AL=20)
+dev.off()
+
+
+
+
+tiff(paste0("IMG/Marker.big.tiff"),width=2,height=2,units='in',res=600)
+p <- FeaturePlot(pbmc, features=c('Lgr5'),order=TRUE, combine = FALSE)
+
+for(i in 1:length(p)) {
+  p[[i]] <- p[[i]] + NoLegend() + NoAxes()
+}
+
+cowplot::plot_grid(plotlist = p)
+dev.off()
+
+
+
+
+
+
+
+
+
 
 pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('Enterocyte.Immature.Distal',
                                  'Enterocyte.Immature.Proximal') )]='EIM'
