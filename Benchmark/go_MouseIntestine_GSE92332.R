@@ -367,11 +367,6 @@ dev.off()
 
 
 
-
-
-
-
-
 #####################
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 setwd('F:/Vector/data/MouseIntestine_GSE92332/')
@@ -398,6 +393,32 @@ tiff(paste0("IMG/NEW_VECTOR.6.tiff"),width=1,height=1,units='in',res=600)
 par(mar=c(0,0,0,0))
 OUT=vector.drawArrow(OUT,P=1,SHOW=TRUE, COL=OUT$COL,AL=20,CEX=0.2,SHOW.SUMMIT=TRUE)
 dev.off()
+
+
+#################
+
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('Enterocyte.Immature.Distal',
+                                 'Enterocyte.Immature.Proximal') )]='EIM'
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('Enterocyte.Mature.Distal',
+                                 'Enterocyte.Mature.Proximal') )]='EM'
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('Enterocyte.Progenitor',
+                                  'Enterocyte.Progenitor.Early',
+                                  'Enterocyte.Progenitor.Late') )]='EP'
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('TA.Early',
+                                  'TA.G1','TA.G1') )]='TA'
+pbmc@meta.data$type[which(pbmc@meta.data$type %in% c('Stem') )]='STEM'
+
+
+TTT=as.factor(pbmc@meta.data$type)
+TTT=factor(TTT , levels=c("STEM",'TA','EP','EIM','EM'))
+
+tiff(paste0("IMG/CHANGE.tiff"),width=3,height=1,units='in',res=600)
+par(mar=c(0,0,0,0))
+boxplot(OUT$VALUE~TTT,outline=FALSE,xlab='',ylab='',las=2)
+dev.off()
+
+
+###################
 
 
 
