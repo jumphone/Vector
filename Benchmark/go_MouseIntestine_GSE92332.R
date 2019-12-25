@@ -279,6 +279,33 @@ pbmc=readRDS('pbmc.RDS')
 
 PCA=PCA.OUT$x
 
+#################################
+
+tiff(paste0("IMG/VAR_EXP.tiff"),width=3,height=2.5,units='in',res=600)
+
+par(mar=c(2,2,2,2))
+EXP.VAR=cumsum(PCA.OUT$sdev^2)/sum(PCA.OUT$sdev^2)
+INDEX=c(1:ncol(PCA))
+INDEX=log(INDEX,2)
+
+plot( INDEX, EXP.VAR,type='l',pch=16, lwd=5, col='grey70')
+
+THIS=150
+segments(x0=INDEX[THIS],
+	 y0=0,
+	 x1=INDEX[THIS],
+	 y1=EXP.VAR[THIS],
+	 col='black',lwd=2,lty=5)
+segments(x0=-10,
+	 y0=EXP.VAR[THIS],
+	 x1=INDEX[THIS],
+	 y1=EXP.VAR[THIS],
+	 col='black',lwd=2,lty=5)
+dev.off()
+
+
+
+########################
 
 VEC=pbmc@reductions$umap@cell.embeddings
 rownames(VEC)=colnames(pbmc)
