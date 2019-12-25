@@ -76,16 +76,16 @@ setwd('F:/Vector/data/MouseDentateGyrus_GSE104323/')
 pbmc=readRDS(file='pbmc.RDS')
 
 
-used_cell=vector.SeuratSelect(pbmc)
-saveRDS(used_cell, 'annotateUsedCell.RDS')
-
+#used_cell=vector.SeuratSelect(pbmc)
+#saveRDS(used_cell, 'annotateUsedCell.RDS')
+used_cell=readRDS('annotateUsedCell.RDS')
 LABEL=rep(NA,ncol(pbmc))
 #LABEL[which(pbmc@assays$RNA@data[which(rownames(pbmc)=='Mog'),]>0)]='Mog+'
-LABEL[which(pbmc@assays$RNA@data[which(rownames(pbmc)=='Olig1'),]>0)]='Olig1+'
-LABEL[which(pbmc@assays$RNA@data[which(rownames(pbmc)=='Gfap'),]>0)]='Gfap+'
+LABEL[which(pbmc@assays$RNA@data[which(rownames(pbmc)=='Olig1'),]>0)]='Olig1'
+LABEL[which(pbmc@assays$RNA@data[which(rownames(pbmc)=='Gfap'),]>0)]='Gfap'
 #LABEL[which(pbmc@assays$RNA@data[which(rownames(pbmc)=='Pdgfra'),]>0)]='Pdgfra+'
-LABEL[which(pbmc@assays$RNA@data[which(rownames(pbmc)=='Nes'),]>0)]='Nes+'
-LABEL[which(pbmc@assays$RNA@data[which(rownames(pbmc)=='Rbfox3'),]>0)]='Rbfox3+'
+LABEL[which(pbmc@assays$RNA@data[which(rownames(pbmc)=='Nes'),]>0)]='Nes'
+LABEL[which(pbmc@assays$RNA@data[which(rownames(pbmc)=='Rbfox3'),]>0)]='Rbfox3'
 LABEL[which(!colnames(pbmc) %in% used_cell)]=NA
 pbmc@meta.data$label=LABEL
 DimPlot(pbmc, group.by='label',label = TRUE)+NoLegend()+NoAxes()
