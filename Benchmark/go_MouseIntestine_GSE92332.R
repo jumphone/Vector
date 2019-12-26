@@ -401,8 +401,6 @@ setwd('F:/Vector/data/MouseIntestine_GSE92332/')
 pbmc=readRDS(file='pbmc.RDS')
 
 
-
-
 VEC=pbmc@reductions$umap@cell.embeddings
 rownames(VEC)=colnames(pbmc)
 PCA= pbmc@reductions$pca@cell.embeddings
@@ -415,6 +413,14 @@ OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
 OUT=vector.gridValue(OUT,SHOW=TRUE)
 OUT=vector.autoCenter(OUT,UP=0.65,SHOW=TRUE)
 OUT=vector.drawArrow(OUT,P=1,SHOW=TRUE,  COL=OUT$COL,AL=40)
+
+
+tiff(paste0("IMG/NEW_VECTOR_TRY.6.tiff"),width=2,height=2,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.drawArrow(OUT,P=1,SHOW=TRUE, COL=OUT$COL,AL=20,OL=1.5,AW=2,AC='black')
+dev.off()
+
+=
 
 tiff(paste0("IMG/NEW_VECTOR.6.tiff"),width=1,height=1,units='in',res=600)
 par(mar=c(0,0,0,0))
