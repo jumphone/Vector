@@ -479,8 +479,8 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
     VALUE=SCORE
     #plot(OUT$VEC, col='grey70',pch=16)
     N.VALUE=(VALUE-min(VALUE))/(max(VALUE)-min(VALUE))
-    COL=vector.vcol(N.VALUE, c(0,0.5,1),c('#009FFF','#FFF200','#ec2F4B'))
-    
+    #COL=vector.vcol(N.VALUE, c(0,0.5,1),c('#009FFF','#FFF200','#ec2F4B'))
+    COL=vector.vcol(N.VALUE,c(0,0.5,1),c('#009FFF','#FFF200','#ffdde1'))
     
     ###################################################
     OUT$COL=rep('grey70',nrow(OUT$VEC))
@@ -527,8 +527,10 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
 
 
 
-vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',OL=1.5,AL=60,CEX=0.5, SHOW.SUMMIT=TRUE){
+vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',OL=1.5,AL=60,CEX=0.5,AW=2, AC='grey20', SHOW.SUMMIT=TRUE){
     ################
+    AW=AW
+    AC=AC
     OUT=OUT
     SHOW=SHOW
     P=P
@@ -590,11 +592,11 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',OL=1.5,AL=60,CE
         #this_arrow_length=sqrt(sum(final_vec^2))#0.1 #* (1+sqrt(sum(final_vec^2)))
         this_arrow_length=dev.size()[1]/AL *  sqrt(sum(final_vec^2))/one   # * sqrt(sum(final_vec^2)) #0.25
         if(SHOW==TRUE){
-            this_arrow_col='grey20'
+            this_arrow_col=AC#'grey20'
             #if(AC==TRUE){this_arrow_col=SCORE.COL[i]}
             arrows(x0=this_p1_loc[1],y0=this_p1_loc[2],
                    x1=this_p2_loc[1],y1=this_p2_loc[2],
-                   lwd=2, length=this_arrow_length,
+                   lwd=AW, length=this_arrow_length,
                    col=this_arrow_col
                    #col=this_arrow_col#SCORE.COL[i]
                    )
