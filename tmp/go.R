@@ -71,7 +71,11 @@ OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
 # Infer vector
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
 
+pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs = 150)
 
+
+
+pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc), )
 
 
 
