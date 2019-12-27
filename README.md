@@ -56,7 +56,7 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     OUT=vector.showValue(OUT)
     OUT=vector.gridValue(OUT, SHOW=TRUE)
     OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
-    OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL,OL=2,AL=50)
+    OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
 
     
 #### Select starting point:
