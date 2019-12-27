@@ -13,7 +13,7 @@ FOLD=rep(5,length(UB))
 names(FOLD)=names(UB)
 
 AGG=BEER.AGG(DATA, BATCH, FOLD, PCNUM=50, GN=2000, CPU=4, print_step=10, SEED=123, N=3, RMG=NULL)
-
+saveRDS(AGG, 'AGG.RDS')
 
 
 
