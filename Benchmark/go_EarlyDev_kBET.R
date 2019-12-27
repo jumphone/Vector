@@ -85,7 +85,7 @@ OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, OL=2,COL=OUT$COL)
 
 tiff(paste0("IMG/NEW_VECTOR_TRY.6.tiff"),width=4,height=4,units='in',res=600)
 par(mar=c(0,0,0,0))
-OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL,AL=40,OL=2,AW=1.5,AC='black',CEX=1)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL,AL=40,BD=F,OL=2,AW=1.5,AC='black',CEX=1)
 dev.off()
 
 
