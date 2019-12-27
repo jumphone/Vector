@@ -398,6 +398,18 @@ boxplot(OUT$VALUE~TTT,outline=FALSE,xlab='',ylab='',las=2)
 dev.off()
 
 
+tiff(paste0("IMG/CHANGE1.tiff"),width=3,height=1,units='in',res=600)
+#par(mar=c(0,0,0,0))
+par(mar=c(0,3,0,0))
+boxplot(OUT$VALUE~TTT,outline=FALSE,xlab='',ylab='',las=2)
+dev.off()
+
+
+tiff(paste0("IMG/CHANGE2.tiff"),width=4.2,height=1.4,units='in',res=600)
+par(mar=c(1,1,0.2,0.2))
+boxplot(OUT$VALUE~TTT,outline=FALSE,xlab='',ylab='',las=2)
+dev.off()
+
 ###################
 
 tiff(paste0("IMG/VECTOR.1.tiff"),width=4,height=4,units='in',res=600)
