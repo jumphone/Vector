@@ -479,8 +479,9 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
     VALUE=SCORE
     #plot(OUT$VEC, col='grey70',pch=16)
     N.VALUE=(VALUE-min(VALUE))/(max(VALUE)-min(VALUE))
-    #COL=vector.vcol(N.VALUE, c(0,0.5,1),c('#009FFF','#FFF200','#ec2F4B'))
-    COL=vector.vcol(N.VALUE,c(0,0.5,1),c('#009FFF','#FFF200','#ffdde1'))
+    #COL=vector.vcol(N.VALUE, c(0,0.5,1),c('#009FFF','#FFF200','#ec2F4B')) # too strong
+    #COL=vector.vcol(N.VALUE,c(0,0.5,1),c('#009FFF','#FFF200','#ffdde1')) # too weak
+    COL=vector.vcol(N.VALUE,c(0,0.5,1),c('#009FFF','#FFF200','#ee9ca7'))
     
     ###################################################
     OUT$COL=rep('grey70',nrow(OUT$VEC))
@@ -527,9 +528,10 @@ vector.autoCenter <- function(OUT, UP=0.9, SHOW=TRUE){
 
 
 
-vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',OL=1.5,AL=60,CEX=0.5,AW=2, AC='grey20', SHOW.SUMMIT=TRUE){
+vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',OL=1.5,AL=60,CEX=0.5,AW=2, BD=TRUE, AC='grey20', SHOW.SUMMIT=TRUE){
     ################
     AW=AW
+    BD=BD
     AC=AC
     OUT=OUT
     SHOW=SHOW
@@ -546,7 +548,9 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',OL=1.5,AL=60,CE
     OL=OL
     CEX=CEX
     SHOW.SUMMIT=SHOW.SUMMIT
-
+    #####################
+    one=min(dist(USED_CENTER_VEC)) * OL
+    #####################
     ###################
     .norm_one <-function(x,one=1){
         one=one
@@ -558,7 +562,18 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',OL=1.5,AL=60,CE
     DIV=1/P
     ####################
     if(SHOW==TRUE){
-        plot(ALL_VEC,col=COL,pch=16,cex=CEX)
+        #plot(ALL_VEC,col=COL,pch=16,cex=CEX)
+        if(BD==TRUE){
+            plot(ALL_VEC,col=COL,pch=16,cex=CEX, 
+                  xlim=c(min(ALL_VEC[,1])-one, max(ALL_VEC[,1])+one ),
+                 ylim=c(min(ALL_VEC[,2])-one, max(ALL_VEC[,2])+one ) 
+                )
+            }else{
+            plot(ALL_VEC,col=COL,pch=16,cex=CEX, 
+                 xlim=c(min(ALL_VEC[,1])-one, max(ALL_VEC[,1])+one ),
+                 ylim=c(min(ALL_VEC[,2])-one, max(ALL_VEC[,2])+one ) , yaxt="n", axes=F
+                )
+            }
         }
     ##########################
     N.SCORE=.normX(SCORE)
@@ -568,7 +583,7 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',OL=1.5,AL=60,CE
     A2_VEC=c()
     A_LENGTH=c()
     #####################
-    one=min(dist(USED_CENTER_VEC)) * OL
+    #one=min(dist(USED_CENTER_VEC)) * OL
     #####################
     i=1
     while(i<=length(USED)){
@@ -617,7 +632,7 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',OL=1.5,AL=60,CE
         Y2=max(OUT$CENTER_VEC[OUT$SUMMIT,2])+one/10
         
         rect(xleft=X1, ybottom=Y1, xright=X2, ytop=Y2, angle = 45,
-        col = NA, border = 'black', lty = 1, lwd = 3)
+        col = NA, border = 'black', lty = 2, lwd = 2)
         }
     #################################
     A1_VEC=t(A1_VEC)
