@@ -25,6 +25,7 @@ BATCH=AGG$data.agg.batch
 
 mybeer=BEER(DATA, BATCH, GNUM=30, PCNUM=150, ROUND=1, GN=2000, SEED=1, COMBAT=TRUE, RMG=NULL,N=3)   
 
+saveRDS(mybeer, 'mybeer.RDS')
 
 
 
@@ -42,9 +43,33 @@ pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims = PCUSE, check_duplicate
 
 DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.1) 
 
+all.genes <- rownames(pbmc)
+pbmc <- ScaleData(pbmc, features = all.genes)
 
 
+FeaturePlot(pbmc,features=c('NES'))
 
+VEC=pbmc@reductions$umap@cell.embeddings
+rownames(VEC)=colnames(pbmc)
+PCA= pbmc@reductions$pca@cell.embeddings
+
+# Define pixel
+OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
+
+# Build network
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+
+# Calculate Margin Score (MS)
+OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+
+# Get pixel's MS
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+
+# Find summit
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+
+# Infer vector
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
 
 
 
