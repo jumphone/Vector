@@ -16,10 +16,19 @@ AGG=BEER.AGG(DATA, BATCH, FOLD, PCNUM=50, GN=2000, CPU=4, print_step=10, SEED=12
 saveRDS(AGG, 'AGG.RDS')
 
 
-
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+setwd('F:/LUOZAILI')
+AGG=readRDS('AGG.RDS')
 
 DATA=AGG$data.agg
 BATCH=AGG$data.agg.batch
+
+mybeer=BEER(DATA, BATCH, GNUM=30, PCNUM=150, ROUND=1, GN=2000, SEED=1, COMBAT=TRUE, RMG=NULL,N=3)   
+
+
+
+
+
 
 
 
