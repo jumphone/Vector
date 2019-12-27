@@ -28,7 +28,19 @@ mybeer=BEER(DATA, BATCH, GNUM=30, PCNUM=150, ROUND=1, GN=2000, SEED=1, COMBAT=TR
 
 
 
+PCUSE=mybeer$select
+COL=rep('black',length(mybeer$cor))
+COL[PCUSE]='red'
+plot(mybeer$cor,mybeer$lcor,pch=16,col=COL,
+    xlab='Rank Correlation',ylab='Linear Correlation',xlim=c(0,1),ylim=c(0,1))
 
+
+
+pbmc <- mybeer$seurat
+PCUSE <- mybeer$select
+pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims = PCUSE, check_duplicates=FALSE)
+
+DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.1) 
 
 
 
