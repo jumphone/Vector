@@ -54,7 +54,7 @@ OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
 
 tiff(paste0("IMG/NEW_VECTOR_TRY.6.tiff"),width=4,height=4,units='in',res=600)
 par(mar=c(0,0,0,0))
-OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL,AL=70,AW=1.5,AC='black')
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL,AL=70,AW=1.5,BD=FALSE,AC='black')
 dev.off()
 
 
