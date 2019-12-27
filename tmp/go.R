@@ -18,7 +18,8 @@ saveRDS(AGG, 'AGG.RDS')
 
 
 
-
+DATA=AGG$data.agg
+BATCH=AGG$data.agg.batch
 
 
 
