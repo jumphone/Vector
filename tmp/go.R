@@ -41,6 +41,17 @@ mybeer=BEER(DATA, BATCH, GNUM=30, PCNUM=150, ROUND=1, GN=2000, SEED=1, COMBAT=TR
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 setwd('F:/Vector/data/MouseNeuralCrest_GSE129114')
 
