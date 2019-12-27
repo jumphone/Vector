@@ -407,20 +407,38 @@ PCA= pbmc@reductions$pca@cell.embeddings
 #######################
 
 
-OUT=vector.buildGrid(VEC, N=8,SHOW=TRUE)
+OUT=vector.buildGrid(VEC, N=15,SHOW=TRUE)
 OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
 OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
 OUT=vector.gridValue(OUT,SHOW=TRUE)
-OUT=vector.autoCenter(OUT,UP=0.65,SHOW=TRUE)
+OUT=vector.autoCenter(OUT,UP=0.75,SHOW=TRUE)
 OUT=vector.drawArrow(OUT,P=1,SHOW=TRUE,  COL=OUT$COL,AL=40)
 
 
-tiff(paste0("IMG/NEW_VECTOR_TRY.6.tiff"),width=2,height=2,units='in',res=600)
+tiff(paste0("IMG/NEW_VECTOR_TRY.6.tiff"),width=4,height=4,units='in',res=600)
 par(mar=c(0,0,0,0))
-OUT=vector.drawArrow(OUT,P=1,SHOW=TRUE, COL=OUT$COL,AL=20,OL=1.5,AW=2,AC='black')
+OUT=vector.drawArrow(OUT,P=1,SHOW=TRUE, COL=OUT$COL,AL=60,OL=1.5,AW=2,AC='black',BD=FALSE)
 dev.off()
 
-=
+
+
+tiff(paste0("IMG/Marker.big.tiff"),width=4,height=2,units='in',res=600)
+p <- FeaturePlot(pbmc, features=c('Lgr5','Pcna'),order=TRUE, combine = FALSE)
+
+for(i in 1:length(p)) {
+  p[[i]] <- p[[i]] + NoLegend() + NoAxes()
+}
+
+cowplot::plot_grid(plotlist = p)
+dev.off()
+
+
+
+
+
+
+
+
 
 tiff(paste0("IMG/NEW_VECTOR.6.tiff"),width=1,height=1,units='in',res=600)
 par(mar=c(0,0,0,0))
@@ -467,6 +485,13 @@ dev.off()
 ###################
 
 
+
+OUT=vector.buildGrid(VEC, N=15,SHOW=TRUE)
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+OUT=vector.autoCenter(OUT,UP=0.75,SHOW=TRUE)
+OUT=vector.drawArrow(OUT,P=1,SHOW=TRUE,  COL=OUT$COL,AL=40)
 
 tiff(paste0("IMG/VECTOR.1.tiff"),width=1,height=1,units='in',res=600)
 par(mar=c(0,0,0,0))
