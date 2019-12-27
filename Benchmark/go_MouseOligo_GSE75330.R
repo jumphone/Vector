@@ -367,7 +367,30 @@ OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
 
 tiff(paste0("IMG/NEW_VECTOR_TRY.6.tiff"),width=4,height=4,units='in',res=600)
 par(mar=c(0,0,0,0))
-OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL,AL=60,AW=1.5,AC='black')
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL,AL=60,AW=1.5,BD=FALSE, AC='black')
+dev.off()
+
+
+
+tiff(paste0("IMG/Marker1.tiff"),width=2,height=2,units='in',res=600)
+p <- FeaturePlot(pbmc, features=c('Pdgfra'),order=TRUE, combine = FALSE, pt.size=0.3)
+
+for(i in 1:length(p)) {
+  p[[i]] <- p[[i]] + NoLegend() + NoAxes()
+}
+
+cowplot::plot_grid(plotlist = p)
+dev.off()
+
+
+tiff(paste0("IMG/Marker2.tiff"),width=2,height=2,units='in',res=600)
+p <- FeaturePlot(pbmc, features=c('Mog'),order=TRUE, combine = FALSE, pt.size=0.3)
+
+for(i in 1:length(p)) {
+  p[[i]] <- p[[i]] + NoLegend() + NoAxes()
+}
+
+cowplot::plot_grid(plotlist = p)
 dev.off()
 
 
