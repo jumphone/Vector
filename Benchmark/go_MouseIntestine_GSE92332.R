@@ -631,7 +631,7 @@ OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
 
 tiff(paste0("IMG/NEW_SMART.VECTOR_TRY.6.tiff"),width=4,height=4,units='in',res=600)
 par(mar=c(0,0,0,0))
-OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL,AL=60,AW=1.5,AC='black')
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL,AL=60,AW=1,AC='black',BD=FALSE)
 dev.off()
 
 tiff(paste0("IMG/NEW_SMART.VECTOR.6.tiff"),width=4,height=4,units='in',res=600)
@@ -639,6 +639,18 @@ par(mar=c(0,0,0,0))
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL,AL=40)
 dev.off()
 
+
+
+
+tiff(paste0("IMG/SMART.Marker.tiff"),width=5,height=5,units='in',res=600)
+p <- FeaturePlot(pbmc, features=c('Lgr5','Pcna','Muc2','Dclk1'),order=TRUE, combine = FALSE,pt.size=0.5)
+
+for(i in 1:length(p)) {
+  p[[i]] <- p[[i]] + NoLegend() + NoAxes()
+}
+
+cowplot::plot_grid(plotlist = p)
+dev.off()
 
 
 
