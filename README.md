@@ -24,7 +24,7 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     PCA= pbmc@reductions$pca@cell.embeddings
 
     # Define pixel
-    OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
+    OUT=vector.buildGrid(VEC, N=20,SHOW=TRUE)
     
     # Build network
     OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
