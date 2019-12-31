@@ -17,14 +17,23 @@ Please prepare a Seurat object with UMAP and 150 PCs.
 
 Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     
-    # pbmc: a Seurat object
+### Case 1: Get UMAP and PCA from Seurat3, pbmc: a Seurat object:
 
-    VEC=pbmc@reductions$umap@cell.embeddings
-    rownames(VEC)=colnames(pbmc)
-    PCA= pbmc@reductions$pca@cell.embeddings
+    VEC = pbmc@reductions$umap@cell.embeddings
+    rownames(VEC) = colnames(pbmc)
+    PCA = pbmc@reductions$pca@cell.embeddings
+
+### Case 2: Get UMAP and PCA from Monocle3, cds: a Monocle object:
+   
+    VEC = cds@reducedDims$UMAP
+    colnames(VEC) = c('UMAP_1','UMAP_2')
+    PCA = cds@reducedDims$PCA
+
+###  Use VECTOR:
+
 
     # Define pixel
-    OUT=vector.buildGrid(VEC, N=20,SHOW=TRUE)
+    OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
     
     # Build network
     OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
