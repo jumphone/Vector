@@ -13,10 +13,21 @@
 
 ## Usage:
 
-Please prepare a Seurat object with UMAP and 150 PCs.
-
+### Please prepare a Seurat object with UMAP and 150 PCs.
 Users can follow https://satijalab.org/seurat/ to generate Seurat object.
-    
+
+    # DATA: Expression matrix. Rownames are gene names. Colnames are cell names.
+    pbmc <- CreateSeuratObject(counts = DATA, project = "pbmc3k", min.cells = 0, min.features = 0)
+    pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
+
+    pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 5000)
+    all.genes <- rownames(pbmc)
+    pbmc <- ScaleData(pbmc, features = all.genes)
+    pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs = 150)
+    pbmc <- RunUMAP(pbmc, dims = 1:50)
+    DimPlot(pbmc, reduction = "umap")
+    saveRDS(pbmc,file='pbmc.RDS')
+
 ### Case 1: Get UMAP and PCA from Seurat3, pbmc: a Seurat object:
 
     VEC = pbmc@reductions$umap@cell.embeddings
