@@ -57,14 +57,119 @@ pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs = 300)
 saveRDS(pbmc,file='pbmc300.RDS')
 
 
-PCUSE=1:300
-pbmc <- RunUMAP(object = pbmc, reduction='pca',dims = PCUSE,n.components=2, 
-		n.neighbors=10, min.dist=0.2,
+
+
+
+
+############
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+setwd('F:/LUOZAILI')
+
+pbmc=readRDS(file='pbmc300.RDS')
+
+PCA = pbmc@reductions$pca@cell.embeddings
+
+
+###########################
+CCG=as.character(read.table('CellCycle.txt')[,1])
+SD=as.matrix(pbmc@assays$RNA@scale.data)
+CCG.EXP=apply(SD[which(rownames(SD) %in% CCG),],2,mean)
+pbmc@meta.data$ccg=CCG.EXP
+
+#########################
+N.PCA=PCA
+i=1
+while(i<=ncol(PCA)){
+    this_fit=loess(PCA[,i]~CCG.EXP)
+    N.PCA[,i]= PCA[,i] -  predict(this_fit)	
+    #this_order=order(CCG.EXP)
+    #N.PCA[this_order,i]= PCA[this_order,i] -  smooth(PCA[this_order,i]) 
+    print(i)
+    i=i+1}
+
+
+pbmc@reductions$pca@cell.embeddings=N.PCA
+
+
+
+#####################
+
+
+PCUSE=1:80
+
+
+
+pbmc <- RunUMAP(object = pbmc, reduction='pca',dims = PCUSE, n.components=2, 
+		#n.neighbors=70, min.dist=0.3,seed.use=123,
 		check_duplicates=FALSE)
 
 DimPlot(pbmc, reduction='umap', group.by='batch', pt.size=0.1) 
 
+
+
+
+
+
+nUMAP=round(length(PCUSE))
+pbmc <- RunUMAP(object = pbmc, reduction='pca',dims = PCUSE,n.components=nUMAP, check_duplicates=FALSE)
+pbmc <- RunUMAP(object = pbmc, reduction='umap',dims = 1:nUMAP,n.components=2, check_duplicates=FALSE)
+
+DimPlot(pbmc, reduction='umap', group.by='batch', pt.size=0.1) 
+
+
 FeaturePlot(pbmc,reduction='umap',features = c('PCNA','NES'),ncol=2,cols=c('blue','gold','red'))
+
+
+
+
+
+
+FeaturePlot(pbmc,reduction='umap',features = c('PCNA','NES'),ncol=2,cols=c('blue','gold','red'))
+
+FeaturePlot(pbmc,reduction='umap',features = CCG,ncol=2,cols=c('blue','gold','red'))
+
+FeaturePlot(pbmc,reduction='umap',features = 'ccg',ncol=2,cols=c('blue','gold','red'))
+
+
+
+VEC = pbmc@reductions$umap@cell.embeddings
+rownames(VEC) = colnames(pbmc)
+PCA = pbmc@reductions$pca@cell.embeddings
+
+# Define pixel
+OUT=vector.buildGrid(VEC, N=50,SHOW=TRUE)
+
+# Build network
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+
+# Calculate Margin Score (MS)
+OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+
+# Get pixel's MS
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+
+# Find summit
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+
+# Infer vector
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ###########
