@@ -16,6 +16,7 @@ AGG=BEER.AGG(DATA, BATCH, FOLD, PCNUM=50, GN=2000, CPU=4, print_step=10, SEED=12
 saveRDS(AGG, 'AGG.RDS')
 
 
+########################
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 setwd('F:/LUOZAILI')
 AGG=readRDS('AGG.RDS')
@@ -23,10 +24,20 @@ AGG=readRDS('AGG.RDS')
 DATA=AGG$data.agg
 BATCH=AGG$data.agg.batch
 
-mybeer=BEER(DATA, BATCH, GNUM=30, PCNUM=150, ROUND=1, GN=2000, SEED=1, COMBAT=TRUE, RMG=NULL,N=3)   
+mybeer=BEER(DATA, BATCH, GNUM=30, PCNUM=150, ROUND=1, GN=5000, SEED=1, COMBAT=TRUE, RMG=NULL,N=3)   
 
 saveRDS(mybeer, 'mybeer.RDS')
 
+
+
+
+
+
+############
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+setwd('F:/LUOZAILI')
+
+mybeer=readRDS('mybeer.RDS')
 
 
 PCUSE=mybeer$select
@@ -39,17 +50,62 @@ plot(mybeer$cor,mybeer$lcor,pch=16,col=COL,
 
 pbmc <- mybeer$seurat
 PCUSE <- mybeer$select
+
+
+
+
+nUMAP=round(length(PCUSE)/2)
+pbmc <- RunUMAP(object = pbmc, reduction='pca',dims = PCUSE,n.components=nUMAP, check_duplicates=FALSE)
+
+pbmc <- RunTSNE(object = pbmc, reduction='umap',dims = 1:nUMAP,  check_duplicates=FALSE)
+
+DimPlot(pbmc, reduction='tsne', group.by='batch', pt.size=0.1) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pbmc <- RunUMAP(object = pbmc, reduction.use='tsne',dims = PCUSE, check_duplicates=FALSE)
+
+
+
+
+#VlnPlot(pbmc, features = c("nFeature_RNA", "nCount_RNA"), ncol = 2)
+
+
+PCUSE <- mybeer$select[1:10]
 pbmc <- RunUMAP(object = pbmc, reduction.use='pca',dims = PCUSE, check_duplicates=FALSE)
-
-DimPlot(pbmc, reduction.use='umap', group.by='batch', pt.size=0.1) 
-
-all.genes <- rownames(pbmc)
-pbmc <- ScaleData(pbmc, features = all.genes)
+DimPlot(pbmc, reduction='umap', group.by='batch', pt.size=0.1) 
+FeaturePlot(pbmc,features = 'PCNA', reduction.use='umap')
 
 
-FeaturePlot(pbmc,features=c('NES'))
 
-VEC=pbmc@reductions$umap@cell.embeddings
+PCUSE <- mybeer$select[1:50]
+pbmc <- RunTSNE(object = pbmc, reduction.use='pca',dims = PCUSE, check_duplicates=FALSE)
+
+
+
+TSNEPlot(pbmc, group.by='batch', pt.size=0.1) 
+FeaturePlot(pbmc,reduction='tsne',features = c('PCNA','SOX11','NES'))
+
+
+#VEC=pbmc@reductions$umap@cell.embeddings
+VEC=pbmc@reductions$tsne@cell.embeddings
 rownames(VEC)=colnames(pbmc)
 PCA= pbmc@reductions$pca@cell.embeddings
 
@@ -71,13 +127,10 @@ OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
 # Infer vector
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
 
-pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs = 150)
 
+FeaturePlot(pbmc,reduction='tsne',features = c('NES','PCNA','SOX11','LHX1','PTPRZ1','PAX6'),ncol=3,cols=c('blue','gold','red'))
 
-
-pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc), )
-
-
+FeaturePlot(pbmc,reduction='tsne',features = c('NES','PCNA','SOX11'))
 
 
 
