@@ -49,6 +49,63 @@ plot(mybeer$cor,mybeer$lcor,pch=16,col=COL,
 
 
 pbmc <- mybeer$seurat
+
+pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs = 300)
+
+
+
+saveRDS(pbmc,file='pbmc300.RDS')
+
+
+PCUSE=1:300
+pbmc <- RunUMAP(object = pbmc, reduction='pca',dims = PCUSE,n.components=2, 
+		n.neighbors=10, min.dist=0.2,
+		check_duplicates=FALSE)
+
+DimPlot(pbmc, reduction='umap', group.by='batch', pt.size=0.1) 
+
+FeaturePlot(pbmc,reduction='umap',features = c('PCNA','NES'),ncol=2,cols=c('blue','gold','red'))
+
+
+###########
+UMAP=pbmc@reductions$umap@cell.embeddings
+library(destiny, quietly = TRUE)
+dm <- DiffusionMap(UMAP)
+
+##########
+
+DimPlot(pbmc, reduction='umap', group.by='batch', pt.size=0.1) 
+
+
+
+
+
+nUMAP=round(length(PCUSE))
+pbmc <- RunUMAP(object = pbmc, reduction='pca',dims = PCUSE,n.components=nUMAP, check_duplicates=FALSE)
+pbmc <- RunUMAP(object = pbmc, reduction='umap',dims = 1:nUMAP,n.components=2, check_duplicates=FALSE)
+
+
+
+DimPlot(pbmc, reduction='umap', group.by='batch', pt.size=0.1) 
+
+
+FeaturePlot(pbmc,reduction='umap',features = c('NES','PCNA','SOX11','LHX1','PTPRZ1','PAX6'),ncol=3,cols=c('blue','gold','red'))
+
+
+
+
+
+
+
+library(gmodels)
+D=as.matrix(pbmc@assays$RNA@scale.data)
+D=D[which(rownames(D) %in% VariableFeatures(pbmc)),]
+PCA.OUT=fast.prcomp(t(D), retx = TRUE, center = FALSE, scale. = FALSE, tol = NULL)
+PCA=PCA.OUT$x
+
+
+
+
 PCUSE <- mybeer$select
 
 
@@ -57,10 +114,13 @@ PCUSE <- mybeer$select
 nUMAP=round(length(PCUSE)/2)
 pbmc <- RunUMAP(object = pbmc, reduction='pca',dims = PCUSE,n.components=nUMAP, check_duplicates=FALSE)
 
-pbmc <- RunTSNE(object = pbmc, reduction='umap',dims = 1:nUMAP,  check_duplicates=FALSE)
+pbmc <- RunUMAP(object = pbmc, reduction='umap',dims = 1:nUMAP,n.components=2, check_duplicates=FALSE)
 
-DimPlot(pbmc, reduction='tsne', group.by='batch', pt.size=0.1) 
 
+DimPlot(pbmc, reduction='umap', group.by='batch', pt.size=0.1) 
+
+
+FeaturePlot(pbmc,reduction='umap',features = c('NES','PCNA','SOX11','LHX1','PTPRZ1','PAX6'),ncol=3,cols=c('blue','gold','red'))
 
 
 
