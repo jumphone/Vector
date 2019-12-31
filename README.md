@@ -35,11 +35,6 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     rownames(VEC) = colnames(pbmc)
     PCA = pbmc@reductions$pca@cell.embeddings
 
-### (Optional) Get UMAP and PCs from Monocle3. cds: a Monocle object:
-   
-    VEC = cds@reducedDims$UMAP
-    colnames(VEC) = c('UMAP_1','UMAP_2')
-    PCA = cds@reducedDims$PCA
 
 ###  Use VECTOR:
 
@@ -61,8 +56,6 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     
     # Infer vector
     OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
-
-
 
 
 #### Change MS to NES gene expression:
@@ -107,3 +100,12 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     SELECT_INDEX=OUT$SELECT_INDEX
 
 
+
+
+
+
+### (Optional) Get UMAP and PCs from Monocle3. cds: a Monocle object:
+   
+    VEC = cds@reducedDims$UMAP
+    colnames(VEC) = c('UMAP_1','UMAP_2')
+    PCA = cds@reducedDims$PCA
