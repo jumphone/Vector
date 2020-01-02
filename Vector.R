@@ -811,6 +811,7 @@ vector.selectRegion <- function(OUT){
     A2_VEC=OUT$A2_VEC
     A_LENGTH=OUT$A_LENGTH
     VEC=OUT$VEC
+    P.PS=OUT$P.PS
     #####################
     CENTER_LIST=OUT$CENTER_LIST
     INDEX_LIST=OUT$INDEX_LIST
