@@ -643,6 +643,14 @@ par(mar=c(0,0,0,0))
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL,AL=60,AW=1,AC='black',BD=FALSE)
 dev.off()
 
+
+
+tiff(paste0("IMG/NEW_SMART.VECTOR_TRY_BLUE.6.tiff"),width=4,height=4,units='in',res=600)
+par(mar=c(0,0,0,0))
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL,AL=60,AW=1,AC='black',BD=FALSE)
+dev.off()
+
+
 tiff(paste0("IMG/NEW_SMART.VECTOR.6.tiff"),width=4,height=4,units='in',res=600)
 par(mar=c(0,0,0,0))
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL,AL=40)
