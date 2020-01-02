@@ -434,6 +434,15 @@ dev.off()
 
 
 
+tiff(paste0("IMG/Marker.big.new.tiff"),width=4,height=2,units='in',res=600)
+p <- FeaturePlot(pbmc, features=c('Lgr5','Fabp1'),order=TRUE, combine = FALSE)
+
+for(i in 1:length(p)) {
+  p[[i]] <- p[[i]] + NoLegend() + NoAxes()
+}
+
+cowplot::plot_grid(plotlist = p)
+dev.off()
 
 
 
@@ -654,6 +663,28 @@ dev.off()
 
 
 
+tiff(paste0("IMG/SMART.Marker.new.tiff"),width=5,height=5,units='in',res=600)
+p <- FeaturePlot(pbmc, features=c('Lgr5','Fabp1','Muc2','Dclk1'),order=TRUE, combine = FALSE,pt.size=0.5)
+
+for(i in 1:length(p)) {
+  p[[i]] <- p[[i]] + NoLegend() + NoAxes()
+}
+
+cowplot::plot_grid(plotlist = p)
+dev.off()
+
+
+
+
+tiff(paste0("IMG/SMART.Marker.new2.tiff"),width=5,height=5,units='in',res=600)
+p <- FeaturePlot(pbmc, features=c('Lgr5','Fabp6','Muc2','Dclk1'),order=TRUE, combine = FALSE,pt.size=0.5)
+
+for(i in 1:length(p)) {
+  p[[i]] <- p[[i]] + NoLegend() + NoAxes()
+}
+
+cowplot::plot_grid(plotlist = p)
+dev.off()
 
 
 
