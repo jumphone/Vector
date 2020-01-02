@@ -1,6 +1,40 @@
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 setwd('F:/LUOZAILI')
 
+pbmc=readRDS('12W_pbmc3k_final.rds')
+
+
+pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs = 150)
+
+
+
+VEC = pbmc@reductions$umap@cell.embeddings
+rownames(VEC) = colnames(pbmc)
+PCA = pbmc@reductions$pca@cell.embeddings
+
+# Define pixel
+OUT=vector.buildGrid(VEC, N=40,SHOW=TRUE)
+
+# Build network
+OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
+
+# Calculate Margin Score (MS)
+OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+
+# Get pixel's MS
+OUT=vector.gridValue(OUT,SHOW=TRUE)
+
+# Find summit
+OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
+
+# Infer vector
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
+####################################
+
+
+FeaturePlot(pbmc,features='NES')
+
+
 
 
 DATA=readRDS('5_all_cells.rds')
