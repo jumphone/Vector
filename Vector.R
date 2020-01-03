@@ -12,8 +12,8 @@ library('igraph')
 
 
 
-vector.smoothOut <- function(X, OUT){
-    Y=X[order(OUT)]-smooth(X[order(OUT)])
+vector.smoothOut <- function(X, Z){
+    Y=X[order(Z)]-smooth(X[order(Z)])
     return(Y)
     }
 
