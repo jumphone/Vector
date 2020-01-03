@@ -36,7 +36,6 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     rownames(VEC) = colnames(pbmc)
     PCA = pbmc@reductions$pca@cell.embeddings
 
-
 ###  Use VECTOR:
 
 
@@ -109,4 +108,6 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     colnames(VEC) = c('UMAP_1','UMAP_2')
     PCA = cds@reducedDims$PCA
 
-    
+### (Optional) Get rank-PCA:   
+
+    PCA=vector.rankPCA(PCA)
