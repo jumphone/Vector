@@ -63,7 +63,7 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
 
 
-#### Change MS to NES gene expression:
+## Additional function 1: Change MS to NES gene expression:
 
     NES.EXP = pbmc@assays$RNA@data[which(rownames(pbmc) =='Nes'),]
     OUT=vector.buildGrid(VEC, N=40,SHOW=TRUE)
@@ -78,7 +78,7 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
 
     
-#### Select starting point:
+## Additional function 2: Manually select starting point:
 
     OUT=vector.buildGrid(VEC, N=40,SHOW=TRUE)
     OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
@@ -89,7 +89,7 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
 
     OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
 
-#### Select region of interest:
+## Additional function 3: Manually select region of interest:
 
     OUT=vector.buildGrid(VEC, N=40,SHOW=TRUE)
     OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
