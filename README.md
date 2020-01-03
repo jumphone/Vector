@@ -40,7 +40,7 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
 
 
     # Define pixel
-    OUT=vector.buildGrid(VEC, N=20,SHOW=TRUE)
+    OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
     
     # Build network
     OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
