@@ -12,29 +12,6 @@ library('igraph')
 
 
 
-vector.smoothOut <- function(X, Z){
-    Y=X
-    Y[order(Z)]=X[order(Z)]-smooth(X[order(Z)])
-    return(Y)
-    }
-
-vector.regressOut <- function(X, Z){
-    FIT=lm(X~Z)
-    Y=X-predict(FIT)    
-    return(Y)
-    }
-
-vector.removeOut <- function(X){   
-    #set.seed(123)
-    BOX=boxplot(X)
-    RM_INDEX=which(X %in% BOX$out)
-    OK_INDEX=which(!X %in% BOX$out)
-    #X[RM_INDEX] = sample(X, length(RM_INDEX))
-    X[RM_INDEX]=max(X[OK_INDEX])   
-    return(X)
-    }
-
-
 
 vector.SeuratSelect <- function(pbmc){
     pbmc=pbmc
@@ -1022,4 +999,33 @@ vector.medCurv <- function(PCA,MAX=1000){
     MED[1]=MED[2]
     return(MED)
     }
+
+
+
+# 2020.01.03
+vector.smoothOut <- function(X, Z){
+    Y=X
+    Y[order(Z)]=X[order(Z)]-smooth(X[order(Z)])
+    return(Y)
+    }
+
+vector.regressOut <- function(X, Z){
+    FIT=lm(X~Z)
+    Y=X-predict(FIT)    
+    return(Y)
+    }
+
+vector.removeOut <- function(X){   
+    #set.seed(123)
+    X=X
+    BOX=boxplot(X)
+    RM_INDEX=which(X %in% BOX$out)
+    OK_INDEX=which(!X %in% BOX$out)
+    #X[RM_INDEX] = sample(X, length(RM_INDEX))
+    Q= .normX(rank(X[RM_INDEX]))   
+    X[RM_INDEX]=quantile(X[OK_INDEX],Q)
+    return(X)
+    }
+
+
 
