@@ -30,11 +30,16 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     DimPlot(pbmc, reduction = "umap")
     saveRDS(pbmc,file='pbmc.RDS')
 
-### Get UMAP and PCs from Seurat3. pbmc: a Seurat object:
+### Get UMAP and PCs from Seurat3 objecy. pbmc: a Seurat object:
 
     VEC = pbmc@reductions$umap@cell.embeddings
     rownames(VEC) = colnames(pbmc)
     PCA = pbmc@reductions$pca@cell.embeddings
+
+
+### (Optional) Get rank-PCA, this step is used to further remove colinearity among PCs:   
+
+    PCA=vector.rankPCA(PCA)
 
 ###  Use VECTOR:
 
@@ -108,6 +113,3 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     colnames(VEC) = c('UMAP_1','UMAP_2')
     PCA = cds@reducedDims$PCA
 
-### (Optional) Get rank-PCA:   
-
-    PCA=vector.rankPCA(PCA)
