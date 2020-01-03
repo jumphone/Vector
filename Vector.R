@@ -1015,22 +1015,20 @@ vector.regressOut <- function(X, Z){
     return(Y)
     }
 
+
+
 vector.removeOut <- function(X){   
     X=X
-    
     ################
     Q1=quantile(X,0.25)
     Q3=quantile(X,0.75)
     IQR=Q3-Q1
     LW=Q1-1.5*IQR
     UP=Q3+1.5*IQR
-    OUTLIER=X[which(X<LW | X>UP)]
-    ################
-    
-    RM_INDEX=which(X %in% OUTLIER)
-    OK_INDEX=which(!X %in% OUTLIER)
-    X[RM_INDEX] = median(X[OK_INDEX])
-    
+    ###############################
+    X[which(X>UP)]=UP
+    X[which(X<LW)]=LW
+    ################    
     return(X)
     }
 
