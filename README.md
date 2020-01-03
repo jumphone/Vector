@@ -37,7 +37,7 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     PCA = pbmc@reductions$pca@cell.embeddings
 
 
-### Further remove rank-based colinearity among PCs:   
+### Remove rank-based colinearity among PCs (new feature in 0.0.3):   
 
     PCA=vector.rankPCA(PCA)
 
