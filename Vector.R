@@ -1033,4 +1033,11 @@ vector.removeOut <- function(X){
     }
 
 
-
+vector.rankPCA <- function(PCA){
+    PCA=PCA #ncol=num(PC)
+    R.PCA=apply(PCA,2,rank)
+    library(gmodels)
+    PCA.OUT=fast.prcomp(R.PCA, retx = TRUE, center = TRUE, scale. = TRUE, tol = NULL)
+    N.PCA=PCA.OUT$x
+    return(N.PCA)
+    }
