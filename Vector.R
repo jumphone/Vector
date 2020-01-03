@@ -24,6 +24,12 @@ vector.regressOut <- function(X, Z){
     return(Y)
     }
 
+vector.removeOut <- function(X){   
+    BOX=boxplot(X)
+    OUT_INDEX=which(X %in% BOX$out)
+    X[OUT_INDEX] = sample(X, length(OUT_INDEX))
+    return(X)
+    }
 
 
 
