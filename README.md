@@ -14,7 +14,7 @@
 
 ## Usage:
 
-### Please prepare a Seurat object with UMAP and 150 PCs.
+### Step 1. Please prepare a Seurat object with UMAP and 150 PCs.
 Users can follow https://satijalab.org/seurat/ to generate Seurat object.
 
     library(Seurat)
@@ -30,18 +30,18 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     DimPlot(pbmc, reduction = "umap")
     saveRDS(pbmc,file='pbmc.RDS')
 
-### Get UMAP and PCs from Seurat3 objecy. pbmc: a Seurat object:
+### Step 2. Get UMAP and PCs from Seurat3 objecy. pbmc: a Seurat object:
 
     VEC = pbmc@reductions$umap@cell.embeddings
     rownames(VEC) = colnames(pbmc)
     PCA = pbmc@reductions$pca@cell.embeddings
 
 
-### Remove rank-based colinearity among PCs (new feature in 0.0.3):   
+### Step 3. Remove rank-based colinearity among PCs (new feature in 0.0.3):   
 
     PCA=vector.rankPCA(PCA)
 
-###  Use VECTOR:
+### Step 4. Use VECTOR:
 
 
     # Define pixel
