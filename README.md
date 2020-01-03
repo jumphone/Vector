@@ -10,6 +10,7 @@
     install.packages('gatepoints')
     install.packages('stringr')
     install.packages('igraph')
+    install.packages('gmodels')
 
 ## Usage:
 
