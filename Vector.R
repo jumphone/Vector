@@ -18,6 +18,11 @@ vector.smoothOut <- function(X, Z){
     return(Y)
     }
 
+vector.regressOut <- function(X, Z){
+    FIT=lm(X~Z)
+    Y=X-predict(FIT)    
+    return(Y)
+    }
 
 
 
