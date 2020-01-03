@@ -114,8 +114,9 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
 
     ...
     OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
-    OUT$VALUE=vector.removeOut(OUT$VALUE)
+    OUT$VALUE[OUT$USED_INDEX]=vector.removeOut(OUT$VALUE[OUT$USED_INDEX])
     OUT=vector.gridValue(OUT, SHOW=TRUE)
+    OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
     ...
     
     
