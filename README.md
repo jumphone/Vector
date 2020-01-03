@@ -66,7 +66,7 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
 ## Additional function 1: Change MS to NES gene expression:
 
     NES.EXP = pbmc@assays$RNA@data[which(rownames(pbmc) =='Nes'),]
-    OUT=vector.buildGrid(VEC, N=40,SHOW=TRUE)
+    OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
     OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
     OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
 
@@ -80,7 +80,7 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     
 ## Additional function 2: Manually select starting point:
 
-    OUT=vector.buildGrid(VEC, N=40,SHOW=TRUE)
+    OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
     OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
     OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
     OUT=vector.gridValue(OUT,SHOW=TRUE)
@@ -91,7 +91,7 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
 
 ## Additional function 3: Manually select region of interest:
 
-    OUT=vector.buildGrid(VEC, N=40,SHOW=TRUE)
+    OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
     OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
     OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
     OUT=vector.gridValue(OUT,SHOW=TRUE)
