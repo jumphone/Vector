@@ -25,11 +25,12 @@ vector.regressOut <- function(X, Z){
     }
 
 vector.removeOut <- function(X){   
-    set.seed(123)
+    #set.seed(123)
     BOX=boxplot(X)
-    OUT_INDEX=which(X %in% BOX$out)
-    #X[OUT_INDEX]=median(X)
-    X[OUT_INDEX] = sample(X, length(OUT_INDEX))
+    RM_INDEX=which(X %in% BOX$out)
+    OK_INDEX=which(!X %in% BOX$out)
+    #X[RM_INDEX] = sample(X, length(RM_INDEX))
+    X[RM_INDEX]=max(X[OK_INDEX])   
     return(X)
     }
 
