@@ -49,7 +49,7 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
     
     # Optional, remove QS score's outlier
-    OUT$VALUE=vector.removeOut(OUT$VALUE)
+    # OUT$VALUE=vector.removeOut(OUT$VALUE)
     
     # Get pixel's QS score
     OUT=vector.gridValue(OUT,SHOW=TRUE)
