@@ -36,6 +36,9 @@ OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
 # Calculate Margin Score (MS)
 OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
 
+#BOX=boxplot(OUT$VALUE)
+#OUT$VALUE[which(OUT$VALUE %in% BOX$out)]=median(OUT$VALUE)
+OUT$VALUE=vector.removeOut(OUT$VALUE)
 
 
 # Get pixel's MS
