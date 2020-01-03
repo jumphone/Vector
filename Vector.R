@@ -1016,14 +1016,15 @@ vector.regressOut <- function(X, Z){
     }
 
 vector.removeOut <- function(X){   
-    #set.seed(123)
     X=X
     BOX=boxplot(X)
     RM_INDEX=which(X %in% BOX$out)
     OK_INDEX=which(!X %in% BOX$out)
+    X[RM_INDEX] = max(X[OK_INDEX])
+    #set.seed(123)
     #X[RM_INDEX] = sample(X, length(RM_INDEX))
-    Q= .normX(rank(X[RM_INDEX]))   
-    X[RM_INDEX]=quantile(X[OK_INDEX],Q)
+    #Q= 1-.normX(rank(X[RM_INDEX]))   
+    #X[RM_INDEX]=quantile(X[OK_INDEX],Q)
     return(X)
     }
 
