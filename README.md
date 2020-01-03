@@ -109,7 +109,19 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
 
 ## Other: Get UMAP and PCs from Monocle3. cds: a Monocle object:
    
+    # Get UMAP:
     VEC = cds@reducedDims$UMAP
     colnames(VEC) = c('UMAP_1','UMAP_2')
-    PCA = cds@reducedDims$PCA
+    
+    # Get 150 PCs
+    library(Seurat)
+    DATA=as.matrix(cds@assays$data[[1]])
+    pbmc <- CreateSeuratObject(counts = DATA, project = "pbmc3k", min.cells = 0, min.features = 0)
+    pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
+    pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 5000)
+    all.genes <- rownames(pbmc)
+    pbmc <- ScaleData(pbmc, features = all.genes)
+    pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs = 150)
+    PCA = pbmc@reductions$pca@cell.embeddings
+
 
