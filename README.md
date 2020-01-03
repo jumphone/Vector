@@ -48,9 +48,6 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     # Calculate Quantile Skewness (QS) score
     OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
     
-    # Optional, remove QS score's outlier
-    # OUT$VALUE=vector.removeOut(OUT$VALUE)
-    
     # Get pixel's QS score
     OUT=vector.gridValue(OUT,SHOW=TRUE)
     
@@ -112,3 +109,13 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     VEC = cds@reducedDims$UMAP
     colnames(VEC) = c('UMAP_1','UMAP_2')
     PCA = cds@reducedDims$PCA
+
+### (Optional) Remove QS score's outlier
+
+    ...
+    OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+    OUT$VALUE=vector.removeOut(OUT$VALUE)
+    OUT=vector.gridValue(OUT, SHOW=TRUE)
+    ...
+    
+    
