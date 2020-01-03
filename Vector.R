@@ -32,6 +32,13 @@ vector.medCurv <- function(PCA,MAX=1000){
     }
 
 
+vector.smoothOut <- function(X, OUT){
+    Y=X[order(OUT)]-smooth(X[order(OUT)])
+    return(Y)
+    }
+
+
+
 
 
 vector.SeuratSelect <- function(pbmc){
