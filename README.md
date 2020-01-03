@@ -102,21 +102,10 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
 
 
 
-
-
 ### (Optional) Get UMAP and PCs from Monocle3. cds: a Monocle object:
    
     VEC = cds@reducedDims$UMAP
     colnames(VEC) = c('UMAP_1','UMAP_2')
     PCA = cds@reducedDims$PCA
 
-### (Optional) Remove QS score's outlier
-
-    ...
-    OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
-    OUT$VALUE[OUT$USED_INDEX]=vector.removeOut(OUT$VALUE[OUT$USED_INDEX])
-    OUT=vector.gridValue(OUT, SHOW=TRUE)
-    OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
-    ...
-    
     
