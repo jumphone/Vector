@@ -107,7 +107,7 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
 
 
 
-### (Optional) Get UMAP and PCs from Monocle3. cds: a Monocle object:
+## Other: Get UMAP and PCs from Monocle3. cds: a Monocle object:
    
     VEC = cds@reducedDims$UMAP
     colnames(VEC) = c('UMAP_1','UMAP_2')
