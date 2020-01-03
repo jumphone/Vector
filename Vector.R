@@ -1019,15 +1019,10 @@ vector.removeOut <- function(X){
     X=X
     BOX=boxplot(X)
     OUTLIER=BOX$out
-    #library(outliers)
-    #OUTLIER=outlier(X)
     RM_INDEX=which(X %in% OUTLIER)
     OK_INDEX=which(!X %in% OUTLIER)
     X[RM_INDEX] = median(X[OK_INDEX])
-    #set.seed(123)
-    #X[RM_INDEX] = sample(X, length(RM_INDEX))
-    #Q= 1-.normX(rank(X[RM_INDEX]))   
-    #X[RM_INDEX]=quantile(X[OK_INDEX],Q)
+   
     return(X)
     }
 
