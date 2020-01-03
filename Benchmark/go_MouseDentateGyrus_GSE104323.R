@@ -103,6 +103,13 @@ dev.off()
 
 
 
+
+
+##########################################
+source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
+setwd('F:/Vector/data/MouseDentateGyrus_GSE104323/')
+pbmc=readRDS(file='pbmc.RDS')
+
 VEC=pbmc@reductions$umap@cell.embeddings
 rownames(VEC)=colnames(pbmc)
 PCA= pbmc@reductions$pca@cell.embeddings
