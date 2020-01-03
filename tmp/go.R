@@ -4,13 +4,28 @@ setwd('F:/LUOZAILI')
 pbmc=readRDS('12W_pbmc3k_final.rds')
 
 
-pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs = 150)
+pbmc <- RunPCA(pbmc, features = VariableFeatures(object = pbmc),npcs = 200)
 
+
+
+###########################
+CCG=as.character(read.table('CellCycle.txt')[,1])
+SD=as.matrix(pbmc@assays$RNA@scale.data)
+CCG.EXP=apply(SD[which(rownames(SD) %in% CCG),],2,mean)
+pbmc@meta.data$ccg=CCG.EXP
+##################################
+
+FeaturePlot(pbmc,features='ccg')
+
+FeaturePlot(pbmc,features='nCount_RNA')
 
 
 VEC = pbmc@reductions$umap@cell.embeddings
 rownames(VEC) = colnames(pbmc)
 PCA = pbmc@reductions$pca@cell.embeddings
+
+#PCA=apply(PCA, 2, vector.smoothOut, pbmc@meta.data$nCount_RNA)
+
 
 # Define pixel
 OUT=vector.buildGrid(VEC, N=40,SHOW=TRUE)
@@ -20,6 +35,8 @@ OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
 
 # Calculate Margin Score (MS)
 OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
+
+
 
 # Get pixel's MS
 OUT=vector.gridValue(OUT,SHOW=TRUE)
