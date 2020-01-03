@@ -45,10 +45,13 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     # Build network
     OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
     
-    # Calculate Margin Score (MS)
+    # Calculate Quantile Skewness (QS) score
     OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
     
-    # Get pixel's MS
+    # Optional, remove QS score's outlier
+    OUT$VALUE=vector.removeOut(OUT$VALUE)
+    
+    # Get pixel's QS score
     OUT=vector.gridValue(OUT,SHOW=TRUE)
     
     # Find summit
