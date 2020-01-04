@@ -63,7 +63,7 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
 
 
-## Additional function 1: Change MS to NES gene expression:
+## Additional function 1: Change QS score to NES gene expression:
 
     NES.EXP = pbmc@assays$RNA@data[which(rownames(pbmc) =='Nes'),]
     OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
