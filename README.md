@@ -1,4 +1,4 @@
-<img src="https://github.com/jumphone/BEER/raw/master/DATA/VECTOR_LOGO.png" width="266">
+<img src="https://github.com/jumphone/BEER/raw/master/DATA/Vector_LOGO.png" width="266">
 
 # Single-cell Developing Vector Inference
 
