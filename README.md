@@ -1,4 +1,4 @@
-<img src="https://github.com/jumphone/BEER/blob/master/DATA/Vector_LOGO.png" width="266">
+<img src="https://github.com/jumphone/BEER/raw/master/DATA/VECTOR_LOGO_NEW.png" width="266">
 
 # Developing Vector Inference
 
