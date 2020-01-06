@@ -103,7 +103,7 @@ vector.getValue <-function(OUT, PCA, SHOW=TRUE){
 
 
 
-vector.buildGrid <- function(VEC, N=20, SHOW=TRUE, COL='grey70'){
+vector.buildGrid <- function(VEC, N=30, SHOW=TRUE, COL='grey70'){
     #############
     VEC.E=VEC
     COL=COL
@@ -628,32 +628,6 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',OL=1.5,AL=60,CE
     ###########
     return(OUT)
     }
-
-
-
-
-
-
-
-VECTOR <- function(VEC, PCA, N=20){
-    N=N
-    PCA=PCA
-    VEC=VEC
-    par(mfrow=c(3,2))
-    ########################
-    
-    OUT=vector.buildGrid(VEC, N=N,SHOW=TRUE)
-    OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
-    OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
-    OUT=vector.gridValue(OUT,SHOW=TRUE)
-    OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
-    OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
-    
-    par(mfrow=c(1,1))
-    return(OUT)
-    #####
-   }
-
 
 
 
