@@ -1,6 +1,6 @@
 <img src="https://github.com/jumphone/BEER/raw/master/DATA/VECTOR_LOGO_NEW.png" width="266">
 
-# Developing Vector Inference
+# Single-cell Developing Vector Inference
 
 #### Environment: R (3.6.1)
 
