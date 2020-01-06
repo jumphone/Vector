@@ -30,7 +30,7 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     DimPlot(pbmc, reduction = "umap")
     saveRDS(pbmc,file='pbmc.RDS')
 
-### Step 2. Get UMAP and PCs from Seurat3 objecy. pbmc: a Seurat object:
+### Step 2. Get UMAP and PCs from Seurat3 objecy. (pbmc: a Seurat object):
 
     VEC = pbmc@reductions$umap@cell.embeddings
     rownames(VEC) = colnames(pbmc)
@@ -107,7 +107,7 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
 
 
 
-## Other: Get UMAP and PCs from Monocle3. cds: a Monocle object:
+## Other: Get UMAP and PCs from Monocle3. (cds: a Monocle object):
    
     # Get UMAP:
     VEC = cds@reducedDims$UMAP
