@@ -35,12 +35,15 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     VEC = pbmc@reductions$umap@cell.embeddings
     rownames(VEC) = colnames(pbmc)
     PCA = pbmc@reductions$pca@cell.embeddings
-
+    
+    source('https://raw.githubusercontent.com/jumphone/Vector/master/Vector.R')
+    
     # Remove quantile-based colinearity among PCs (new feature in VECTOR 0.0.3):   
     PCA=vector.rankPCA(PCA)
 
 ### Step 3. Use VECTOR:
-
+    
+    source('https://raw.githubusercontent.com/jumphone/Vector/master/Vector.R')
 
     # Define pixel
     OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
