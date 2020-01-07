@@ -57,7 +57,7 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     # Get pixel's QS score
     OUT=vector.gridValue(OUT,SHOW=TRUE)
     
-    # Find summit
+    # Find starting point
     OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
     
     # Infer vector
