@@ -102,11 +102,37 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     OUT=vector.reDrawArrow(OUT, COL=OUT$COL)
     OUT=vector.selectRegion(OUT)
 
-    SELECT_PS=OUT$SELECT_PS
-    SELECT_INDEX=OUT$SELECT_INDEX
-
-
-
+    SELECT_PS=OUT$SELECT_PS               #Peseudotime Score (PS) of selected cells
+    SELECT_INDEX=OUT$SELECT_INDEX         #Index of selected cells in the expression matrix 
+    SELECT_COL=OUT$COL[OUT$SELECT_INDEX]  #Colors
+   
+    #######################
+    # Identify development related genes
+    EXP=as.matrix(pbmc@assays$RNA@data)[which(rownames(pbmc) %in% VariableFeatures(pbmc)),SELECT_INDEX]
+    COR=c()
+    i=1
+    while(i<=nrow(EXP)){
+        this_cor=cor(SELECT_PS, EXP[i,],method='spearman')
+        COR=c(COR,this_cor)
+        if(i %%100==1){print(i)}
+        i=i+1}
+    names(COR)=rownames(EXP)
+    head(sort(COR),n=10)     #Decreasing (top 10)
+    tail(sort(COR),n=10)     #Increasing (top 10) 
+    
+    # Select one gene to draw figure
+    show_gene=names(head(sort(COR),n=10))[1]
+    show_gene.exp=EXP[which(rownames(EXP)==show_gene),]
+    
+    # Smooth expression value along pesudotime order (optional)
+    show_gene.exp[order(SELECT_PS)]=smooth.spline(show_gene.exp[order(SELECT_PS)], df=5)$y    
+    
+    # Draw figure
+    plot(jitter(SELECT_PS), show_gene.exp, pch=16,col=SELECT_COL, ylab=show_gene,xlab='PS')
+    show_gene.fit=lm(show_gene.exp~SELECT_PS)
+    abline(show_gene.fit,col='black',lwd=1)
+    
+    
 
 ## Other: Get UMAP and PCs from Monocle3. (cds: a Monocle object):
    
