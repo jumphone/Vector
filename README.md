@@ -99,9 +99,11 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
     OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
 
+    #######################
     OUT=vector.reDrawArrow(OUT, COL=OUT$COL)
     OUT=vector.selectRegion(OUT)
-
+    
+    #######################
     SELECT_PS=OUT$SELECT_PS               #Peseudotime Score (PS) of selected cells
     SELECT_INDEX=OUT$SELECT_INDEX         #Index of selected cells in the expression matrix 
     SELECT_COL=OUT$COL[OUT$SELECT_INDEX]  #Colors
