@@ -774,6 +774,7 @@ vector.selectRegion <- function(OUT){
     SELECT_NAME=vector.selectPoint(VEC,CEX=0.1)
     #########################
     SELECT_INDEX=which(rownames(VEC) %in% SELECT_NAME)
+    SELECT_INDEX=SELECT_INDEX[which(SELECT_INDEX %in% OUT$USED_INDEX)]
     #########################
     #########################
     A_USED=c()
