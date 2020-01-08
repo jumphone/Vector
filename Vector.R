@@ -23,6 +23,17 @@ vector.SeuratSelect <- function(pbmc){
     return(used.cells)
     }
 
+vector.SeuratAddMetaByCell <- function(pbmc, used.cells){
+    pbmc=pbmc
+    used.cells=used.cells
+    SELECT=rep('NO',ncol(pbmc))
+    SELECT[which(colnames(pbmc) %in% used.cells)]='YES'
+    pbmc@meta.data$select=SELECT
+    return(pbmc)
+    }
+
+
+
 
 .normX <- function(x){
     y=(x-min(x))/(max(x)-min(x))
