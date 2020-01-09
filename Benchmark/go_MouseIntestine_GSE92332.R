@@ -254,7 +254,7 @@ dev.off()
 
 
 ############################################################################
-# PC500
+# All PCs
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 setwd('F:/Vector/data/MouseIntestine_GSE92332/')
 
