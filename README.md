@@ -42,7 +42,7 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     PCA=vector.rankPCA(PCA)
 
 ### Step 3. Use VECTOR:
-<img src="https://raw.githubusercontent.com/jumphone/BEER/master/DATA/TMP/WF.jpg" width="400">
+<img src="https://raw.githubusercontent.com/jumphone/BEER/master/DATA/TMP/WF.jpg" width="600">
 
     source('https://raw.githubusercontent.com/jumphone/Vector/master/Vector.R')
 
