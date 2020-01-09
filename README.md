@@ -66,6 +66,7 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
 
 
 ## Additional function 1: Change QS score to NES gene expression:
+<img src="https://raw.githubusercontent.com/jumphone/BEER/master/DATA/TMP/WF1.jpg" width="400">
 
     NES.EXP = pbmc@assays$RNA@data[which(rownames(pbmc) =='Nes'),]
     OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
@@ -81,6 +82,7 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
 
     
 ## Additional function 2: Manually select starting point:
+<img src="https://raw.githubusercontent.com/jumphone/BEER/master/DATA/TMP/WF2.jpg" width="200">
 
     OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
     OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
@@ -92,6 +94,7 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
 
 ## Additional function 3: Manually select region of interest:
+<img src="https://raw.githubusercontent.com/jumphone/BEER/master/DATA/TMP/WF3.jpg" width="200">
 
     OUT=vector.buildGrid(VEC, N=30,SHOW=TRUE)
     OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
