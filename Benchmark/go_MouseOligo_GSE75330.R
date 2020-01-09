@@ -209,7 +209,7 @@ dev.off()
 
 
 ############################################################################
-# PC500
+# All PCs
 
 source('https://raw.githubusercontent.com/jumphone/BEER/master/BEER.R')
 setwd('F:/Vector/data/MouseOligo_GSE75330')
