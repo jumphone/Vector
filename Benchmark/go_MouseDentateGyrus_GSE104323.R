@@ -257,7 +257,7 @@ OUT=vector.selectRegion(OUT)
 saveRDS(OUT,'Select.OUT.RDS')
 
 
-SELECT_SCORE=OUT$SELECT_SCORE
+SELECT_SCORE=OUT$SELECT_SCORE # negative Pesudotime Score
 SELECT_INDEX=OUT$SELECT_INDEX
 
 EXP=as.matrix(pbmc@assays$RNA@scale.data)[,SELECT_INDEX]
