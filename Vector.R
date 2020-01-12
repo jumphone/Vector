@@ -1038,7 +1038,7 @@ vector.rankPCA <- function(PCA){
     pos_index=which(x>0)
     neg_index=which(x<0)
     x[pos_index]=rank(x[pos_index])
-    x[neg_index]=-rank(-x[neg_index])
+    x[neg_index]=rank(-x[neg_index])
     return(x)
     }
 
