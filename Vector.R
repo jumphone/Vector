@@ -1028,3 +1028,51 @@ vector.rankPCA <- function(PCA){
     N.PCA=PCA.OUT$x
     return(N.PCA)
     }
+
+
+
+###################
+#2020.1.12
+
+.normNew <- function(x){
+    pos_index=which(x>0)
+    neg_index=which(x<0)
+    x[pos_index]=rank(x[pos_index])
+    x[neg_index]=-rank(-x[neg_index])
+    return(x)
+    }
+
+
+
+vector.calValueNew <- function(PCA){
+    OUT=list()
+    PCA=PCA
+    PCA.RC=apply(PCA, 2, .normNew)   
+    VALUE=apply(PCA.RC,1,mean)
+    ###########################
+    OUT$VALUE=VALUE
+    OUT$PCA.RC=PCA.RC
+    return(OUT)
+    }
+
+
+
+vector.getValueNew <-function(OUT, PCA, SHOW=TRUE){
+    OUT=OUT
+    PCA=PCA
+    SHOW=SHOW
+    ############
+    VALUE.OUT=vector.calValueNew(PCA)
+    ###############
+    OUT$VALUE=VALUE.OUT$VALUE
+    OUT$PCA=PCA
+    OUT$PCA.RC=VALUE.OUT$PCA.RC
+    ###############
+    if(SHOW==TRUE){
+        vector.showValue(OUT)
+        }
+    #####
+    return(OUT)
+    }
+
+
