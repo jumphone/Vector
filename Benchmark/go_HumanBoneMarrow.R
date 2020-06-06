@@ -49,14 +49,11 @@ pbmc=readRDS(file='pbmc.RDS')
 # GATA2:ENSG00000179348
 # AK2: ENSG00000004455
 
-# B cell
-# HOXD10: ENSG00000128710 
-
-
 
 FeaturePlot(pbmc, features=c('ENSG00000179348',
-                            'ENSG00000102145',
-                            'ENSG00000128710'))
+                            'ENSG00000102145'
+                            ),
+           sort.cell=TRUE, pt.size=1)
 
 
 VEC=pbmc@reductions$umap@cell.embeddings
@@ -69,4 +66,10 @@ OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
 OUT=vector.gridValue(OUT,SHOW=TRUE)
 OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
+
+
+
+
+
+
 
