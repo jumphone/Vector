@@ -122,6 +122,10 @@ OUT=vector.gridValue(OUT,SHOW=TRUE)
 OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL,AL=40)
 
+OUT=vector.drawArrow(OUT,P=0.1,SHOW=TRUE, COL=OUT$COL,AL=80)
+OUT=vector.drawArrow(OUT,P=0.3,SHOW=TRUE, COL=OUT$COL,AL=80)
+OUT=vector.drawArrow(OUT,P=0.6,SHOW=TRUE, COL=OUT$COL,AL=80)
+OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL,AL=80)
 
 
 
