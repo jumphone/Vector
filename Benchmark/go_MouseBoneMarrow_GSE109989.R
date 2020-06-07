@@ -50,6 +50,24 @@ OUT=vector.gridValue(OUT,SHOW=TRUE)
 OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
 
 
+#setwd('F:/Vector/data/MouseBoneMarrow_GSE109989/')
+#pbmc=readRDS(file='pbmc.RDS')
+VVV=OUT$VALUE
+TTT=rep(NA, length(VVV))
+DATA=pbmc@assays$RNA@counts
+TTT[which(DATA[which(rownames(DATA)=='Cenpa'),] >0)]='Cenpa +'
+TTT[which(DATA[which(rownames(DATA)=='Il1b'),] >0)]='Il1b +'
+
+USED=which(!is.na(TTT))
+TTT=TTT[USED]
+VVV=VVV[USED]
+
+
+TTT=as.factor(TTT)
+TTT=factor(TTT , levels=c('Cenpa +','Il1b +'))
+
+boxplot(VVV~TTT,outline=FALSE,xlab='',ylab='',las=2)
+
 
 
 tiff(paste0("IMG/NEW_VECTOR_TRY.6.tiff"),width=4,height=4,units='in',res=600)
