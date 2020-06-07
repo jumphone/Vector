@@ -115,15 +115,33 @@ rownames(VEC)=colnames(pbmc)
 PCA= pbmc@reductions$pca@cell.embeddings
 
 
-
-
-
 OUT=vector.buildGrid(VEC, N=40,SHOW=TRUE)
 OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
 OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
 OUT=vector.gridValue(OUT,SHOW=TRUE)
 OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL,AL=40)
+
+
+
+
+################################################################
+VVV=OUT$VALUE
+TTT=LABEL
+DATA=pbmc@assays$RNA@counts
+#TTT[which(DATA[which(rownames(DATA)=='Sox10'),] >0)]='Sox10 +'
+#TTT[which(DATA[which(rownames(DATA)=='Th'),] >0)]='Th +'
+
+USED=which(!is.na(TTT))
+TTT=TTT[USED]
+VVV=VVV[USED]
+
+TTT=as.factor(TTT)
+TTT=factor(TTT , levels=c('Nes','Gfap','Olig1','Rbfox3'))
+
+boxplot(VVV~TTT,outline=FALSE,xlab='',ylab='',las=2)
+####################################################################
+
 
 tiff(paste0("IMG/NEW_VECTOR_TRY.6.tiff"),width=4,height=4,units='in',res=600)
 par(mar=c(0,0,0,0))
