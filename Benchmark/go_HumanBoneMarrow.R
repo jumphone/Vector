@@ -41,10 +41,6 @@ saveRDS(pbmc,file='pbmc.RDS')
 ###############################
 
 ###########################
-setwd('F:/Vector/data/MouseBoneMarrow_GSE109989/')
-pbmc=readRDS(file='pbmc.RDS')
-# https://www.rndsystems.com/cn/pathways/hematopoietic-stem-cell-differentiation-pathways-lineage-specific-markers
-
 # HSC
 # GATA2:ENSG00000179348
 # AK2: ENSG00000004455
@@ -68,22 +64,5 @@ OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL)
 
 
-
-
-VVV=OUT$VALUE
-TTT=rep(NA, length(VVV))
-DATA=pbmc@assays$RNA@counts
-TTT[which(DATA[which(rownames(DATA)=='Cenpa'),] >0)]='Cenpa +'
-TTT[which(DATA[which(rownames(DATA)=='Il1b'),] >0)]='Il1b +'
-
-USED=which(!is.na(TTT))
-TTT=TTT[USED]
-VVV=VVV[USED]
-
-
-TTT=as.factor(TTT)
-TTT=factor(TTT , levels=c('Cenpa +','Il1b +'))
-
-boxplot(VVV~TTT,outline=FALSE,xlab='',ylab='',las=2)
 
 
