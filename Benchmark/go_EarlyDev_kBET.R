@@ -83,6 +83,26 @@ OUT=vector.autoCenter(OUT,UP=0.9,SHOW=TRUE)
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, OL=2,COL=OUT$COL)
 
 
+
+################################################################
+VVV=OUT$VALUE
+TTT=pbmc@meta.data$type#rep(NA, length(VVV))
+#DATA=pbmc@assays$RNA@counts
+#TTT[which(DATA[which(rownames(DATA)=='Sox10'),] >0)]='Sox10 +'
+#TTT[which(DATA[which(rownames(DATA)=='Th'),] >0)]='Th +'
+
+#USED=which(!is.na(TTT))
+#TTT=TTT[USED]
+#VVV=VVV[USED]
+
+TTT=as.factor(TTT)
+TTT=factor(TTT , levels=c('2-cell','4-cell','8-cell','16-cell','32-cell'))
+
+boxplot(VVV~TTT,outline=FALSE,xlab='',ylab='',las=2)
+####################################################################
+
+
+
 tiff(paste0("IMG/NEW_VECTOR_TRY.6.tiff"),width=4,height=4,units='in',res=600)
 par(mar=c(0,0,0,0))
 OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL,AL=40,BD=F,OL=2,AW=1.5,AC='black',CEX=1)
