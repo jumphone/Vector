@@ -583,8 +583,8 @@ vector.drawArrow <- function(OUT, P=0.9, SHOW=TRUE, COL='grey70',OL=1.5,AL=60,CE
         vector_list=cbind(USED_CENTER_VEC[,1]-this_p1_loc[1],USED_CENTER_VEC[,2]-this_p1_loc[2])
         vector_list_norm=t(apply(vector_list,1,.norm_one, one))
         
-        vector_weight_1= DIV^-(rank(USED_DIST[i,])-1)  
-        vector_weight_2= SCORE[i]-SCORE
+        vector_weight_1= DIV^-(rank(USED_DIST[i,])-1)    # equals to P ^ (rank(USED_DIST[i,])-1)
+        vector_weight_2= SCORE[i]-SCORE                  # PS - PS[i]; "PS_i - PS_j" in  the paper; In paper, PS[i] is "PS_j".
         
         vector_weight = vector_weight_1 * vector_weight_2        
         vector_weight = vector_weight/sum(abs(vector_weight))
