@@ -15,8 +15,8 @@
 ## Usage:
 
 ### Step 1. Please prepare a Seurat object with UMAP and 150 PCs.
-Users can follow https://satijalab.org/seurat/ to generate Seurat object.
-
+Users can follow https://satijalab.org/seurat/ to generate Seurat object (V3.0.0).
+V
     library(Seurat)
     # DATA: Expression matrix. Rownames are gene names. Colnames are cell names.
     pbmc <- CreateSeuratObject(counts = DATA, project = "pbmc3k", min.cells = 0, min.features = 0)
@@ -52,10 +52,10 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     # Build network
     OUT=vector.buildNet(OUT, CUT=1, SHOW=TRUE)
     
-    # Calculate Quantile Skewness (QS) score
+    # Calculate Quantile Polarization (QP) score
     OUT=vector.getValue(OUT, PCA, SHOW=TRUE)
     
-    # Get pixel's QS score
+    # Get pixel's QP score
     OUT=vector.gridValue(OUT,SHOW=TRUE)
     
     # Find starting point
@@ -65,7 +65,7 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object.
     OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
 
 
-## Additional function 1: Change QS score to NES gene expression:
+## Additional function 1: Change QP score to NES gene expression:
 <img src="https://raw.githubusercontent.com/jumphone/BEER/master/DATA/TMP/WF1.jpg" width="400">
 
     NES.EXP = pbmc@assays$RNA@data[which(rownames(pbmc) =='Nes'),]
