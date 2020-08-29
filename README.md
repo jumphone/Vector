@@ -74,6 +74,8 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object (V3.0.0
     # Infer vector
     OUT=vector.drawArrow(OUT,P=0.9,SHOW=TRUE, COL=OUT$COL, SHOW.SUMMIT=TRUE)
 
+    # OUT$P.PS : Peseudotime Score (PS) of each cell
+
 
 ## Additional function 1: Change QP score to a given gene's expression value (e.g. Nes):
 <img src="https://raw.githubusercontent.com/jumphone/BEER/master/DATA/TMP/WF1.jpg" width="400">
