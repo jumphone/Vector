@@ -12,7 +12,7 @@ Unsupervised Inference of Developmental Directions for Single Cells Using VECTOR
 
 fzhang15_at_fudan.edu.cn
 
-#### Environment: R (3.6.1)
+## Environment: R (3.6.1)
 
 #### Please install following R packages before using VECTOR:
 
