@@ -16,7 +16,7 @@
 
 ### Step 1. Please prepare a Seurat object with UMAP and 150 PCs.
 Users can follow https://satijalab.org/seurat/ to generate Seurat object (V3.0.0).
-V
+
     library(Seurat)
     # DATA: Expression matrix. Rownames are gene names. Colnames are cell names.
     pbmc <- CreateSeuratObject(counts = DATA, project = "pbmc3k", min.cells = 0, min.features = 0)
