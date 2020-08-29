@@ -2,6 +2,15 @@
 
 # Single-cell Developing Vector Inference
 
+## Citation:
+
+Unsupervised Inference of Developmental Directions for Single Cells Using VECTOR [https://doi.org/10.1016/j.celrep.2020.108069](https://doi.org/10.1016/j.celrep.2020.108069)
+
+## Contact:
+
+15110700005_at_fudan.edu.cn
+fzhang15_at_fudan.edu.cn
+
 #### Environment: R (3.6.1)
 
 #### Please install following R packages before using VECTOR:
