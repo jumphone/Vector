@@ -1,6 +1,6 @@
 <img src="https://github.com/jumphone/BEER/raw/master/DATA/Vector_LOGO.png" width="266">
 
-# Single-cell Developing Vector Inference
+# Unsupervised Inference of Developmental Directions for Single Cells
 
 ## Citation:
 
