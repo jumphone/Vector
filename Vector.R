@@ -1075,4 +1075,152 @@ vector.getValueNew <-function(OUT, PCA, SHOW=TRUE){
     return(OUT)
     }
 
+###############################################
+
+#20201030
+
+
+
+
+
+vector.autoCenterCor <- function(OUT, UP=0.9, SHOW=TRUE){
+    #####################
+    OUT=OUT
+    SHOW=SHOW
+    UP=UP
+    #############################
+    DIST=OUT$DIST
+    USED=OUT$USED
+    USED_NAME=OUT$USED_NAME
+    CENTER_VALUE=OUT$CENTER_VALUE
+    CENTER_VEC=OUT$CENTER_VEC
+    CENTER_INDEX=OUT$CENTER_INDEX
+    INDEX_LIST=OUT$INDEX_LIST
+    ############
+    
+    
+    USED_CENTER_VALUE=CENTER_VALUE[USED]
+    USED_CENTER_VEC=CENTER_VEC[USED,] 
+    
+       
+    HIGH=USED[which(USED_CENTER_VALUE>=quantile(USED_CENTER_VALUE,UP))]
+    HIGH_NAME=USED_NAME[which(USED_CENTER_VALUE>=quantile(USED_CENTER_VALUE,UP))]
+    LOW_NAME=USED_NAME[which(USED_CENTER_VALUE<quantile(USED_CENTER_VALUE,UP))]
+    #plot(OUT$CENTER_VEC[USED,])
+    #points(CENTER_VEC[HIGH,], col='red',pch=16)
+    #plot(CENTER_VEC[HIGH,], col='red')
+    
+    SUB=induced_subgraph(OUT$GRAPH, HIGH_NAME)
+    SUB_CPT=components(SUB)
+    CLUSTER=list()
+    LENGTH=c()
+    PCH=rep(1,length(HIGH))
+    DIST_COR=c()
+    DIST_MEAN=c()
+    
+    i=1
+    while(i<=SUB_CPT$no){
+        this_name=names(which(SUB_CPT$membership==i))
+        this_index=as.numeric(str_replace(this_name,'P',''))  
+        PCH[which(HIGH %in% this_index)]=as.character(i)
+        LENGTH=c(LENGTH, length(this_index))
+        if(length(this_index)==1){
+            this_dist=DIST[USED, this_index]
+        }else{
+            this_dist=apply(DIST[USED, this_index],1,mean)
+        }
+        this_cor=cor(this_dist, CENTER_VALUE[USED],method='spearman')
+        DIST_COR=c(DIST_COR,this_cor)
+        
+        
+        DIST_MEAN=c(DIST_MEAN, mean(this_dist))
+        CLUSTER=c(CLUSTER,list(this_index))       
+        i=i+1}
+    
+    ####################
+    
+    #SELECT=which(DIST_COR==min(DIST_COR))[1]
+    #SELECT=which(rank(DIST_MEAN)*rank(DIST_COR) == min(rank(DIST_MEAN)*rank(DIST_COR)) )
+    
+    #TMP=10^LENGTH - DIST_COR
+    TMP=-DIST_COR
+    #TMP=rank(-DIST_COR) * rank(LENGTH )
+    SELECT=which(TMP==max(TMP))[1]
+    #SELECT=which(LENGTH==max(LENGTH))[1]
+    #SELECT=which( rank(-DIST_COR) * rank(LENGTH) == max( rank(-DIST_COR) * rank(LENGTH)  ) )[1]
+    
+    SUMMIT=CLUSTER[[SELECT]]
+    #print(SELECT)
+    #plot(OUT$CENTER_VEC[USED,])
+    #points(OUT$CENTER_VEC[CLUSTER[[9]],],pch=16,col='red')
+    
+    
+    SCORE=c()
+    PS=c()
+    i=1
+    while(i<=length(USED_NAME)){
+        this_name=USED_NAME[i]
+        this_dist=DIST[which(colnames(DIST)==this_name),
+                       which(rownames(DIST) %in% paste0('P',SUMMIT))]
+        this_dist=this_dist
+        #this_value=CENTER_VALUE[USED]
+        this_score=min(this_dist)#sum(rank(-this_dist) * rank(this_value))
+        #this_cor=cor(-this_value, this_dist)#,method='spearman')
+        SCORE=c(SCORE, this_score)
+        PS=c(PS, this_score)
+        i=i+1}
+    SCORE=max(SCORE)-SCORE
+    ##########################################
+    
+    VALUE=SCORE
+    #plot(OUT$VEC, col='grey70',pch=16)
+    N.VALUE=(VALUE-min(VALUE))/(max(VALUE)-min(VALUE))
+    #COL=vector.vcol(N.VALUE, c(0,0.5,1),c('#009FFF','#FFF200','#ec2F4B')) # too strong
+    #COL=vector.vcol(N.VALUE,c(0,0.5,1),c('#009FFF','#FFF200','#ffdde1')) # too weak
+    COL=vector.vcol(N.VALUE,c(0,0.5,1),c('#009FFF','#FFF200','#ee9ca7'))
+    
+    ###################################################
+    OUT$COL=rep('grey70',nrow(OUT$VEC))
+    OUT$ORIG.COL=rep('grey70',nrow(OUT$VEC))
+    OUT$P.SCORE=rep(0,nrow(OUT$VEC))
+    OUT$P.PS=rep(NA,nrow(OUT$VEC))
+    i=1
+    while(i<=length(USED)){
+        this_index=INDEX_LIST[[USED[i]]]
+        OUT$COL[this_index]=COL[i]
+        OUT$ORIG.COL[this_index]=OUT$ORIG.CENTER.COL[USED][i]
+        OUT$P.SCORE[this_index]=SCORE[i]
+        OUT$P.PS[this_index]=PS[i]
+        i=i+1
+        }
+    ###########
+    
+    
+    if(SHOW==TRUE){
+        #plot(OUT$VEC, col=OUT$COL, pch=16, cex=0.5 )
+        plot(OUT$VEC, col=OUT$ORIG.COL, pch=16, cex=0.5)
+        text(CENTER_VEC[HIGH,1], CENTER_VEC[HIGH,2],labels=PCH,cex=1,pos=2)
+        points(CENTER_VEC[HIGH,1], CENTER_VEC[HIGH,2], col='black',pch=16,cex=1)
+        points(CENTER_VEC[SUMMIT,1],CENTER_VEC[SUMMIT,2], col='black',pch=16,cex=1.5)
+        points(CENTER_VEC[SUMMIT,1],CENTER_VEC[SUMMIT,2], col='red',pch=16,cex=1)  
+        }
+ 
+    ######################
+    ############
+    OUT$SCORE=SCORE
+    OUT$SUMMIT=SUMMIT
+    OUT$CLUSTER=CLUSTER
+    OUT$LENGTH=LENGTH
+    OUT$PCH=PCH
+    OUT$DIST_COR=DIST_COR
+    OUT$PS=PS
+    #OUT$DIST_MEAN=DIST_MEAN
+    ################################
+    
+    #######################
+    return(OUT)
+    }
+
+
+
 
