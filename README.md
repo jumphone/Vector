@@ -16,11 +16,11 @@ fzhang15_at_fudan.edu.cn
 
 #### Please install following R packages before using VECTOR:
 
-    install.packages('circlize')
-    install.packages('gatepoints')
-    install.packages('stringr')
-    install.packages('igraph')
-    install.packages('gmodels')
+    install.packages('circlize')   # 0.4.11
+    install.packages('gatepoints') # 0.1.3
+    install.packages('stringr')    # 1.4.0
+    install.packages('igraph')     # 1.2.6
+    install.packages('gmodels')    # 2.18.1
 
 ## Usage:
 
