@@ -157,6 +157,10 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object (V3.0.0
     # Get UMAP:
     VEC = cds@reducedDims$UMAP
     colnames(VEC) = c('UMAP_1','UMAP_2')
+ 
+    # or
+    VEC = cds@int_colData$reducedDims$UMAP
+    colnames(VEC) = c('UMAP_1','UMAP_2')
     
     # Get 150 PCs
     library(Seurat)
