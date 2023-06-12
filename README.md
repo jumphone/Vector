@@ -174,3 +174,14 @@ Users can follow https://satijalab.org/seurat/ to generate Seurat object (V3.0.0
     PCA = pbmc@reductions$pca@cell.embeddings
 
 
+
+
+<img src="https://fzhang.bioinfo-lab.com/img/white.png" height="50">
+
+-------------------------------------------------------------------------------------------------------------------
+
+<img src="https://fzhang.bioinfo-lab.com/img/panda_happy_logo.png" height='150'>
+
+#### More tools & studies: https://fzhang.bioinfo-lab.com/
+
+
