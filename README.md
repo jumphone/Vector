@@ -8,6 +8,8 @@ Unsupervised Inference of Developmental Directions for Single Cells Using VECTOR
 
 ## Contact:
 
+fzhang_at_shsmu.edu.cn
+
 15110700005_at_fudan.edu.cn
 
 fzhang15_at_fudan.edu.cn
